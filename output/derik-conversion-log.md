@@ -218,6 +218,38 @@ Yüklenmezse `data-fallback` + `onerror` JS ile desenli zemin (`.img-fallback`) 
 - **Regular**: user, heart
 - **Brands**: instagram, facebook, x-twitter, youtube, whatsapp
 
+---
+
+## v2.4 — hikayemiz.html (yeni sayfa, skill ile KD referansı)
+
+Tarih: 2026-05-04
+Skill kullanımı: `web-replicator` → `https://www.kahvedunyasi.com/hikayemiz`
+- FETCH: HTML + 6 CSS bundle indirildi (`output/_fetch/kahvedunyasi-hikayemiz/`)
+- ANALYZE: WebFetch + structural read; KD'nin 3 section (marka tanıtım / mağaza divider / global başarılar) layout'u çıkarıldı
+- GENERATE + ADAPT: Derik içerik + render
+
+### Sayfa yapısı
+1. **Breadcrumb** — Anasayfa > Hakkımızda > Hikayemiz
+2. **HERO** (`.story-hero`) — primary-700 zemin, 2-col, eyebrow + başlık (altın `<em>` vurgusu) + p + Unsplash görsel
+3. **SECTION 1** (`.story-intro`) — merkezi lead başlık + 3 vertical pillar (numaralı: 01/02/03 altın) + en altta full-width görsel (21:9)
+4. **SECTION 2** (`.divider-section`) — primary-700 zemin, 2-col, başlıkta 3 altın `<em>` vurgusu, alt paragraf, "Tüm Satış Noktaları" altın CTA, sağda 4:5 görsel
+5. **SECTION 3** (`.stats-section`) — eyebrow + başlık + lead + 3-col stat-card (12+ / 50+ / 5). Kartlar: krem zemin, altın rakam (72px), hover'da -6px lift + altın border. **Harita YOK**.
+6. **Footer** — diğer 3 sayfa ile aynı
+
+### Beyaz elips kullanılmadı
+KD'deki ürün kartı askısı/yarım daire dekoratif eleman bilinçli olarak alınmadı.
+
+### Header dropdown güncellemesi
+"Hakkımızda ▾" altındaki "Hikayemiz" linki 4 sayfada (`index/magaza/urun-detay/hikayemiz`) artık `hikayemiz.html`'e gidiyor.
+
+### Yeni Unsplash görseller
+- `story_hero` — 1601000937856 (zeytin/zeytinyağı kompozisyon)
+- `story_grove` — 1565299585323 (zeytinlik manzara, 21:9 hero altı)
+- `story_press` — 1542838132 (zeytin işleme/üretim, divider sağ visual)
+
+### Build
+`output/_build_v2.py`'ye `build_hikayemiz()` modülü eklendi, FILES sözlüğüne girdi yapıldı. Tek seferde 4 sayfa build ediliyor (`hikayemiz.html` 42 KB).
+
 ## Park Edilenler (sonraki revize için)
 1. **Canlı Destek floating buton** (sağ alt köşe, FA `fa-comments`)
 2. **Mega menu**: kategori hover'da 3-sütun alt menü (KD'deki gibi)

@@ -350,6 +350,61 @@ ul{list-style:none}
   .pd-info{position:static}
 }
 
+/* HIKAYEMIZ — story page */
+.story-hero{background:var(--primary-700);color:#fff;padding:96px 0;border-radius:0}
+.story-hero .wrap{display:grid;grid-template-columns:1.1fr 1fr;gap:var(--s-12);align-items:center}
+.story-hero .eyebrow{display:inline-block;font-size:var(--fs-xs);font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-gold);margin-bottom:var(--s-5)}
+.story-hero h1{font-size:48px;font-weight:800;line-height:1.1;letter-spacing:-0.025em;margin-bottom:var(--s-6);color:#fff}
+.story-hero h1 em{font-style:normal;color:var(--accent-gold)}
+.story-hero p{font-size:var(--fs-md);line-height:1.6;opacity:.85;max-width:520px}
+.story-hero .visual{aspect-ratio:4/3;border-radius:var(--r-lg);overflow:hidden;background:rgba(255,255,255,.06)}
+.story-hero .visual img{width:100%;height:100%;object-fit:cover}
+
+.story-intro{padding:96px 0 var(--s-12)}
+.story-intro .lead{max-width:780px;margin:0 auto var(--s-12);text-align:center}
+.story-intro .lead h2{font-size:var(--fs-3xl);font-weight:700;letter-spacing:-0.02em;margin-bottom:var(--s-5);line-height:1.2}
+.story-intro .lead p{color:var(--text-2);font-size:var(--fs-md);line-height:1.7}
+.story-intro .pillars{max-width:880px;margin:0 auto var(--s-12);display:flex;flex-direction:column;gap:var(--s-8)}
+.pillar{display:grid;grid-template-columns:auto 1fr;gap:var(--s-5);align-items:start;padding:var(--s-6) 0;border-bottom:1px solid var(--border)}
+.pillar:last-child{border-bottom:0}
+.pillar .num{font-size:var(--fs-2xl);font-weight:800;color:var(--accent-gold);line-height:1;letter-spacing:-0.02em;min-width:54px}
+.pillar h3{font-size:var(--fs-lg);font-weight:700;color:var(--text);margin-bottom:var(--s-3)}
+.pillar p{color:var(--text-2);line-height:1.7;max-width:640px}
+.story-intro .full-img{margin-top:var(--s-10);border-radius:var(--r-lg);overflow:hidden;aspect-ratio:21/9;background:var(--bg-card)}
+.story-intro .full-img img{width:100%;height:100%;object-fit:cover}
+
+.divider-section{background:var(--primary-700);color:#fff;padding:96px 0}
+.divider-section .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:var(--s-12);align-items:center}
+.divider-section h2{font-size:42px;font-weight:800;line-height:1.15;letter-spacing:-0.02em;margin-bottom:var(--s-6);color:#fff}
+.divider-section h2 em{font-style:normal;color:var(--accent-gold)}
+.divider-section p{font-size:var(--fs-md);line-height:1.7;opacity:.88;max-width:580px;margin-bottom:var(--s-8)}
+.divider-section .btn-light{background:var(--accent-gold);color:var(--primary-900);padding:14px 28px;border-radius:var(--r-sm);font-size:var(--fs-sm);font-weight:700;letter-spacing:.04em;text-transform:uppercase;display:inline-flex;align-items:center;gap:var(--s-2);transition:transform var(--t-fast),background var(--t-fast)}
+.divider-section .btn-light:hover{background:#d8b46c;color:var(--primary-900);transform:translateY(-2px)}
+.divider-section .visual{aspect-ratio:4/5;border-radius:var(--r-lg);overflow:hidden}
+.divider-section .visual img{width:100%;height:100%;object-fit:cover}
+
+.stats-section{padding:96px 0}
+.stats-section .lead{max-width:780px;margin:0 auto var(--s-12)}
+.stats-section .eyebrow{display:inline-block;font-size:var(--fs-xs);font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--primary-700);margin-bottom:var(--s-4)}
+.stats-section h2{font-size:var(--fs-3xl);font-weight:700;letter-spacing:-0.02em;margin-bottom:var(--s-5);line-height:1.2}
+.stats-section .lead p{color:var(--text-2);font-size:var(--fs-md);line-height:1.7}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-5)}
+.stat-card{background:var(--bg-product);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-10) var(--s-8);transition:transform var(--t-mid),box-shadow var(--t-mid),border-color var(--t-fast)}
+.stat-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-2);border-color:var(--accent-gold)}
+.stat-card .big{font-size:72px;font-weight:800;color:var(--accent-gold);line-height:1;letter-spacing:-0.04em;margin-bottom:var(--s-4)}
+.stat-card h3{font-size:var(--fs-lg);font-weight:700;color:var(--primary-900);margin-bottom:var(--s-3)}
+.stat-card p{color:var(--text-2);font-size:var(--fs-sm);line-height:1.6}
+
+@media(max-width:1024px){
+  .story-hero .wrap,.divider-section .wrap{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr;gap:var(--s-4)}
+  .story-hero h1{font-size:36px}
+  .divider-section h2{font-size:32px}
+  .stat-card .big{font-size:56px}
+  .pillar{grid-template-columns:1fr;gap:var(--s-2)}
+  .story-hero,.story-intro,.divider-section,.stats-section{padding:56px 0}
+}
+
 /* REVEAL */
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease-out,transform .6s ease-out}
 .reveal.in{opacity:1;transform:none}
@@ -394,7 +449,7 @@ ul{list-style:none}
     <a href="#kurumsal" class="top-link">Kurumsal Satış</a>
     <span class="top-link has-dd">Hakkımızda <i class="fa-solid fa-chevron-down"></i>
       <span class="dd-menu">
-        <a href="#hikayemiz">Hikayemiz</a>
+        <a href="hikayemiz.html">Hikayemiz</a>
         <a href="#uretim">Üretim</a>
         <a href="#magazalar">Mağazalar</a>
       </span>
