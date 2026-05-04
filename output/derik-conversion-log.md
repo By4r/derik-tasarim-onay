@@ -406,3 +406,55 @@ open "/Users/dadaistanbul/Design/Derik Design/urun-detay.html"
 2. **Görsel asset**: hero-visual + banner + ürün img-wrap + kategori .ph yerlerine gerçek fotoğraflar
 3. **Font**: gothamFont yerine Derik kimlik fontu (örn. Playfair Display heading + Inter body)
 4. **İçerik genişletme**: ürün sayfası, kurumsal sayfa template'leri için aynı skill yeniden çalıştırılabilir
+
+---
+
+## v3.0 — Account Dashboard Pages (4 tabs)
+
+**Date:** 2026-05-04
+**Skill:** web-replicator (KD primary ref + Trendyol card anatomy helper)
+**Trigger:** "KD'yi referans al, Trendyol kart anatomisi yardımcı, Derik'e uyarla"
+
+### Pages Added
+- `uyelik-bilgilerim.html` — Profile form (kişisel + şifre değiştir)
+- `siparis-gecmisim.html` — Order list (3 mock orders + filter chips)
+- `adreslerim.html` — Address tabs (Teslimat 1 dolu + Fatura empty state)
+- `promosyonlarim.html` — 3 promo cards + filter chips
+
+### Layout Decisions (KD-derived)
+- **Single account layout:** sticky 280px sidebar (avatar + name + 4 nav + sign-out) + content area
+- **Active state:** olive border-left + primary-100 bg + primary-700 text
+- **Avatar:** pastel pink (#F4D7D9) bg, initial "B"
+- **Breadcrumb:** "Anasayfa > [tab]"
+- **Page head:** h1 + lead, then layout grid
+
+### Card Anatomy (Trendyol-derived, KD-toned)
+- **Order card:** 4-col head (date / order# / recipient / total) + Detaylar btn → body row (thumb + status badge + product line + Değerlendir/Kargo Takip btn)
+- **Address card:** title + ev/iş icon + default tag + edit/delete actions / name + multi-line address / masked phone
+- **Promo card:** 3-col grid (icon + body + CTA) — icon block + title + amount (gold xl) + min purchase + expiry (red) + Kullan btn
+
+### Filter Chips
+- Pill-shaped, active = gold bg + dark text, passive = soft bg + muted text
+- Sipariş: Tümü / Devam Edenler / İptaller / İadeler
+- Promo: Tümü / Avantajlı Kupon / Sana Özel
+
+### Header Integration (8 existing pages)
+Replaced single user icon with `.user-dd-wrap` containing dropdown menu:
+- Üyelik Bilgilerim → uyelik-bilgilerim.html
+- Sipariş Geçmişim → siparis-gecmisim.html
+- Adreslerim → adreslerim.html
+- Promosyonlarım → promosyonlarim.html
+- (divider)
+- Çıkış Yap (placeholder)
+
+CSS injected into 8 pages: `index.html`, `magaza.html`, `urun-detay.html`, `hikayemiz.html`, `uretim.html`, `iletisim.html`, `kurumsal-satis.html`, `sss.html`.
+
+### Build Tooling
+- `output/_build_account.py` — generates 4 account pages from shared base CSS + sidebar component + 4 content blocks
+- `output/_inject_user_dd.py` — injects dropdown markup + CSS into 8 existing pages
+
+### Trendyol Elements NOT Used (KD ferah his korundu)
+- "Sadece 1 TL" promo banner card
+- "Asistanım" floating module
+- Heavy marketing banners between order cards
+- "Sana Özel" carousel

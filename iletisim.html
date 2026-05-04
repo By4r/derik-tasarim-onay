@@ -620,6 +620,16 @@ ul{list-style:none}
   .page-head{grid-template-columns:1fr}
   .pd-perks{grid-template-columns:1fr}
 }
+
+/* USER DROPDOWN */
+.user-dd-wrap{position:relative;display:inline-flex}
+.user-dd-wrap:hover .user-dd-menu,.user-dd-menu:hover{display:block}
+.user-dd-menu{position:absolute;top:calc(100% + 4px);right:0;background:#fff;border:1px solid var(--border);border-radius:var(--r-md);box-shadow:var(--shadow-2);padding:var(--s-2) 0;min-width:220px;display:none;z-index:60}
+.user-dd-menu a{display:flex;align-items:center;gap:var(--s-3);padding:10px 16px;font-size:var(--fs-sm);color:var(--text-2);font-weight:600}
+.user-dd-menu a i{width:18px;color:var(--muted);font-size:var(--icon-sm)}
+.user-dd-menu a:hover{background:var(--primary-100);color:var(--primary-700)}
+.user-dd-menu a:hover i{color:var(--primary-700)}
+.user-dd-menu .divider{height:1px;background:var(--border);margin:var(--s-2) 0;display:block}
 </style>
 </head>
 <body>
@@ -663,7 +673,17 @@ ul{list-style:none}
     </nav>
     <div class="header-actions">
       <a href="#ara" class="icon-btn" aria-label="Ara"><i class="fa-solid fa-magnifying-glass"></i></a>
-      <a href="#hesap" class="icon-btn" aria-label="Hesabım"><i class="fa-regular fa-user"></i></a>
+      <span class="user-dd-wrap">
+        <a href="uyelik-bilgilerim.html" class="icon-btn" aria-label="Hesabım"><i class="fa-regular fa-user"></i></a>
+        <span class="user-dd-menu">
+          <a href="uyelik-bilgilerim.html"><i class="fa-regular fa-id-card"></i> Üyelik Bilgilerim</a>
+          <a href="siparis-gecmisim.html"><i class="fa-solid fa-box"></i> Sipariş Geçmişim</a>
+          <a href="adreslerim.html"><i class="fa-solid fa-location-dot"></i> Adreslerim</a>
+          <a href="promosyonlarim.html"><i class="fa-solid fa-ticket"></i> Promosyonlarım</a>
+          <span class="divider"></span>
+          <a href="#"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</a>
+        </span>
+      </span>
       <a href="#favoriler" class="icon-btn" aria-label="Favoriler"><i class="fa-regular fa-heart"></i></a>
       <a href="#sepet" class="icon-btn cart-badge" aria-label="Sepetim"><i class="fa-solid fa-bag-shopping"></i><span class="cart-num">0</span></a>
     </div>
