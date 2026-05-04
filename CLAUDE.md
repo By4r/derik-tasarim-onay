@@ -5,8 +5,8 @@
 - **Aşama:** Statik HTML konsept tasarımı (henüz production değil)
 - **Patron:** Yasin Bey (Dada İstanbul) — onay merci
 - **Repo:** https://github.com/By4r/derik-tasarim-onay
-- **Canlı:** https://derik-tasarim-onay.netlify.app
-- **Auto-deploy:** GitHub main branch → Netlify (30-60 sn)
+- **Canlı:** https://by4r.github.io/derik-tasarim-onay/
+- **Auto-deploy:** GitHub main branch → GitHub Pages (30-60 sn)
 
 ## Mevcut Sayfalar (kök dizinde)
 - `index.html` — Ana sayfa (Hero, Kategoriler, Banner, Yeni Çıkanlar, Çok Satanlar)
@@ -143,7 +143,7 @@ Yapı (yukarıdan aşağıya):
 ## Önemli Notlar
 - **macOS Finder drag = move (kopyala değil)** — Option+drag ile kopyala. Dosyayı yanlışlıkla başka klasöre sürüklersen Code "file disappeared" hatası verir.
 - **Tarayıcıda dosya açıkken Code yazamayabilir** — Bazı durumlarda. Öyle bir hata gelirse tab'ı kapat.
-- **Netlify auto-deploy 30-60 sn** — `git push` sonrası bu süre kadar bekle, sonra hard refresh (Cmd+Shift+R)
+- **GitHub Pages auto-deploy 30-60 sn** — `git push` sonrası bu süre kadar bekle, sonra hard refresh (Cmd+Shift+R)
 - **Tüm yeni sayfalarda** header (top ribbon + telefon barsız + dropdown'lar) ve footer aynı yapıda olmalı, 8 sayfa senkron
 
 ## Skill Tetikleyici Tipik Komutlar
