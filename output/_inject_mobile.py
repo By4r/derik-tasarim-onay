@@ -19,6 +19,7 @@ AUTH_PAGES = ['giris.html', 'kayit.html', 'sifremi-unuttum.html', 'sifre-sifirla
 MARKER = '=== MOBILE PANEL (v3.8) ==='
 
 CSS_BLOCK = '''
+/* ===== MOBILE V3.8 BEGIN ===== */
 /* ============ MOBILE PANEL (v3.8) ============ */
 .mobile-burger{display:none;width:42px;height:42px;border-radius:50%;align-items:center;justify-content:center;color:var(--text);cursor:pointer;background:transparent;border:0;transition:background var(--t-fast)}
 .mobile-burger:hover{background:var(--primary-100,#F2EBDC);color:var(--primary-700)}
@@ -95,6 +96,7 @@ body.mobile-panel-open{overflow:hidden}
   .product-grid{grid-template-columns:1fr!important}
   .cat-grid{grid-template-columns:1fr!important}
 }
+/* ===== MOBILE V3.8 END ===== */
 '''
 
 # Hamburger button HTML — inserted into .header-actions
@@ -222,7 +224,9 @@ JS_AUTH = '''
 def patch_main(fname: Path) -> bool:
     txt = fname.read_text()
     # Strip prior v3.8 injections (idempotent)
-    txt = re.sub(r'/\* ============ MOBILE PANEL \(v3\.8\) ============.*?(?=/\* |</style>|$)', '', txt, flags=re.DOTALL)
+    txt = re.sub(r'/\* ===== MOBILE V3\.8 BEGIN =====.*?MOBILE V3\.8 END ===== \*/\n?', '', txt, flags=re.DOTALL)
+    # Legacy single-marker strip (in case of older injection)
+    txt = re.sub(r'/\* ============ MOBILE PANEL \(v3\.8\) ============.*?(?=/\* (?!FOOTER|GENERAL)|</style>)', '', txt, flags=re.DOTALL)
     txt = re.sub(r'\n<!-- MOBILE PANEL \(v3\.8\) -->.*?</aside>\n?', '', txt, flags=re.DOTALL)
     txt = re.sub(r'\n<script>\s*//\s*===\s*MOBILE PANEL \(v3\.8\)\s*===.*?</script>\n?', '', txt, flags=re.DOTALL)
     # Remove existing burger button if any
@@ -252,7 +256,9 @@ def patch_main(fname: Path) -> bool:
 
 def patch_auth(fname: Path) -> bool:
     txt = fname.read_text()
-    txt = re.sub(r'/\* ============ MOBILE PANEL \(v3\.8\) ============.*?(?=/\* |</style>|$)', '', txt, flags=re.DOTALL)
+    txt = re.sub(r'/\* ===== MOBILE V3\.8 BEGIN =====.*?MOBILE V3\.8 END ===== \*/\n?', '', txt, flags=re.DOTALL)
+    # Legacy single-marker strip (in case of older injection)
+    txt = re.sub(r'/\* ============ MOBILE PANEL \(v3\.8\) ============.*?(?=/\* (?!FOOTER|GENERAL)|</style>)', '', txt, flags=re.DOTALL)
     txt = re.sub(r'\n<!-- MOBILE PANEL \(v3\.8\) -->.*?</aside>\n?', '', txt, flags=re.DOTALL)
     txt = re.sub(r'\n<script>\s*//\s*===\s*MOBILE PANEL \(v3\.8\)\s*===.*?</script>\n?', '', txt, flags=re.DOTALL)
     txt = re.sub(r'\s*<button class="mobile-burger"[^>]*>.*?</button>', '', txt, flags=re.DOTALL)
@@ -260,10 +266,10 @@ def patch_auth(fname: Path) -> bool:
     if CSS_BLOCK not in txt:
         txt = txt.replace('</style>', CSS_BLOCK + '\n</style>', 1)
 
-    # Auth header: add burger after .ctx-link a
+    # Auth pages now use full header — inject burger inside .header-actions like main pages
     new_txt, n = re.subn(
-        r'(<a href="[^"]*" class="ctx-link">.*?</a>)(\s*</div>\s*</header>)',
-        r'\1\n    ' + BURGER_BTN + r'\2',
+        r'(<div class="header-actions">.*?</a>)(\s*</div>\s*</div>\s*</header>)',
+        r'\1\n      ' + BURGER_BTN + r'\2',
         txt, count=1, flags=re.DOTALL
     )
     if n:

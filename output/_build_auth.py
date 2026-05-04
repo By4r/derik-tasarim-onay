@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
-"""Build 4 auth pages with v3.7.1 fixes:
-- Form: <form onsubmit="return false"> + type="button" submit + onClick handler
-  (Prevents accidental GET submission)
-- Header right: context-aware ("Hesabınız yok mu? Üye Olun" vs vice versa)
-- Breadcrumb above card
-- "← Alışverişe devam et" link below card
-- localStorage: isLoggedIn + userName + userEmail
+"""Build 4 auth pages with v3.8.1 — FULL site header (replaces minimal header).
+
+Reuses topbar + header-top + header markup from index.html for visual
+consistency across the site. Form/breadcrumb/footer/JS unchanged from v3.7.1.
 """
 from pathlib import Path
 
@@ -30,6 +27,7 @@ BASE_CSS = r"""
   --r-sm:6px;--r-md:10px;--r-lg:12px;--r-pill:100px;
   --shadow-1:0 2px 8px rgba(0,0,0,.06);
   --shadow-2:0 6px 20px rgba(42,31,20,.10);
+  --shadow-header:0 1px 4px rgba(0,0,0,.04);
   --maxw:1320px;--t-fast:.2s ease;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -42,13 +40,60 @@ ul{list-style:none}
 .container{max-width:var(--maxw);margin:0 auto;padding:0 var(--s-8)}
 @media(max-width:768px){.container{padding:0 var(--s-6)}}
 
-/* SADE HEADER (auth only) */
-.auth-header{background:var(--bg);border-bottom:1px solid var(--border);padding:var(--s-5) 0}
-.auth-header .container{display:flex;align-items:center;justify-content:space-between;gap:var(--s-4)}
+/* TOP RIBBON */
+.topbar{background:var(--primary-700);color:var(--bg);font-size:13px;font-weight:500}
+.topbar.hidden{display:none}
+.topbar .container{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:var(--s-4);min-height:36px}
+.topbar a{color:var(--bg)}
+.topbar a:hover{color:var(--accent-gold)}
+.topbar .tb-left{justify-self:start}
+.topbar .tb-mid{justify-self:center;text-align:center}
+.topbar .tb-mid b{color:var(--accent-gold);font-weight:700;letter-spacing:.04em}
+.topbar .tb-right{justify-self:end;display:flex;align-items:center;gap:var(--s-3)}
+.topbar .tb-close{color:var(--bg);opacity:.8;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center}
+.topbar .tb-close:hover{background:rgba(255,255,255,.12);opacity:1}
+@media(max-width:768px){.topbar .container{grid-template-columns:1fr auto}.topbar .tb-left{display:none}}
+
+/* HEADER */
+.header{position:sticky;top:0;z-index:50;background:var(--bg);box-shadow:var(--shadow-header);border-bottom:1px solid var(--border)}
+.header-row1{display:flex;align-items:center;gap:var(--s-6);height:88px}
 .brand-logo{font-size:30px;font-weight:800;letter-spacing:-0.025em;color:var(--primary-700);font-style:italic}
-.auth-header .ctx-link{font-size:var(--fs-sm);color:var(--text-2);display:inline-flex;align-items:center;gap:6px}
-.auth-header .ctx-link b{color:var(--primary-700);font-weight:700;margin-left:6px;text-decoration:underline}
-.auth-header .ctx-link:hover b{color:var(--primary-900)}
+.brand-logo:hover{color:var(--primary-700)}
+.header-actions{display:flex;align-items:center;gap:var(--s-2)}
+.icon-btn{position:relative;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:var(--text);transition:background var(--t-fast),color var(--t-fast)}
+.icon-btn i{font-size:var(--icon-md)}
+.icon-btn:hover{background:var(--primary-100);color:var(--primary-700)}
+.cart-badge .cart-num{position:absolute;top:-2px;right:-2px;background:var(--accent-gold);color:var(--primary-900);font-size:11px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg)}
+
+/* HEADER TOP (Kurumsal + Hakkımızda) */
+.header-top{background:var(--bg);border-bottom:1px solid var(--border);font-size:var(--fs-xs)}
+.header-top .container{display:flex;justify-content:flex-end;align-items:center;gap:var(--s-5);min-height:38px}
+.header-top .top-link{font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text-2);padding:6px 4px;display:inline-flex;align-items:center;gap:6px;position:relative}
+.header-top .top-link i{font-size:10px;color:var(--muted)}
+.header-top .top-link:hover{color:var(--primary-700)}
+.header-top .has-dd{cursor:pointer}
+.header-top .dd-menu{position:absolute;top:calc(100% + 2px);right:0;background:#fff;border:1px solid var(--border);border-radius:var(--r-sm);box-shadow:var(--shadow-2);padding:4px 0;min-width:160px;display:none;z-index:60}
+.header-top .has-dd:hover .dd-menu,.header-top .dd-menu:hover{display:block}
+.header-top .dd-menu a{display:block;padding:7px 14px;font-size:var(--fs-xs);font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text-2);text-align:right;line-height:1.3}
+.header-top .dd-menu a:hover{background:var(--primary-100);color:var(--primary-700)}
+
+/* MAIN NAV */
+.nav{display:flex;justify-content:center;gap:var(--s-8);flex:1}
+.nav a{font-size:var(--fs-sm);font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:8px 0;position:relative;color:var(--text);white-space:nowrap}
+.nav a::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--primary-700);transition:width var(--t-fast)}
+.nav a:hover::after,.nav a.active::after{width:100%}
+.nav a.active{color:var(--primary-700)}
+@media(max-width:1024px){.nav{display:none}.header-row1{height:auto;padding:var(--s-4) 0;gap:var(--s-4)}.header-top{display:none}}
+
+/* USER DROPDOWN */
+.user-dd-wrap{position:relative;display:inline-flex}
+.user-dd-wrap:hover .user-dd-menu,.user-dd-menu:hover{display:block}
+.user-dd-menu{position:absolute;top:calc(100% + 4px);right:0;background:#fff;border:1px solid var(--border);border-radius:var(--r-md);box-shadow:var(--shadow-2);padding:var(--s-2) 0;min-width:220px;display:none;z-index:60}
+.user-dd-menu a{display:flex;align-items:center;gap:var(--s-3);padding:10px 16px;font-size:var(--fs-sm);color:var(--text-2);font-weight:600}
+.user-dd-menu a i{width:18px;color:var(--muted);font-size:var(--icon-sm)}
+.user-dd-menu a:hover{background:var(--primary-100);color:var(--primary-700)}
+.user-dd-menu a:hover i{color:var(--primary-700)}
+.user-dd-menu .divider{height:1px;background:var(--border);margin:var(--s-2) 0;display:block}
 
 /* BREADCRUMB */
 .crumb{font-size:var(--fs-sm);color:var(--muted);padding:var(--s-6) 0 var(--s-2);display:flex;align-items:center;gap:var(--s-2);flex-wrap:wrap}
@@ -66,7 +111,6 @@ main.auth-main{flex:1;display:flex;flex-direction:column;align-items:center;just
 .auth-card h1{font-size:var(--fs-2xl);font-weight:700;margin-bottom:var(--s-2);color:var(--text)}
 .auth-card .lead{color:var(--text-2);font-size:var(--fs-sm)}
 
-/* Continue shopping link below card */
 .continue-link{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-sm);color:var(--text-2);font-weight:600;margin-top:var(--s-6);transition:color var(--t-fast)}
 .continue-link:hover{color:var(--primary-700)}
 
@@ -82,19 +126,16 @@ main.auth-main{flex:1;display:flex;flex-direction:column;align-items:center;just
 .field .field-err{font-size:11px;color:var(--accent-red);font-weight:600;margin-top:6px;display:none}
 .field.has-error .field-err{display:block}
 
-/* Password */
 .pw-wrap{position:relative}
 .pw-wrap input{padding-right:42px}
 .pw-toggle{position:absolute;top:50%;right:10px;transform:translateY(-50%);width:30px;height:30px;border-radius:var(--r-sm);color:var(--muted);display:inline-flex;align-items:center;justify-content:center;transition:color var(--t-fast)}
 .pw-toggle:hover{color:var(--primary-700);background:var(--bg-soft)}
 
-/* Phone group */
 .phone-group{display:flex;align-items:stretch;border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;background:#fff;transition:all var(--t-fast)}
 .phone-group:focus-within{border-color:var(--primary-700);box-shadow:0 0 0 2px rgba(59,74,42,.08)}
 .phone-group .prefix{padding:13px 14px;background:var(--bg-soft);color:var(--text-2);font-weight:700;font-size:var(--fs-sm);border-right:1px solid var(--border);display:inline-flex;align-items:center;flex-shrink:0}
 .phone-group input{border:0!important;box-shadow:none!important;border-radius:0!important;flex:1}
 
-/* Strength */
 .pw-strength{display:flex;gap:4px;margin-top:8px;height:4px}
 .pw-strength span{flex:1;background:var(--border);border-radius:var(--r-pill);transition:background var(--t-fast)}
 .pw-strength.weak span:nth-child(1){background:var(--accent-red)}
@@ -108,12 +149,10 @@ main.auth-main{flex:1;display:flex;flex-direction:column;align-items:center;just
 .match-msg.ok{color:var(--accent-success)}
 .match-msg.err{color:var(--accent-red)}
 
-/* Checkbox */
 .check-row{display:flex;align-items:flex-start;gap:8px;font-size:var(--fs-sm);color:var(--text-2);margin:var(--s-3) 0;cursor:pointer;line-height:1.5}
 .check-row input{width:16px;height:16px;accent-color:var(--primary-700);flex-shrink:0;margin-top:3px}
 .check-row a{color:var(--primary-700);font-weight:700;text-decoration:underline}
 
-/* Submit */
 .btn-submit{width:100%;padding:14px;border-radius:var(--r-sm);background:var(--primary-700);color:#fff;font-weight:700;font-size:var(--fs-sm);letter-spacing:.04em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);cursor:pointer;border:0;margin-top:var(--s-4);transition:all var(--t-fast)}
 .btn-submit:hover:not(:disabled){background:var(--primary-900)}
 .btn-submit:disabled{background:var(--muted-2);cursor:not-allowed;opacity:.7}
@@ -142,7 +181,6 @@ main.auth-main{flex:1;display:flex;flex-direction:column;align-items:center;just
 .kvkk-note{margin-top:var(--s-4);font-size:11px;color:var(--muted);text-align:center;line-height:1.5}
 .kvkk-note a{color:var(--primary-700);text-decoration:underline}
 
-/* Success state */
 .success-state{text-align:center;padding:var(--s-6) 0}
 .success-state .check-icon{width:72px;height:72px;border-radius:50%;background:#E8F0DC;color:var(--accent-success);display:inline-flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:var(--s-5)}
 .success-state h2{font-size:var(--fs-xl);font-weight:700;margin-bottom:var(--s-3)}
@@ -168,10 +206,9 @@ main.auth-main{flex:1;display:flex;flex-direction:column;align-items:center;just
   .footer-cols{grid-template-columns:1fr;gap:var(--s-6)}
   .field-row{grid-template-columns:1fr}
   .auth-card{padding:var(--s-6)}
-  .auth-header .ctx-link span{display:none}
 }
 
-/* Toast */
+/* TOAST */
 .toast-stack{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:10px;pointer-events:none}
 .toast{background:var(--primary-900);color:#fff;padding:12px 20px;border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);display:flex;align-items:center;gap:10px;min-width:260px;animation:toastIn .25s ease;pointer-events:auto}
 .toast i{color:var(--accent-gold);font-size:16px}
@@ -180,7 +217,65 @@ main.auth-main{flex:1;display:flex;flex-direction:column;align-items:center;just
 @keyframes toastOut{to{transform:translateY(20px);opacity:0}}
 """
 
-def head_block(title, ctx_label_prefix, ctx_label_link, ctx_target, breadcrumb_label):
+FULL_HEADER = '''
+<!-- TOP RIBBON 3-col -->
+<div class="topbar" id="topRibbon">
+  <div class="container">
+    <a class="tb-left" href="kurumsal-satis.html">Kurumsal Hediyeler · kurumlara özel fiyatlarla <i class="fa-solid fa-arrow-right" style="font-size:11px;margin-left:4px;"></i></a>
+    <span class="tb-mid">750 TL ÜZERİ <b>KARGO ÜCRETSİZ</b> · YENİ HASAT ÜRÜNLERİ STOKTA</span>
+    <span class="tb-right">
+      <button class="tb-close" aria-label="Kapat" onclick="document.getElementById('topRibbon').classList.add('hidden')"><i class="fa-solid fa-xmark"></i></button>
+    </span>
+  </div>
+</div>
+
+<!-- HEADER TOP -->
+<div class="header-top">
+  <div class="container">
+    <a href="kurumsal-satis.html" class="top-link">Kurumsal Satış</a>
+    <span class="top-link has-dd">Hakkımızda <i class="fa-solid fa-chevron-down"></i>
+      <span class="dd-menu">
+        <a href="hikayemiz.html">Hikayemiz</a>
+        <a href="uretim.html">Üretim</a>
+        <a href="#magazalar">Mağazalar</a>
+        <a href="iletisim.html">İletişim</a>
+      </span>
+    </span>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-row1">
+    <a href="index.html" class="brand-logo">Derik</a>
+    <nav class="nav">
+      <a href="magaza.html">Zeytinyağları</a>
+      <a href="#zeytinler">Zeytinler</a>
+      <a href="#sabunlar">Sabunlar</a>
+      <a href="#dogal">Doğal Ürünler</a>
+      <a href="#hediye">Hediye Setleri</a>
+    </nav>
+    <div class="header-actions">
+      <a href="magaza.html" class="icon-btn" aria-label="Ara"><i class="fa-solid fa-magnifying-glass"></i></a>
+      <span class="user-dd-wrap">
+        <a href="giris.html" class="icon-btn" aria-label="Hesabım"><i class="fa-regular fa-user"></i></a>
+        <span class="user-dd-menu">
+          <a href="uyelik-bilgilerim.html"><i class="fa-regular fa-id-card"></i> Üyelik Bilgilerim</a>
+          <a href="siparis-gecmisim.html"><i class="fa-solid fa-box"></i> Sipariş Geçmişim</a>
+          <a href="adreslerim.html"><i class="fa-solid fa-location-dot"></i> Adreslerim</a>
+          <a href="promosyonlarim.html"><i class="fa-solid fa-ticket"></i> Promosyonlarım</a>
+          <span class="divider"></span>
+          <a href="#"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</a>
+        </span>
+      </span>
+      <a href="#favoriler" class="icon-btn" aria-label="Favoriler"><i class="fa-regular fa-heart"></i></a>
+      <a href="#sepet" class="icon-btn cart-badge" aria-label="Sepetim"><i class="fa-solid fa-bag-shopping"></i><span class="cart-num">0</span></a>
+    </div>
+  </div>
+</header>
+'''
+
+def head_block(title, breadcrumb_label):
     return f'''<!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -191,13 +286,7 @@ def head_block(title, ctx_label_prefix, ctx_label_link, ctx_target, breadcrumb_l
 <style>{BASE_CSS}</style>
 </head>
 <body>
-
-<header class="auth-header">
-  <div class="container">
-    <a href="index.html" class="brand-logo">Derik</a>
-    <a href="{ctx_target}" class="ctx-link"><span>{ctx_label_prefix}</span><b>{ctx_label_link}</b></a>
-  </div>
-</header>
+{FULL_HEADER}
 
 <div class="container">
   <nav class="crumb">
@@ -270,6 +359,65 @@ FOOTER_HTML = '''
 <div class="toast-stack" id="toastStack" aria-live="polite"></div>
 '''
 
+# Auth-state JS for header dropdown — same pattern as _inject_auth_state.py
+AUTH_STATE_JS = '''
+<script>
+// === AUTH HEADER STATE (v3.8.1) ===
+(function(){
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  const userName = localStorage.getItem('userName') || 'Hesabım';
+  const userEmail = localStorage.getItem('userEmail') || '';
+  const initial = (userName.trim().charAt(0) || 'H').toUpperCase();
+  document.querySelectorAll('.user-dd-wrap').forEach(wrap => {
+    const link = wrap.querySelector('a.icon-btn');
+    const menu = wrap.querySelector('.user-dd-menu');
+    if (!isLoggedIn) {
+      if (link) link.setAttribute('href', 'giris.html');
+      if (menu) {
+        // Replace dropdown with login/register CTAs
+        menu.innerHTML = `
+          <a href="giris.html"><i class="fa-solid fa-arrow-right-to-bracket"></i> Giriş Yap</a>
+          <a href="kayit.html"><i class="fa-solid fa-user-plus"></i> Üye Ol</a>
+        `;
+      }
+    } else {
+      if (menu && !menu.querySelector('.dd-user-head')) {
+        const header = document.createElement('div');
+        header.className = 'dd-user-head';
+        header.innerHTML = `
+          <div class="dd-avatar">${initial}</div>
+          <div class="dd-info">
+            <b>${userName}</b>
+            ${userEmail ? `<span>${userEmail}</span>` : ''}
+          </div>`;
+        header.style.cssText = 'display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);margin-bottom:4px';
+        const ddCss = document.createElement('style');
+        ddCss.textContent = `
+          .dd-user-head .dd-avatar{width:36px;height:36px;border-radius:50%;background:#F4D7D9;color:#8B3A3A;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+          .dd-user-head .dd-info b{display:block;font-size:13px;font-weight:700;color:var(--text);line-height:1.3}
+          .dd-user-head .dd-info span{display:block;font-size:11px;color:var(--muted);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:160px}
+        `;
+        document.head.appendChild(ddCss);
+        menu.insertBefore(header, menu.firstChild);
+      }
+    }
+  });
+  // Çıkış Yap
+  document.querySelectorAll('a').forEach(a => {
+    if (a.getAttribute('href') === '#' && a.textContent.trim().toLowerCase().includes('çıkış')) {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userEmail');
+        location.href = 'giris.html';
+      });
+    }
+  });
+})();
+</script>
+'''
+
 JS_COMMON = '''
 <script>
 function showToast(msg, icon){
@@ -329,7 +477,6 @@ document.querySelectorAll('[data-pw-match]').forEach(inp => {
   source.addEventListener('input', check);
 });
 
-// Field error helper
 function setFieldError(inp, msg){
   const field = inp.closest('.field') || inp.parentElement;
   inp.classList.add('error');
@@ -358,8 +505,7 @@ function btnReset(btn){
 </script>
 '''
 
-# ============ PAGE 1: GIRIS ============
-GIRIS_HEAD = head_block('Giriş Yap', 'Hesabınız yok mu?', 'Üye Olun', 'kayit.html', 'Üye Girişi')
+# ============ PAGE BODIES ============
 GIRIS_BODY = '''<div class="auth-card">
   <div class="auth-head">
     <h1>Hoş geldiniz</h1>
@@ -418,7 +564,6 @@ document.getElementById('loginBtn').addEventListener('click', () => {
   setTimeout(() => {
     localStorage.setItem('isLoggedIn', 'true');
     localStorage.setItem('userEmail', email.value);
-    // Derive userName from email if not set
     if (!localStorage.getItem('userName')) {
       const local = email.value.split('@')[0];
       const name = local.charAt(0).toUpperCase() + local.slice(1);
@@ -431,8 +576,6 @@ document.getElementById('loginBtn').addEventListener('click', () => {
 </script>
 '''
 
-# ============ PAGE 2: KAYIT ============
-KAYIT_HEAD = head_block('Üye Ol', 'Zaten üye misiniz?', 'Giriş Yapın', 'giris.html', 'Üye Ol')
 KAYIT_BODY = '''<div class="auth-card wide">
   <div class="auth-head">
     <h1>Hesap Oluşturun</h1>
@@ -535,8 +678,6 @@ document.getElementById('registerBtn').addEventListener('click', () => {
 </script>
 '''
 
-# ============ PAGE 3: SIFREMI-UNUTTUM ============
-UNUTTUM_HEAD = head_block('Şifremi Unuttum', 'Hatırladınız mı?', 'Giriş Yap', 'giris.html', 'Şifremi Unuttum')
 UNUTTUM_BODY = '''<div class="auth-card" id="forgotCard">
   <div class="auth-head">
     <h1>Şifremi Unuttum</h1>
@@ -596,8 +737,6 @@ document.getElementById('resendBtn').addEventListener('click', () => location.re
 </script>
 '''
 
-# ============ PAGE 4: SIFRE-SIFIRLA ============
-SIFIRLA_HEAD = head_block('Yeni Şifre Belirle', 'Hesabınız var mı?', 'Giriş Yap', 'giris.html', 'Şifre Sıfırla')
 SIFIRLA_BODY = '''<div class="auth-card" id="resetCard">
   <div class="auth-head">
     <h1>Yeni Şifre Belirle</h1>
@@ -660,14 +799,15 @@ document.getElementById('resetBtn').addEventListener('click', () => {
 '''
 
 PAGES = [
-    ('giris.html', GIRIS_HEAD, GIRIS_BODY),
-    ('kayit.html', KAYIT_HEAD, KAYIT_BODY),
-    ('sifremi-unuttum.html', UNUTTUM_HEAD, UNUTTUM_BODY),
-    ('sifre-sifirla.html', SIFIRLA_HEAD, SIFIRLA_BODY),
+    ('giris.html', 'Giriş Yap', 'Üye Girişi', GIRIS_BODY),
+    ('kayit.html', 'Üye Ol', 'Üye Ol', KAYIT_BODY),
+    ('sifremi-unuttum.html', 'Şifremi Unuttum', 'Şifremi Unuttum', UNUTTUM_BODY),
+    ('sifre-sifirla.html', 'Yeni Şifre Belirle', 'Şifre Sıfırla', SIFIRLA_BODY),
 ]
 
-for fname, head, body in PAGES:
-    html = head + body + FOOTER_HTML + JS_COMMON + '\n</body>\n</html>\n'
+for fname, title, breadcrumb, body in PAGES:
+    head = head_block(title, breadcrumb)
+    html = head + body + FOOTER_HTML + AUTH_STATE_JS + JS_COMMON + '\n</body>\n</html>\n'
     (ROOT / fname).write_text(html)
     print(f'Wrote {fname}')
 
