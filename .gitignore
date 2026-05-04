@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Skill çalışma dosyaları (fetch edilen ham siteler)
+output/_fetch/
+*.tmp
+
+# Claude harness iç notları (deploy'a gitmesin)
+.claude/plans/
+.claude/todos/

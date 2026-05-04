@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- BRAND-SLOT: meta-title -->
+<title>BRAND — Anasayfa</title>
+
+<!-- ============================================
+     DERIK MARKA YERİ
+     Aşağıda BRAND-SLOT yorumları ile işaretli
+     tüm yerlerde "BRAND" kelimesi geçiyor.
+     Tek komutla değiştir:
+       sed -i '' 's/BRAND/Derik/g' kahvedunyasi-template.html
+     Logo: <span class="brand-logo">BRAND</span>
+       gerçek logo SVG/img için class korunsun.
+     ============================================ -->
+
+<style>
+:root {
+  /* Renk — primary teal (Kahve Dünyası'nın gerçek primary'si #005e5b) */
+  --primary-700: #005e5b;
+  --primary-800: #438c8a;
+  --primary-900: #004947;
+  --primary-100: #ebfffe;
+  --primary-200: #edf4f9;
+
+  /* Nötr */
+  --bg: #ffffff;
+  --bg-soft: #fafafa;
+  --bg-section: #f6f6f6;
+  --bg-card: #f4f4f4;
+  --text: #000000;
+  --text-2: #363636;
+  --muted: #888888;
+  --muted-2: #afafaf;
+  --border: #ececec;
+
+  /* Accent */
+  --accent-yellow: #fff46d;
+  --accent-yellow-soft: #fffac4;
+  --accent-red: #ff2d55;
+  --accent-gold: #f1c40f;
+
+  /* Type */
+  --font: "Inter", "Helvetica Neue", system-ui, Arial, sans-serif; /* gothamFont yerine yakın stack */
+  --fs-xs: 12px;
+  --fs-sm: 14px;
+  --fs-base: 16px;
+  --fs-md: 18px;
+  --fs-lg: 20px;
+  --fs-xl: 24px;
+  --fs-2xl: 32px;
+  --fs-3xl: 36px;
+  --fs-hero: 60px;
+
+  /* Spacing */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px;
+  --s-5: 20px; --s-6: 24px; --s-8: 32px; --s-10: 40px;
+  --s-12: 48px; --s-16: 64px;
+
+  /* Radius / shadow */
+  --r-sm: 8px;
+  --r-md: 10px;
+  --r-lg: 15px;
+  --r-xl: 20px;
+  --r-pill: 100px;
+  --shadow-1: 0 2px 8px rgba(0,0,0,.06);
+  --shadow-2: 0 4px 16px rgba(0,0,0,.08);
+  --shadow-header: 0 1px 4px rgba(0,0,0,.04);
+
+  --maxw: 1320px;
+  --t-fast: .2s ease;
+  --t-mid: .3s ease;
+}
+
+/* Typography polish */
+h1, h2, h3, h4 { letter-spacing: -0.015em; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; transition: color var(--t-fast); }
+a:hover { color: var(--primary-700); }
+button { font-family: inherit; cursor: pointer; border: 0; background: transparent; }
+img, svg { display: block; max-width: 100%; }
+ul { list-style: none; }
+.container { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--s-8); }
+@media (max-width: 768px) { .container { padding: 0 var(--s-6); } }
+@media (max-width: 480px) { .container { padding: 0 var(--s-4); } }
+
+/* ===== TOP BAR ===== */
+.topbar {
+  background: var(--accent-yellow);
+  color: var(--text);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  text-align: center;
+  padding: var(--s-2) var(--s-4);
+  letter-spacing: .03em;
+}
+
+/* ===== SUBTOP BAR ===== */
+.subtop {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+.subtop .container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--s-6);
+  height: 36px;
+}
+.subtop a:hover { color: var(--primary-700); }
+.subtop .lang { display: inline-flex; gap: 6px; }
+.subtop .lang button { font-size: var(--fs-xs); color: var(--muted); padding: 4px 6px; }
+.subtop .lang button.active { color: var(--text); font-weight: 600; }
+
+/* ===== HEADER ===== */
+.header {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--bg);
+  box-shadow: var(--shadow-header);
+}
+.header .container {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 80px; gap: var(--s-6);
+}
+.brand-logo {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--primary-700);
+}
+.nav {
+  display: flex; gap: var(--s-8); flex: 1; justify-content: center;
+}
+.nav a {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 8px 0;
+  position: relative;
+}
+.nav a::after {
+  content: ""; position: absolute; left: 0; bottom: 0;
+  height: 2px; width: 0; background: var(--primary-700);
+  transition: width var(--t-fast);
+}
+.nav a:hover::after { width: 100%; }
+.header-actions { display: flex; align-items: center; gap: var(--s-4); }
+.icon-btn {
+  width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  transition: background var(--t-fast);
+}
+.icon-btn:hover { background: var(--primary-100); color: var(--primary-700); }
+.search {
+  display: flex; align-items: center; gap: var(--s-2);
+  background: var(--bg-section);
+  border-radius: var(--r-pill);
+  padding: 8px 14px;
+  width: 220px;
+}
+.search input { border: 0; background: transparent; outline: 0; flex: 1; font-size: var(--fs-sm); }
+.cart-badge {
+  position: relative;
+}
+.cart-badge::after {
+  content: "2"; position: absolute; top: 2px; right: 2px;
+  background: var(--primary-700); color: #fff;
+  font-size: 10px; font-weight: 700;
+  width: 16px; height: 16px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ===== HERO ===== */
+.hero { padding: var(--s-8) 0 0; }
+.hero-slider {
+  position: relative;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  min-height: 70vh;
+  height: 640px;
+  background:
+    radial-gradient(ellipse at 90% 100%, rgba(0,94,91,.18) 0%, transparent 55%),
+    linear-gradient(120deg, #f5efe6 0%, #ecdfca 65%, #d9c2a0 100%);
+  color: #2d1810;
+}
+.hero-slide {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  height: 100%;
+  gap: var(--s-10);
+  padding: var(--s-12);
+}
+.hero-slide.dark { color: #fff; }
+.hero-text { max-width: 540px; }
+.hero-visual {
+  align-self: stretch;
+  border-radius: var(--r-lg);
+  background-color: #ffffff66;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(0,94,91,.08) 0 14px, rgba(0,94,91,0) 14px 28px);
+  border: 1px solid rgba(0,0,0,.06);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(45,24,16,.45);
+  font-size: var(--fs-xs); letter-spacing: .15em; text-transform: uppercase;
+  font-weight: 600;
+  min-height: 380px;
+}
+.hero-slide .eyebrow {
+  display: inline-block;
+  background: var(--primary-700);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  margin-bottom: var(--s-5);
+}
+.hero-text h1 {
+  font-size: var(--fs-hero);
+  font-weight: 800;
+  line-height: 1.05;
+  margin-bottom: var(--s-5);
+  letter-spacing: -0.025em;
+}
+.hero-text p { font-size: var(--fs-md); margin-bottom: var(--s-8); opacity: .85; max-width: 460px; }
+.btn {
+  display: inline-block;
+  padding: 14px 28px;
+  border-radius: var(--r-pill);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  transition: transform var(--t-fast), background var(--t-fast), color var(--t-fast);
+}
+.btn-primary { background: var(--primary-700); color: #fff; }
+.btn-primary:hover { background: var(--primary-900); color: #fff; transform: translateY(-2px); }
+.btn-outline { background: transparent; color: var(--primary-700); border: 2px solid var(--primary-700); }
+.btn-outline:hover { background: var(--primary-700); color: #fff; }
+.btn-ghost { color: var(--primary-700); padding: 0; border-radius: 0; }
+.btn-ghost:hover { color: var(--primary-900); text-decoration: underline; }
+.hero-dots {
+  position: absolute; bottom: var(--s-6); left: 50%; transform: translateX(-50%);
+  display: flex; gap: var(--s-2);
+}
+.hero-dots span {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: rgba(0,0,0,.2); cursor: pointer;
+  transition: all var(--t-fast);
+}
+.hero-dots span.active { background: var(--primary-700); width: 28px; border-radius: var(--r-pill); }
+
+/* ===== SECTION ===== */
+.section { padding: 96px 0; }
+@media (max-width: 768px) { .section { padding: 56px 0; } }
+.section-head {
+  display: flex; justify-content: space-between; align-items: end;
+  margin-bottom: var(--s-10);
+}
+.section-head h2 {
+  font-size: var(--fs-3xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  position: relative;
+  padding-bottom: var(--s-3);
+}
+.section-head h2::after {
+  content: ""; position: absolute; left: 0; bottom: 0;
+  width: 40px; height: 3px;
+  background: var(--primary-700);
+  border-radius: var(--r-pill);
+}
+.section-head .more {
+  font-size: var(--fs-sm); font-weight: 600; color: var(--primary-700);
+}
+.section-head .more::after { content: " →"; transition: margin var(--t-fast); display: inline-block; }
+.section-head .more:hover::after { margin-left: 6px; }
+
+/* ===== KATEGORI GRID ===== */
+.cat-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--s-5); }
+.cat {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--bg-card);
+  height: 240px;
+  position: relative;
+  cursor: pointer;
+  transition: transform var(--t-mid), box-shadow var(--t-mid);
+  display: block;
+}
+.cat:hover { transform: translateY(-6px); box-shadow: var(--shadow-2); }
+.cat .ph {
+  width: 100%; height: 100%;
+  transition: transform var(--t-mid), filter var(--t-mid);
+  filter: brightness(.96);
+}
+.cat:hover .ph { transform: scale(1.06); filter: brightness(1.04); }
+.cat::before {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,.18) 100%);
+  pointer-events: none;
+  transition: opacity var(--t-mid);
+}
+.cat:hover::before { opacity: .5; }
+.cat .label {
+  position: absolute; left: 50%; bottom: var(--s-4);
+  transform: translateX(-50%);
+  background: rgba(255,255,255,.95);
+  color: var(--primary-900);
+  padding: 8px 18px;
+  border-radius: var(--r-pill);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0,0,0,.08);
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.cat:hover .label { background: var(--primary-700); color: #fff; }
+
+/* ===== HABERLER (2 BÜYÜK BANNER) ===== */
+.banner-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-6); }
+.banner {
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 16/9;
+  cursor: pointer;
+  transition: transform var(--t-mid), box-shadow var(--t-mid);
+  background: linear-gradient(135deg, var(--primary-700), var(--primary-900));
+}
+.banner:hover { transform: translateY(-4px); box-shadow: var(--shadow-2); }
+.banner .ph-banner {
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(ellipse at 80% 30%, rgba(255,255,255,.10) 0%, transparent 55%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.04) 0 16px, transparent 16px 32px);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,.55);
+  border: 1px dashed rgba(255,255,255,.18);
+  border-radius: var(--r-xl);
+  font-size: var(--fs-xs); letter-spacing: .15em; text-transform: uppercase; font-weight: 600;
+  transition: transform var(--t-mid);
+}
+.banner:hover .ph-banner { transform: scale(1.03); }
+.banner-text {
+  position: absolute; left: var(--s-10); bottom: var(--s-10); right: var(--s-10);
+  color: #fff;
+  z-index: 2;
+}
+.banner-text small {
+  display: inline-block;
+  background: rgba(255,255,255,.18);
+  padding: 4px 10px; border-radius: var(--r-pill);
+  font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .1em; font-weight: 600;
+  margin-bottom: var(--s-3);
+}
+.banner-text h3 { font-size: var(--fs-xl); font-weight: 700; margin-top: var(--s-2); line-height: 1.2; }
+.banner-text .banner-cta {
+  display: inline-block; margin-top: var(--s-4);
+  font-size: var(--fs-sm); font-weight: 700;
+  padding: 8px 18px; border-radius: var(--r-pill);
+  background: #fff; color: var(--primary-900);
+  transition: transform var(--t-fast);
+}
+.banner:hover .banner-cta { transform: translateX(4px); }
+
+/* ===== ÜRÜN CARD ===== */
+.product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-5); }
+.product {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  transition: box-shadow var(--t-mid), transform var(--t-mid);
+}
+.product:hover { box-shadow: var(--shadow-2); transform: translateY(-4px); }
+.product .img-wrap {
+  aspect-ratio: 1/1;
+  background: #FAF9F5;
+  overflow: hidden;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+}
+.product .ph { width: 100%; height: 100%; transition: transform var(--t-mid); }
+.product:hover .ph { transform: scale(1.03); }
+.badge {
+  position: absolute; top: var(--s-3); left: var(--s-3);
+  background: var(--primary-900); color: #FAF6EE;
+  font-size: 10px; font-weight: 700; padding: 5px 10px;
+  border-radius: var(--r-pill);
+  text-transform: uppercase; letter-spacing: .08em;
+  z-index: 1;
+}
+.product-body { padding: var(--s-4); display: flex; flex-direction: column; gap: var(--s-3); flex: 1; }
+.product-title { font-size: var(--fs-sm); font-weight: 600; min-height: 42px; line-height: 1.4; }
+.rating { display: flex; align-items: center; gap: 6px; font-size: var(--fs-xs); color: var(--muted); }
+.rating .stars { color: var(--accent-gold); letter-spacing: 1px; font-size: 12px; }
+.product-meta { display: flex; align-items: center; justify-content: space-between; }
+.price { font-size: var(--fs-md); font-weight: 800; color: var(--primary-900); }
+.price s { color: var(--muted); font-weight: 400; font-size: var(--fs-xs); margin-left: 6px; }
+.add-cart {
+  background: var(--primary-700); color: #fff;
+  padding: 12px 16px; border-radius: var(--r-pill);
+  font-size: var(--fs-xs); font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  width: 100%;
+  transition: background var(--t-fast), transform var(--t-fast);
+}
+.add-cart:hover { background: var(--primary-900); transform: translateY(-1px); }
+
+/* ===== HEDİYELİK KUTULAR (BANNER + 3 PRODUCT) ===== */
+.gift-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: var(--s-5); }
+.gift-feature {
+  border-radius: var(--r-xl); overflow: hidden;
+  background: linear-gradient(135deg, var(--primary-700), var(--primary-900));
+  color: #fff;
+  padding: var(--s-10); display: flex; flex-direction: column; justify-content: end;
+  position: relative;
+  min-height: 360px;
+}
+.gift-feature h3 { font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--s-3); }
+.gift-feature p { opacity: .85; margin-bottom: var(--s-6); }
+
+/* ===== BLOG ===== */
+.blog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-6); }
+.blog-card { display: flex; flex-direction: column; gap: var(--s-4); cursor: pointer; }
+.blog-card .img-wrap {
+  aspect-ratio: 16/10; border-radius: var(--r-lg); overflow: hidden; background: var(--bg-card);
+}
+.blog-card .ph { width: 100%; height: 100%; transition: transform var(--t-mid); }
+.blog-card:hover .ph { transform: scale(1.05); }
+.blog-card .tag {
+  display: inline-block;
+  background: var(--primary-100); color: var(--primary-700);
+  font-size: var(--fs-xs); font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: var(--r-pill);
+  align-self: flex-start;
+}
+.blog-card h3 { font-size: var(--fs-lg); font-weight: 700; }
+.blog-card .date { font-size: var(--fs-xs); color: var(--muted); }
+
+/* ===== INSTAGRAM ===== */
+.ig-grid { display: grid; grid-template-columns: repeat(9, 1fr); gap: var(--s-2); }
+.ig {
+  aspect-ratio: 1/1; background: var(--bg-card);
+  border-radius: var(--r-sm); overflow: hidden;
+  cursor: pointer; transition: transform var(--t-fast);
+}
+.ig:hover { transform: scale(1.04); }
+
+/* ===== APP DOWNLOAD ===== */
+.app-download {
+  background: var(--primary-200);
+  border-radius: var(--r-xl);
+  padding: var(--s-12);
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: center; gap: var(--s-10);
+}
+.app-download h2 { font-size: var(--fs-2xl); font-weight: 800; margin-bottom: var(--s-4); }
+.app-download p { color: var(--text-2); margin-bottom: var(--s-6); }
+.store-badges { display: flex; gap: var(--s-3); flex-wrap: wrap; }
+.store-badge {
+  background: var(--text); color: #fff;
+  padding: 12px 18px; border-radius: var(--r-md);
+  font-size: var(--fs-xs); font-weight: 700; letter-spacing: .04em;
+}
+.app-mock {
+  aspect-ratio: 1/1;
+  border-radius: var(--r-xl);
+  background: linear-gradient(135deg, var(--primary-700), var(--primary-900));
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: var(--fs-md); font-weight: 600; opacity: .8;
+}
+
+/* ===== FOOTER ===== */
+.footer { background: var(--bg-section); padding: var(--s-12) 0 var(--s-6); margin-top: var(--s-16); }
+.footer-cols { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: var(--s-8); padding-bottom: var(--s-10); border-bottom: 1px solid var(--border); }
+.footer h4 { font-size: var(--fs-sm); font-weight: 800; letter-spacing: .05em; text-transform: uppercase; margin-bottom: var(--s-4); }
+.footer ul li { padding: 6px 0; }
+.footer ul li a { color: var(--text-2); font-size: var(--fs-sm); }
+.footer-brand p { color: var(--muted); font-size: var(--fs-sm); margin-top: var(--s-3); max-width: 300px; }
+.footer-bottom {
+  padding-top: var(--s-5);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: var(--fs-xs); color: var(--muted); flex-wrap: wrap; gap: var(--s-4);
+}
+.socials { display: flex; gap: var(--s-3); }
+.socials a {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--bg); display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: var(--text-2);
+  transition: all var(--t-fast);
+}
+.socials a:hover { background: var(--primary-700); color: #fff; }
+.policies { display: flex; gap: var(--s-4); }
+
+/* ===== PLACEHOLDER PATTERN (no real images) ===== */
+.ph {
+  background-image:
+    linear-gradient(135deg, rgba(0,0,0,.04) 0%, rgba(0,0,0,0) 60%),
+    repeating-linear-gradient(45deg, rgba(0,94,91,.05) 0 12px, rgba(0,94,91,.0) 12px 24px);
+  background-color: var(--bg-card);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted-2); font-size: var(--fs-xs); letter-spacing: .1em; text-transform: uppercase;
+}
+.ph.dark { background-color: var(--primary-900); color: rgba(255,255,255,.5); }
+
+/* ===== SCROLL REVEAL ===== */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease-out, transform .6s ease-out; }
+.reveal.in { opacity: 1; transform: none; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .cat-grid { grid-template-columns: repeat(4, 1fr); }
+  .product-grid { grid-template-columns: repeat(3, 1fr); }
+  .gift-grid { grid-template-columns: 1fr 1fr; }
+  .ig-grid { grid-template-columns: repeat(6, 1fr); }
+  .nav { display: none; }
+  :root { --fs-hero: 44px; }
+}
+@media (max-width: 640px) {
+  .container { padding: 0 var(--s-4); }
+  .header .container { height: 64px; }
+  .search { display: none; }
+  .hero-slider { height: 360px; }
+  .hero-slide { padding: 0 var(--s-6); }
+  :root { --fs-hero: 32px; --fs-2xl: 24px; }
+  .cat-grid { grid-template-columns: repeat(2, 1fr); }
+  .product-grid { grid-template-columns: repeat(2, 1fr); }
+  .banner-grid, .blog-grid, .app-download, .footer-cols { grid-template-columns: 1fr; }
+  .gift-grid { grid-template-columns: 1fr; }
+  .ig-grid { grid-template-columns: repeat(3, 1fr); }
+  .section { padding: var(--s-10) 0; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">1250 TL VE ÜZERİ SİPARİŞLERİNİZDE KARGO BEDAVA!</div>
+
+<!-- SUBTOP -->
+<div class="subtop">
+  <div class="container">
+    <span class="lang">
+      <button class="active">Türkçe</button>
+      <button>English</button>
+    </span>
+    <a href="#">0 (850) 393 7070</a>
+    <a href="#">Mağazalar</a>
+    <a href="#">Blog</a>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container">
+    <!-- BRAND-SLOT: header-logo -->
+    <a href="#" class="brand-logo">BRAND</a>
+    <nav class="nav">
+      <a href="#">Hediye Gönder</a>
+      <a href="#">Kahve</a>
+      <a href="#">Çikolata</a>
+      <a href="#">Aksesuar</a>
+      <a href="#">Pastacılık</a>
+      <a href="#">Reform</a>
+    </nav>
+    <div class="header-actions">
+      <div class="search">
+        <span>🔍</span>
+        <input placeholder="Ürün ara..." />
+      </div>
+      <button class="icon-btn" aria-label="Hesabım">👤</button>
+      <button class="icon-btn cart-badge" aria-label="Sepetim">🛒</button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-slider">
+      <div class="hero-slide">
+        <div class="hero-text">
+          <span class="eyebrow">Yeni Sezon</span>
+          <!-- BRAND-SLOT: hero-title -->
+          <h1>BRAND ile Hepimizin Ortak Noktası</h1>
+          <!-- BRAND-SLOT: tagline -->
+          <p>BRAND tagline buraya — özenle seçilmiş çekirdekler, el yapımı çikolatalar.</p>
+          <a href="#" class="btn btn-primary">Keşfet</a>
+        </div>
+        <div class="hero-visual">Banner Görseli</div>
+      </div>
+      <div class="hero-dots">
+        <span class="active"></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KATEGORİLER -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Kategoriler</h2>
+      <a href="#" class="more">Tümünü Gör</a>
+    </div>
+    <div class="cat-grid">
+      <a class="cat reveal"><div class="ph">Kahve</div><span class="label">Kahve</span></a>
+      <a class="cat reveal"><div class="ph">Çikolata</div><span class="label">Çikolata</span></a>
+      <a class="cat reveal"><div class="ph">Hediyelik</div><span class="label">Hediyelik</span></a>
+      <a class="cat reveal"><div class="ph">Aksesuar</div><span class="label">Aksesuar</span></a>
+      <a class="cat reveal"><div class="ph">Pastacılık</div><span class="label">Pastacılık</span></a>
+      <a class="cat reveal"><div class="ph">Reform</div><span class="label">Reform</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- HABERLER VE FIRSATLAR -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="section-head">
+      <h2>Haberler ve Fırsatlar</h2>
+      <a href="#" class="more">Tümünü Gör</a>
+    </div>
+    <div class="banner-grid">
+      <a class="banner reveal">
+        <div class="ph-banner">Banner Görseli</div>
+        <div class="banner-text">
+          <small>Yeni Koleksiyon</small>
+          <h3>Sonbahar Kahveleri · %15 İndirim</h3>
+          <span class="banner-cta">Keşfet →</span>
+        </div>
+      </a>
+      <a class="banner reveal">
+        <div class="ph-banner">Banner Görseli</div>
+        <div class="banner-text">
+          <small>Kampanya</small>
+          <h3>Hediye Setleri için Teklif Al</h3>
+          <span class="banner-cta">Detaylar →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- YENİ ÇIKANLAR -->
+<section class="section" style="background:var(--bg-soft);">
+  <div class="container">
+    <div class="section-head">
+      <h2>Yeni Çıkanlar</h2>
+      <a href="#" class="more">Tümünü Gör</a>
+    </div>
+    <div class="product-grid">
+      <article class="product reveal">
+        <div class="img-wrap">
+          <span class="badge">Yeni</span>
+          <div class="ph">Ürün</div>
+        </div>
+        <div class="product-body">
+          <div class="product-title">Filtre Kahve — Etiyopya Yirgacheffe 250g</div>
+          <div class="rating"><span class="stars">★★★★☆</span><span>(48)</span></div>
+          <div class="product-meta">
+            <span class="price">189,90 TL</span>
+          </div>
+          <button class="add-cart">Sepete Ekle</button>
+        </div>
+      </article>
+      <article class="product reveal">
+        <div class="img-wrap"><div class="ph">Ürün</div></div>
+        <div class="product-body">
+          <div class="product-title">El Yapımı Çikolata Karışımı 18'li</div>
+          <div class="rating"><span class="stars">★★★★★</span><span>(126)</span></div>
+          <div class="product-meta">
+            <span class="price">249,00 TL</span>
+          </div>
+          <button class="add-cart">Sepete Ekle</button>
+        </div>
+      </article>
+      <article class="product reveal">
+        <div class="img-wrap">
+          <span class="badge">İndirim</span>
+          <div class="ph">Ürün</div>
+        </div>
+        <div class="product-body">
+          <div class="product-title">Türk Kahvesi Geleneksel — 500g</div>
+          <div class="rating"><span class="stars">★★★★★</span><span>(82)</span></div>
+          <div class="product-meta">
+            <span class="price">129,90 TL <s>159,00 TL</s></span>
+          </div>
+          <button class="add-cart">Sepete Ekle</button>
+        </div>
+      </article>
+      <article class="product reveal">
+        <div class="img-wrap"><div class="ph">Ürün</div></div>
+        <div class="product-body">
+          <div class="product-title">Espresso Çekirdekleri Premium 1kg</div>
+          <div class="rating"><span class="stars">★★★★★</span><span>(214)</span></div>
+          <div class="product-meta">
+            <span class="price">399,00 TL</span>
+          </div>
+          <button class="add-cart">Sepete Ekle</button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ÇOK SATANLAR -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Çok Satanlar</h2>
+      <a href="#" class="more">Tümünü Gör</a>
+    </div>
+    <div class="product-grid">
+      <article class="product reveal">
+        <div class="img-wrap"><span class="badge">Çok Satan</span>
+          <div class="ph">Ürün</div></div>
+        <div class="product-body">
+          <div class="product-title">Hediye Kutusu — Klasik Seçki</div>
+          <div class="rating"><span class="stars">★★★★★</span><span>(312)</span></div>
+          <div class="product-meta"><span class="price">94,90 TL</span></div>
+          <button class="add-cart">Sepete Ekle</button>
+        </div>
+      </article>
+      <article class="product reveal">
+        <div class="img-wrap"><div class="ph">Ürün</div></div>
+        <div class="product-body">
+          <div class="product-title">French Press 600ml — Cam</div>
+          <div class="rating"><span class="stars">★★★★☆</span><span>(54)</span></div>
+          <div class="product-meta"><span class="price">219,00 TL</span></div>
+          <button class="add-cart">Sepete Ekle</button>
+        </div>
+      </article>
+      <article class="product reveal">
+        <div class="img-wrap"><div class="ph">Ürün</div></div>
+        <div class="product-body">
+          <div class="product-title">Bademli Antep Fıstıklı Çikolata</div>
+          <div class="rating"><span class="stars">★★★★★</span><span>(98)</span></div>
+          <div class="product-meta"><span class="price">79,90 TL</span></div>
+          <button class="add-cart">Sepete Ekle</button>
+        </div>
+      </article>
+      <article class="product reveal">
+        <div class="img-wrap"><div class="ph">Ürün</div></div>
+        <div class="product-body">
+          <div class="product-title">Manuel Kahve Değirmeni — Pirinç</div>
+          <div class="rating"><span class="stars">★★★★★</span><span>(167)</span></div>
+          <div class="product-meta"><span class="price">549,00 TL</span></div>
+          <button class="add-cart">Sepete Ekle</button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- HEDİYELİK KUTULAR -->
+<section class="section" style="background:var(--bg-soft);">
+  <div class="container">
+    <div class="section-head">
+      <h2>Hediyelik Kutular</h2>
+      <a href="#" class="more">Tümünü Gör</a>
+    </div>
+    <div class="gift-grid">
+      <div class="gift-feature reveal">
+        <h3>Sevdiklerinize Özel</h3>
+        <p>El yapımı kutularda sürpriz seçkiler — kişiye özel notla birlikte.</p>
+        <a href="#" class="btn btn-primary" style="align-self:flex-start;">Hediye Seç</a>
+      </div>
+      <article class="product reveal">
+        <div class="img-wrap"><div class="ph">Ürün</div></div>
+        <div class="product-body">
+          <div class="product-title">Mini Hediye Kutusu</div>
+          <div class="rating"><span class="stars">★★★★☆</span><span>(44)</span></div>
+          <div class="product-meta"><span class="price">94,90 TL</span></div>
+          <button class="add-cart">Sepete Ekle</button>
+        </div>
+      </article>
+      <article class="product reveal">
+        <div class="img-wrap"><div class="ph">Ürün</div></div>
+        <div class="product-body">
+          <div class="product-title">Lezzet Sandığı</div>
+          <div class="rating"><span class="stars">★★★★★</span><span>(91)</span></div>
+          <div class="product-meta"><span class="price">189,00 TL</span></div>
+          <button class="add-cart">Sepete Ekle</button>
+        </div>
+      </article>
+      <article class="product reveal">
+        <div class="img-wrap"><div class="ph">Ürün</div></div>
+        <div class="product-body">
+          <div class="product-title">Yıldönümü Seti</div>
+          <div class="rating"><span class="stars">★★★★☆</span><span>(28)</span></div>
+          <div class="product-meta"><span class="price">329,00 TL</span></div>
+          <button class="add-cart">Sepete Ekle</button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Blog</h2>
+      <a href="#" class="more">Tümünü Gör</a>
+    </div>
+    <div class="blog-grid">
+      <article class="blog-card reveal">
+        <div class="img-wrap"><div class="ph">Blog görseli</div></div>
+        <span class="tag">Kahve Kültürü</span>
+        <h3>Türk Kahvesi Pişirmenin İncelikleri</h3>
+        <span class="date">12 Mart 2026 · 4 dk okuma</span>
+      </article>
+      <article class="blog-card reveal">
+        <div class="img-wrap"><div class="ph">Blog görseli</div></div>
+        <span class="tag">Atölye</span>
+        <h3>Çikolata Tadımı Nasıl Yapılır?</h3>
+        <span class="date">28 Şubat 2026 · 6 dk okuma</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- INSTAGRAM -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="section-head">
+      <!-- BRAND-SLOT: instagram-handle -->
+      <h2>Bizi Takip Edin · @BRAND</h2>
+      <a href="#" class="more">Instagram</a>
+    </div>
+    <div class="ig-grid">
+      <a class="ig"><div class="ph"></div></a>
+      <a class="ig"><div class="ph"></div></a>
+      <a class="ig"><div class="ph"></div></a>
+      <a class="ig"><div class="ph"></div></a>
+      <a class="ig"><div class="ph"></div></a>
+      <a class="ig"><div class="ph"></div></a>
+      <a class="ig"><div class="ph"></div></a>
+      <a class="ig"><div class="ph"></div></a>
+      <a class="ig"><div class="ph"></div></a>
+    </div>
+  </div>
+</section>
+
+<!-- APP DOWNLOAD -->
+<section class="section">
+  <div class="container">
+    <div class="app-download reveal">
+      <div>
+        <!-- BRAND-SLOT: app-promo -->
+        <h2>BRAND Uygulamasını Hemen İndir</h2>
+        <p>Özel kampanyalar, hızlı sipariş ve mağaza bulucu cebinizde.</p>
+        <div class="store-badges">
+          <a class="store-badge">▶ Google Play</a>
+          <a class="store-badge">  App Store</a>
+          <a class="store-badge">  AppGallery</a>
+        </div>
+      </div>
+      <div class="app-mock">Uygulama mockup</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-cols">
+      <div class="footer-brand">
+        <!-- BRAND-SLOT: footer-logo -->
+        <span class="brand-logo">BRAND</span>
+        <!-- BRAND-SLOT: footer-tagline -->
+        <p>BRAND — özenle hazırlanmış lezzetler, paylaşmak için.</p>
+        <div class="socials" style="margin-top:var(--s-4);">
+          <a href="#">IG</a><a href="#">FB</a><a href="#">X</a><a href="#">YT</a>
+        </div>
+      </div>
+      <div>
+        <h4>Kategoriler</h4>
+        <ul>
+          <li><a href="#">Kahve</a></li>
+          <li><a href="#">Çikolata</a></li>
+          <li><a href="#">Aksesuar</a></li>
+          <li><a href="#">Pastacılık</a></li>
+          <li><a href="#">Reform</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Kurumsal</h4>
+        <ul>
+          <!-- BRAND-SLOT: footer-about -->
+          <li><a href="#">BRAND Hakkında</a></li>
+          <li><a href="#">Mağazalar</a></li>
+          <li><a href="#">Kariyer</a></li>
+          <li><a href="#">Bayilik</a></li>
+          <li><a href="#">Basın</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Yardım</h4>
+        <ul>
+          <li><a href="#">Sıkça Sorulan Sorular</a></li>
+          <li><a href="#">Sipariş Takibi</a></li>
+          <li><a href="#">İade ve Değişim</a></li>
+          <li><a href="#">İletişim</a></li>
+          <!-- BRAND-SLOT: email-domain -->
+          <li><a href="#">info@BRAND.com.tr</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <!-- BRAND-SLOT: footer-copyright -->
+      <span>©2026 BRAND. Tüm hakları saklıdır.</span>
+      <div class="policies">
+        <a href="#">Çerez Politikası</a>
+        <a href="#">Gizlilik Politikası</a>
+        <a href="#">Üyelik Sözleşmesi</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// Hero auto-rotate dots (visual only)
+const dots = document.querySelectorAll('.hero-dots span');
+let idx = 0;
+setInterval(() => {
+  dots.forEach(d => d.classList.remove('active'));
+  idx = (idx + 1) % dots.length;
+  dots[idx].classList.add('active');
+}, 4500);
+</script>
+</body>
+</html>
