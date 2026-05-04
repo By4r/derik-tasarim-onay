@@ -1,5 +1,40 @@
 # Web Replicator — Öğrenilen Pattern'ler
 
+## L02 — Component port: CSS property diff TEK BAŞINA yetersiz, visual diff zorunlu
+**Kaynak:** Derik v3.11.5 → v3.11.7 patron geri bildirimi (modal sync, "FATURA TÜRÜ" centered+highlighted bug).
+
+### Kural
+Bir komponenti (modal, kart, form, hero, header) sayfa A'dan sayfa B'ye **birebir aynı** yapma görevlerinde, **CSS property-by-property diff TEK BAŞINA yetersizdir**. Mutlaka **visual/screenshot diff** de yapılmalı.
+
+### Neden
+Property diff iki sayfadaki **scoped selector**'ları karşılaştırır (örn. `.modal-backdrop .section-divider`). Ama render farkı şu kaynaklardan da gelebilir ve property diff bunları **kaçırır**:
+
+1. **Base rule sızması** — A sayfasında `.section-divider{display:flex;justify-content:center;height:64px}` non-modal contextte tanımlı; modal-scoped override sadece font/color ekliyor → layout property'leri (flex, center, height, background) modal'a sızıyor. B sayfasında o base rule HİÇ yok, dolayısıyla diff "her iki tarafta da modal-scoped rule aynı" diyerek temiz raporluyor.
+2. **`:target` / URL hash anchor states** — element ID'si URL hash'iyle eşleşince `:target` highlight tetiklenir; diff bunu pasif görmez.
+3. **`:hover`, `:focus-within`, `:checked` pseudo-classes** — statik diff'te görünmez, etkileşimde fark yapar.
+4. **`::before` / `::after` pseudo-elements** — global CSS reset/normalize'dan miras gelebilir, scoped diff atlar.
+5. **Inherited properties** — body veya container'dan miras gelen `text-align`, `direction`, `font-family`.
+6. **Cascade specificity sırası** — aynı property birden fazla rule'da, hangi sırada yüklendiğine bağlı olarak winner farklı olabilir.
+
+### Implementation (port checklist)
+1. **CSS property diff** (klasik) — scoped selector property'lerini karşılaştır.
+2. **Base rule audit** — port edilen sayfada port edilmemiş element class'larının (örn. `.section-divider`) **base** kuralı var mı? Modal-scoped override bu base'i layout düzeyinde reset ediyor mu (`display`, `height`, `background`, `position`, `text-align`)?
+3. **Visual diff** — Playwright `browser_take_screenshot` ile iki sayfa modal'ı yan-yana, veya browser DevTools'la elementi inspect edip **computed style** karşılaştırması (sadece declared değil).
+4. **Pseudo-class/element scan** — `:target`, `:hover`, `:focus`, `:checked`, `::before`, `::after` rule'ları her iki sayfada eşleşiyor mu?
+5. **Cascade test** — aynı sınıfı taşıyan başka element var mı, hangi rule önce yüklendi?
+
+### Yanlış pattern (kaçınılacak)
+- Sadece "modal CSS bloğunu" karşılaştırıp tamam demek — class adlarının paylaşıldığı global rule'lar atlanır.
+- "Class isimleri aynı, property'ler aynı, demek ki aynı görünüyor" varsayımı — base rule sızması bu varsayımı bozar.
+- Modal-scoped override yazarken sadece visual property eklemek (font, color, border) — layout property'leri (`display`, `position`, `height`, `text-align`, `background`) **explicit reset** edilmezse base rule sızar.
+
+### Test kriteri
+1. Port edilen modal'ı her iki sayfada açıp screenshot al → pixel-level karşılaştır.
+2. Modal içindeki TÜM elementleri DevTools'da inspect, "Computed" tab'de değerleri karşılaştır (declared değil, computed).
+3. Modal içindeki her class için iki sayfada da `document.querySelectorAll('.classname').forEach(el => console.log(getComputedStyle(el)))` çalıştırıp diff al.
+
+---
+
 ## L01 — Banka kartı şema logoları (Visa / Mastercard / Troy / Amex)
 **Kaynak:** Derik v3.11.4 → v3.11.6 patron geri bildirimleri (iki iter).
 
