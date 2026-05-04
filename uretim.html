@@ -772,7 +772,7 @@ body.mobile-panel-open{overflow:hidden}
 </header>
 
 <div class="container">
-  <nav class="crumb">
+  <nav class="crumb" style="justify-content:center">
     <a href="index.html">Anasayfa</a>
     <i class="fa-solid fa-chevron-right sep"></i>
     <a href="hakkimizda.html">Hakkımızda</a>
@@ -783,7 +783,7 @@ body.mobile-panel-open{overflow:hidden}
 
 <!-- HERO -->
 <section class="uretim-hero">
-  <div class="container wrap">
+  <div class="container wrap" style="text-align:center">
     <span class="eyebrow">Üretim</span>
     <h1>Derik'te Üretim — Halhalı'dan Sofranıza</h1>
     <p>Mardin Derik'in bereketli topraklarında yetişen Halhalı zeytinleri, kuşaktan kuşağa aktarılan ustalık ve modern hijyen standartlarıyla buluşarak sofralarınıza özgün lezzetler olarak ulaşıyor.</p>
@@ -1186,6 +1186,22 @@ document.querySelectorAll('.add-cart, [data-add-cart]').forEach(b => {
 .v39-mini-row .name{font-weight:600;color:var(--text);margin-bottom:4px;display:block;text-decoration:none}
 .v39-mini-row .price{color:var(--primary-700);font-weight:700}
 @media(max-width:560px){#v39-minicart{width:100%}}
+/* ===== v3.12 PAGE BAND ===== */
+.page-band{background:var(--primary-700);color:#fff;padding:48px 0;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+.page-band>.container{text-align:center;max-width:1200px;margin:0 auto}
+.page-band .crumb{justify-content:center;color:rgba(255,255,255,.65);padding:0 0 14px;font-size:13px}
+.page-band .crumb a{color:rgba(255,255,255,.65)}
+.page-band .crumb a:hover{color:var(--accent-gold)}
+.page-band .crumb .sep{color:rgba(255,255,255,.35)}
+.page-band .crumb .active{color:#fff;font-weight:600}
+.page-band h1{color:#fff;font-size:36px;font-weight:700;letter-spacing:-0.02em;margin:0 0 10px;line-height:1.2}
+.page-band .lead,.page-band>.container>p{color:rgba(255,255,255,.82);max-width:620px;margin:0 auto;font-size:15px;line-height:1.6}
+.page-band .legal-hero{padding:0;text-align:center;border:0}
+.page-band .legal-hero h1{margin:0 0 10px}
+.page-band .legal-hero p{color:rgba(255,255,255,.82);max-width:620px;margin:0 auto;font-size:15px;line-height:1.6}
+.page-band-center{text-align:center}
+.page-band-center .crumb{justify-content:center}
+@media(max-width:767px){.page-band{padding:32px 0}.page-band h1{font-size:26px}.page-band .lead,.page-band>.container>p,.page-band .legal-hero p{font-size:14px;padding:0 16px}}
 </style>
 
 <script>

@@ -833,23 +833,20 @@ body.mobile-panel-open{overflow:hidden}
     </div>
   </div>
 </header>
-<div class="container">
-  <nav class="crumb">
+<section class="page-band">
+  <div class="container">
+    <nav class="crumb">
     <a href="index.html">Anasayfa</a>
     <i class="fa-solid fa-chevron-right sep"></i>
     <span class="active">Mesafeli Satış Sözleşmesi</span>
   </nav>
-</div>
+    <div class="legal-hero">
+      <h1>Mesafeli Satış Sözleşmesi</h1>
+      <p>6502 sayılı Tüketicinin Korunması Hakkında Kanun çerçevesinde sipariş öncesi onayınıza sunulan sözleşme metnidir.</p>
+    </div>
+  </div>
+</section>
 
-<!-- LEGAL PAGE HEAD -->
-<div class="container legal-hero">
-  <h1>Mesafeli Satış Sözleşmesi</h1>
-  <p>6502 sayılı Tüketicinin Korunması Hakkında Kanun çerçevesinde sipariş öncesi onayınıza sunulan sözleşme metnidir.</p>
-</div>
-
-<div class="container">
-  <div class="legal-notice"><i class="fa-solid fa-circle-info"></i><span><b>Bilgilendirme:</b> Bu metin örnek/taslak içeriktir. Yasal danışmanlık sonrası güncellenecektir.</span></div>
-</div>
 
 <div class="container legal-layout">
   <aside class="legal-toc" aria-label="İçindekiler">
@@ -1290,6 +1287,22 @@ document.querySelectorAll('.add-cart, [data-add-cart]').forEach(b => {
 .v39-mini-row .name{font-weight:600;color:var(--text);margin-bottom:4px;display:block;text-decoration:none}
 .v39-mini-row .price{color:var(--primary-700);font-weight:700}
 @media(max-width:560px){#v39-minicart{width:100%}}
+/* ===== v3.12 PAGE BAND ===== */
+.page-band{background:var(--primary-700);color:#fff;padding:48px 0;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06)}
+.page-band>.container{text-align:center;max-width:1200px;margin:0 auto}
+.page-band .crumb{justify-content:center;color:rgba(255,255,255,.65);padding:0 0 14px;font-size:13px}
+.page-band .crumb a{color:rgba(255,255,255,.65)}
+.page-band .crumb a:hover{color:var(--accent-gold)}
+.page-band .crumb .sep{color:rgba(255,255,255,.35)}
+.page-band .crumb .active{color:#fff;font-weight:600}
+.page-band h1{color:#fff;font-size:36px;font-weight:700;letter-spacing:-0.02em;margin:0 0 10px;line-height:1.2}
+.page-band .lead,.page-band>.container>p{color:rgba(255,255,255,.82);max-width:620px;margin:0 auto;font-size:15px;line-height:1.6}
+.page-band .legal-hero{padding:0;text-align:center;border:0}
+.page-band .legal-hero h1{margin:0 0 10px}
+.page-band .legal-hero p{color:rgba(255,255,255,.82);max-width:620px;margin:0 auto;font-size:15px;line-height:1.6}
+.page-band-center{text-align:center}
+.page-band-center .crumb{justify-content:center}
+@media(max-width:767px){.page-band{padding:32px 0}.page-band h1{font-size:26px}.page-band .lead,.page-band>.container>p,.page-band .legal-hero p{font-size:14px;padding:0 16px}}
 </style>
 
 <script>
