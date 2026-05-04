@@ -1,30 +1,14 @@
 #!/usr/bin/env python3
 """
 v3.9 Global components injector — idempotent.
-Adds: cookie banner, whatsapp button, toast container, mini cart drawer, newsletter footer row.
+Adds: cookie banner, whatsapp button, toast container, mini cart drawer.
+Newsletter block REMOVED in v3.9.4 (patron decision).
 Each block uses marker comment so re-runs are safe.
 """
 import os, re, glob
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGES = glob.glob(os.path.join(ROOT, "*.html"))
-
-NEWSLETTER_MARKER = "<!-- INJECT:V39:NEWSLETTER -->"
-NEWSLETTER_BLOCK = NEWSLETTER_MARKER + """
-<div class="footer-newsletter" style="border-top:1px solid var(--border);margin-top:32px;padding-top:24px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px">
-  <div style="flex:1;min-width:260px">
-    <h4 style="margin:0 0 4px;color:var(--bg);font-size:18px;font-weight:700">Bültene Abone Ol</h4>
-    <p style="margin:0;color:var(--bg);opacity:.85;font-size:14px">Kampanya ve yeni hasat haberlerinden ilk siz haberdar olun.</p>
-  </div>
-  <form onsubmit="event.preventDefault();window.showToast&&window.showToast('Abone olduğunuz için teşekkürler!','success');this.reset();" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;flex:1;min-width:280px;justify-content:flex-end">
-    <input type="email" required placeholder="E-posta adresiniz" style="flex:1;min-width:180px;padding:12px 16px;border-radius:var(--r-sm,8px);border:1px solid var(--border);background:#fff;color:var(--text);font:inherit">
-    <button type="submit" style="padding:12px 22px;background:var(--accent-gold);color:#fff;border:0;border-radius:var(--r-sm,8px);font-weight:700;cursor:pointer;font:inherit">Abone Ol</button>
-    <label style="flex-basis:100%;color:var(--bg);opacity:.8;font-size:12px;display:flex;gap:6px;align-items:center;justify-content:flex-end">
-      <input type="checkbox" required> E-posta gönderimi için bilgilendirme aldığımı onaylıyorum.
-    </label>
-  </form>
-</div>
-"""
 
 GLOBAL_MARKER = "<!-- INJECT:V39:GLOBAL -->"
 GLOBAL_BLOCK = GLOBAL_MARKER + """
@@ -170,15 +154,6 @@ document.addEventListener('click',function(e){
 </script>
 """
 
-def inject_newsletter(html):
-    if NEWSLETTER_MARKER in html:
-        return html, False
-    # Insert before <div class="footer-bottom">
-    pattern = r'(<div class="footer-bottom">)'
-    if re.search(pattern, html):
-        return re.sub(pattern, NEWSLETTER_BLOCK + r'\n    \1', html, count=1), True
-    return html, False
-
 def inject_global(html):
     if GLOBAL_MARKER in html:
         return html, False
@@ -195,7 +170,6 @@ def main():
         with open(path, 'r', encoding='utf-8') as f:
             html = f.read()
         orig = html
-        html, n_news = inject_newsletter(html)
         html, n_glob = inject_global(html)
         if html != orig:
             with open(path, 'w', encoding='utf-8') as f:
