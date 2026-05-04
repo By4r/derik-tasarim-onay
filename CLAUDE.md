@@ -106,7 +106,7 @@ Yapı (yukarıdan aşağıya):
 1. **Plan mode'a geç** (Shift+Tab) — büyük işler için her zaman, küçük revize için skip OK
 2. **Auto mode'da implement** — manuel onay yerine
 3. **Tüm prompt'lar `=== DEPLOY ===` bloğu ile biter** — bittiğinde `git add + commit + push` otomatik yapılır
-4. **Commit mesajları İngilizce DEĞİL — Türkçe ve "v#.# açıklama" formatında** (örn. "v2.7.2 katalog kaldır, form radius fix")
+4. **Commit mesajları İngilizce — "v#.# description" formatında** (örn. "v2.7.2 remove catalog, form radius fix") — diğer projelerle (Çaykaraspor, Y2Z) tutarlı
 5. **3 sayfada (artık 8 sayfada) header/footer birebir aynı** — herhangi bir değişiklik tüm sayfalara uygulanır
 6. **Skill aktif kullanılır:** yeni KD-türevi sayfa eklenirken (`web-replicator skill aktif et, X URL'ini fetch et`)
 
