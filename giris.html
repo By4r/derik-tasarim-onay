@@ -38,19 +38,31 @@ ul{list-style:none}
 
 /* SADE HEADER (auth only) */
 .auth-header{background:var(--bg);border-bottom:1px solid var(--border);padding:var(--s-5) 0}
-.auth-header .container{display:flex;align-items:center;justify-content:space-between}
+.auth-header .container{display:flex;align-items:center;justify-content:space-between;gap:var(--s-4)}
 .brand-logo{font-size:30px;font-weight:800;letter-spacing:-0.025em;color:var(--primary-700);font-style:italic}
-.auth-header .back-link{font-size:var(--fs-sm);font-weight:600;color:var(--text-2);display:inline-flex;align-items:center;gap:6px}
-.auth-header .back-link:hover{color:var(--primary-700)}
+.auth-header .ctx-link{font-size:var(--fs-sm);color:var(--text-2);display:inline-flex;align-items:center;gap:6px}
+.auth-header .ctx-link b{color:var(--primary-700);font-weight:700;margin-left:6px;text-decoration:underline}
+.auth-header .ctx-link:hover b{color:var(--primary-900)}
+
+/* BREADCRUMB */
+.crumb{font-size:var(--fs-sm);color:var(--muted);padding:var(--s-6) 0 var(--s-2);display:flex;align-items:center;gap:var(--s-2);flex-wrap:wrap}
+.crumb a{color:var(--primary-700);font-weight:600}
+.crumb a:hover{color:var(--primary-900);text-decoration:underline}
+.crumb .sep{font-size:10px;color:var(--muted-2)}
+.crumb .active{color:var(--text);font-weight:600}
 
 /* MAIN */
-main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;padding:var(--s-10) var(--s-4)}
+main.auth-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:var(--s-4) var(--s-4) var(--s-10)}
 
 .auth-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-10) var(--s-8);max-width:480px;width:100%;box-shadow:var(--shadow-1)}
 .auth-card.wide{max-width:540px}
 .auth-card .auth-head{text-align:center;margin-bottom:var(--s-8)}
 .auth-card h1{font-size:var(--fs-2xl);font-weight:700;margin-bottom:var(--s-2);color:var(--text)}
 .auth-card .lead{color:var(--text-2);font-size:var(--fs-sm)}
+
+/* Continue shopping link below card */
+.continue-link{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-sm);color:var(--text-2);font-weight:600;margin-top:var(--s-6);transition:color var(--t-fast)}
+.continue-link:hover{color:var(--primary-700)}
 
 .field{display:flex;flex-direction:column;margin-bottom:var(--s-4)}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3);margin-bottom:var(--s-4)}
@@ -59,7 +71,10 @@ main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;pad
 .field label .req{color:var(--accent-gold);margin-left:2px}
 .field input{padding:13px 14px;border:1px solid var(--border);border-radius:var(--r-sm);font-family:inherit;font-size:var(--fs-sm);background:#fff;color:var(--text);width:100%;font-weight:500;transition:all var(--t-fast)}
 .field input:focus{outline:none;border-color:var(--primary-700);box-shadow:0 0 0 2px rgba(59,74,42,.08)}
+.field input.error{border-color:var(--accent-red);box-shadow:0 0 0 2px rgba(176,74,62,.08)}
 .field .hint{font-size:11px;color:var(--muted);margin-top:6px}
+.field .field-err{font-size:11px;color:var(--accent-red);font-weight:600;margin-top:6px;display:none}
+.field.has-error .field-err{display:block}
 
 /* Password */
 .pw-wrap{position:relative}
@@ -73,7 +88,7 @@ main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;pad
 .phone-group .prefix{padding:13px 14px;background:var(--bg-soft);color:var(--text-2);font-weight:700;font-size:var(--fs-sm);border-right:1px solid var(--border);display:inline-flex;align-items:center;flex-shrink:0}
 .phone-group input{border:0!important;box-shadow:none!important;border-radius:0!important;flex:1}
 
-/* Strength bar */
+/* Strength */
 .pw-strength{display:flex;gap:4px;margin-top:8px;height:4px}
 .pw-strength span{flex:1;background:var(--border);border-radius:var(--r-pill);transition:background var(--t-fast)}
 .pw-strength.weak span:nth-child(1){background:var(--accent-red)}
@@ -83,11 +98,9 @@ main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;pad
 .pw-strength-label.weak{color:var(--accent-red)}
 .pw-strength-label.medium{color:var(--accent-gold)}
 .pw-strength-label.strong{color:var(--accent-success)}
-
-/* Match indicator */
-.field .match-msg{font-size:11px;margin-top:6px;font-weight:600}
-.field .match-msg.ok{color:var(--accent-success)}
-.field .match-msg.err{color:var(--accent-red)}
+.match-msg{font-size:11px;margin-top:6px;font-weight:600;display:block}
+.match-msg.ok{color:var(--accent-success)}
+.match-msg.err{color:var(--accent-red)}
 
 /* Checkbox */
 .check-row{display:flex;align-items:flex-start;gap:8px;font-size:var(--fs-sm);color:var(--text-2);margin:var(--s-3) 0;cursor:pointer;line-height:1.5}
@@ -102,29 +115,24 @@ main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;pad
 .btn-submit.loading::before{content:"";width:14px;height:14px;border:2px solid #fff;border-right-color:transparent;border-radius:50%;animation:spin .7s linear infinite;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* Forgot link */
 .row-between{display:flex;justify-content:space-between;align-items:center;margin:var(--s-2) 0 var(--s-4);flex-wrap:wrap;gap:8px}
 .row-between .check-row{margin:0;font-size:var(--fs-sm)}
 .row-between .forgot{font-size:var(--fs-sm);font-weight:700;color:var(--primary-700)}
 .row-between .forgot:hover{color:var(--primary-900);text-decoration:underline}
 
-/* Divider */
 .divider-or{display:flex;align-items:center;gap:var(--s-3);margin:var(--s-6) 0;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 .divider-or::before,.divider-or::after{content:"";flex:1;height:1px;background:var(--border)}
 
-/* Social buttons */
 .social-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3)}
 .social-btn{padding:12px;border:1px solid var(--border);border-radius:var(--r-sm);background:#fff;color:var(--text-2);font-weight:600;font-size:var(--fs-sm);display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:not-allowed;opacity:.7;position:relative;transition:all var(--t-fast)}
 .social-btn:hover{border-color:var(--muted-2)}
 .social-btn .soon{position:absolute;top:-8px;right:-6px;background:var(--accent-gold);color:var(--primary-900);font-size:9px;font-weight:700;padding:2px 6px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.04em}
 .social-btn i{font-size:16px}
 
-/* Bottom switch */
 .auth-switch{text-align:center;margin-top:var(--s-6);padding-top:var(--s-6);border-top:1px solid var(--border);font-size:var(--fs-sm);color:var(--text-2)}
 .auth-switch a{color:var(--primary-700);font-weight:700;margin-left:6px}
 .auth-switch a:hover{text-decoration:underline}
 
-/* KVKK note */
 .kvkk-note{margin-top:var(--s-4);font-size:11px;color:var(--muted);text-align:center;line-height:1.5}
 .kvkk-note a{color:var(--primary-700);text-decoration:underline}
 
@@ -154,9 +162,10 @@ main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;pad
   .footer-cols{grid-template-columns:1fr;gap:var(--s-6)}
   .field-row{grid-template-columns:1fr}
   .auth-card{padding:var(--s-6)}
+  .auth-header .ctx-link span{display:none}
 }
 
-/* Toast (shared) */
+/* Toast */
 .toast-stack{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:10px;pointer-events:none}
 .toast{background:var(--primary-900);color:#fff;padding:12px 20px;border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);display:flex;align-items:center;gap:10px;min-width:260px;animation:toastIn .25s ease;pointer-events:auto}
 .toast i{color:var(--accent-gold);font-size:16px}
@@ -170,9 +179,17 @@ main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;pad
 <header class="auth-header">
   <div class="container">
     <a href="index.html" class="brand-logo">Derik</a>
-    <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Anasayfaya Dön</a>
+    <a href="kayit.html" class="ctx-link"><span>Hesabınız yok mu?</span><b>Üye Olun</b></a>
   </div>
 </header>
+
+<div class="container">
+  <nav class="crumb">
+    <a href="index.html">Anasayfa</a>
+    <i class="fa-solid fa-chevron-right sep"></i>
+    <span class="active">Üye Girişi</span>
+  </nav>
+</div>
 
 <main class="auth-main">
 <div class="auth-card">
@@ -181,16 +198,16 @@ main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;pad
     <p class="lead">Hesabınıza giriş yapın</p>
   </div>
 
-  <form id="loginForm" novalidate>
+  <form id="loginForm" onsubmit="return false" novalidate>
     <div class="field">
       <label for="email">E-posta <span class="req">*</span></label>
-      <input id="email" name="email" type="email" required placeholder="ornek@mail.com" autocomplete="email">
+      <input id="email" name="email" type="email" placeholder="ornek@mail.com" autocomplete="email">
     </div>
 
     <div class="field">
       <label for="pw">Şifre <span class="req">*</span></label>
       <div class="pw-wrap">
-        <input id="pw" name="password" type="password" required placeholder="Şifrenizi girin" autocomplete="current-password" minlength="6">
+        <input id="pw" name="password" type="password" placeholder="Şifrenizi girin" autocomplete="current-password">
         <button type="button" class="pw-toggle" aria-label="Şifreyi göster"><i class="fa-regular fa-eye"></i></button>
       </div>
     </div>
@@ -202,7 +219,7 @@ main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;pad
       <a href="sifremi-unuttum.html" class="forgot">Şifremi unuttum</a>
     </div>
 
-    <button type="submit" class="btn-submit"><i class="fa-solid fa-arrow-right-to-bracket"></i> Giriş Yap</button>
+    <button type="button" id="loginBtn" class="btn-submit"><i class="fa-solid fa-arrow-right-to-bracket"></i> Giriş Yap</button>
 
     <p class="kvkk-note">Giriş yaparak <a href="#">Kullanım Koşulları</a> ve <a href="#">Gizlilik Politikası</a>&apos;nı kabul etmiş olursunuz.</p>
   </form>
@@ -220,13 +237,32 @@ main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;pad
 </div>
 
 <script>
-simulateSubmit(document.getElementById('loginForm'), () => {
-  localStorage.setItem('isLoggedIn', 'true');
-  localStorage.setItem('userEmail', document.getElementById('email').value);
-  location.href = 'uyelik-bilgilerim.html';
+document.getElementById('loginBtn').addEventListener('click', () => {
+  const email = document.getElementById('email');
+  const pw = document.getElementById('pw');
+  const btn = document.getElementById('loginBtn');
+  let ok = true;
+  clearFieldError(email); clearFieldError(pw);
+  if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) { setFieldError(email, 'Geçerli bir e-posta girin.'); ok = false; }
+  if (!pw.value || pw.value.length < 6) { setFieldError(pw, 'Şifre en az 6 karakter olmalı.'); ok = false; }
+  if (!ok) return;
+  btnLoading(btn);
+  setTimeout(() => {
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('userEmail', email.value);
+    // Derive userName from email if not set
+    if (!localStorage.getItem('userName')) {
+      const local = email.value.split('@')[0];
+      const name = local.charAt(0).toUpperCase() + local.slice(1);
+      localStorage.setItem('userName', name);
+    }
+    const next = new URLSearchParams(location.search).get('next');
+    location.href = next || 'uyelik-bilgilerim.html';
+  }, 800);
 });
 </script>
 
+<a href="index.html" class="continue-link"><i class="fa-solid fa-arrow-left"></i> Alışverişe devam et</a>
 </main>
 
 <footer class="footer">
@@ -294,7 +330,6 @@ function showToast(msg, icon){
   setTimeout(() => { t.classList.add('fade-out'); setTimeout(() => t.remove(), 300); }, 2700);
 }
 
-// Password show/hide
 document.querySelectorAll('.pw-toggle').forEach(btn => {
   btn.addEventListener('click', () => {
     const inp = btn.previousElementSibling;
@@ -304,7 +339,6 @@ document.querySelectorAll('.pw-toggle').forEach(btn => {
   });
 });
 
-// Strength
 function calcStrength(pw){
   let s = 0;
   if (pw.length >= 8) s++;
@@ -331,13 +365,10 @@ document.querySelectorAll('[data-pw-strength]').forEach(inp => {
   });
 });
 
-// Match check
 document.querySelectorAll('[data-pw-match]').forEach(inp => {
-  const sourceSel = inp.dataset.pwMatch;
-  const source = document.querySelector(sourceSel);
-  const msg = inp.parentElement.parentElement.querySelector('.match-msg') || (() => {
-    const m = document.createElement('span'); m.className = 'match-msg'; inp.parentElement.parentElement.appendChild(m); return m;
-  })();
+  const source = document.querySelector(inp.dataset.pwMatch);
+  const msg = inp.parentElement.parentElement.querySelector('.match-msg');
+  if (!msg) return;
   function check(){
     if (!inp.value) { msg.textContent = ''; msg.className = 'match-msg'; return; }
     if (inp.value === source.value) { msg.textContent = '✓ Şifreler eşleşiyor'; msg.className = 'match-msg ok'; }
@@ -347,18 +378,31 @@ document.querySelectorAll('[data-pw-match]').forEach(inp => {
   source.addEventListener('input', check);
 });
 
-// Submit simulator helper
-function simulateSubmit(form, fn){
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    if (!form.checkValidity()) { form.reportValidity(); return; }
-    const btn = form.querySelector('.btn-submit');
-    const orig = btn.innerHTML;
-    btn.classList.add('loading');
-    btn.disabled = true;
-    btn.innerHTML = 'İşleniyor...';
-    setTimeout(() => fn(form, btn, orig), 900);
-  });
+// Field error helper
+function setFieldError(inp, msg){
+  const field = inp.closest('.field') || inp.parentElement;
+  inp.classList.add('error');
+  field.classList.add('has-error');
+  let err = field.querySelector('.field-err');
+  if (!err) { err = document.createElement('span'); err.className = 'field-err'; field.appendChild(err); }
+  err.textContent = msg;
+}
+function clearFieldError(inp){
+  const field = inp.closest('.field') || inp.parentElement;
+  inp.classList.remove('error');
+  field.classList.remove('has-error');
+}
+
+function btnLoading(btn){
+  btn.dataset.orig = btn.innerHTML;
+  btn.classList.add('loading');
+  btn.disabled = true;
+  btn.innerHTML = 'İşleniyor...';
+}
+function btnReset(btn){
+  btn.classList.remove('loading');
+  btn.disabled = false;
+  btn.innerHTML = btn.dataset.orig || btn.innerHTML;
 }
 </script>
 

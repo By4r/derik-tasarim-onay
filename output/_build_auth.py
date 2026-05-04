@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Build 4 auth pages: giris, kayit, sifremi-unuttum, sifre-sifirla.
-
-KD pattern (kahvedunyasi.com /uye-girisi): SADE header (sadece logo),
-ortalanmış 480px form kartı, krem zemin, hafif shadow, full-width primary
-CTA, alt link "üye değil misin?", footer ortak.
+"""Build 4 auth pages with v3.7.1 fixes:
+- Form: <form onsubmit="return false"> + type="button" submit + onClick handler
+  (Prevents accidental GET submission)
+- Header right: context-aware ("Hesabınız yok mu? Üye Olun" vs vice versa)
+- Breadcrumb above card
+- "← Alışverişe devam et" link below card
+- localStorage: isLoggedIn + userName + userEmail
 """
 from pathlib import Path
 
@@ -42,19 +44,31 @@ ul{list-style:none}
 
 /* SADE HEADER (auth only) */
 .auth-header{background:var(--bg);border-bottom:1px solid var(--border);padding:var(--s-5) 0}
-.auth-header .container{display:flex;align-items:center;justify-content:space-between}
+.auth-header .container{display:flex;align-items:center;justify-content:space-between;gap:var(--s-4)}
 .brand-logo{font-size:30px;font-weight:800;letter-spacing:-0.025em;color:var(--primary-700);font-style:italic}
-.auth-header .back-link{font-size:var(--fs-sm);font-weight:600;color:var(--text-2);display:inline-flex;align-items:center;gap:6px}
-.auth-header .back-link:hover{color:var(--primary-700)}
+.auth-header .ctx-link{font-size:var(--fs-sm);color:var(--text-2);display:inline-flex;align-items:center;gap:6px}
+.auth-header .ctx-link b{color:var(--primary-700);font-weight:700;margin-left:6px;text-decoration:underline}
+.auth-header .ctx-link:hover b{color:var(--primary-900)}
+
+/* BREADCRUMB */
+.crumb{font-size:var(--fs-sm);color:var(--muted);padding:var(--s-6) 0 var(--s-2);display:flex;align-items:center;gap:var(--s-2);flex-wrap:wrap}
+.crumb a{color:var(--primary-700);font-weight:600}
+.crumb a:hover{color:var(--primary-900);text-decoration:underline}
+.crumb .sep{font-size:10px;color:var(--muted-2)}
+.crumb .active{color:var(--text);font-weight:600}
 
 /* MAIN */
-main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;padding:var(--s-10) var(--s-4)}
+main.auth-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:var(--s-4) var(--s-4) var(--s-10)}
 
 .auth-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-10) var(--s-8);max-width:480px;width:100%;box-shadow:var(--shadow-1)}
 .auth-card.wide{max-width:540px}
 .auth-card .auth-head{text-align:center;margin-bottom:var(--s-8)}
 .auth-card h1{font-size:var(--fs-2xl);font-weight:700;margin-bottom:var(--s-2);color:var(--text)}
 .auth-card .lead{color:var(--text-2);font-size:var(--fs-sm)}
+
+/* Continue shopping link below card */
+.continue-link{display:inline-flex;align-items:center;gap:6px;font-size:var(--fs-sm);color:var(--text-2);font-weight:600;margin-top:var(--s-6);transition:color var(--t-fast)}
+.continue-link:hover{color:var(--primary-700)}
 
 .field{display:flex;flex-direction:column;margin-bottom:var(--s-4)}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3);margin-bottom:var(--s-4)}
@@ -63,7 +77,10 @@ main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;pad
 .field label .req{color:var(--accent-gold);margin-left:2px}
 .field input{padding:13px 14px;border:1px solid var(--border);border-radius:var(--r-sm);font-family:inherit;font-size:var(--fs-sm);background:#fff;color:var(--text);width:100%;font-weight:500;transition:all var(--t-fast)}
 .field input:focus{outline:none;border-color:var(--primary-700);box-shadow:0 0 0 2px rgba(59,74,42,.08)}
+.field input.error{border-color:var(--accent-red);box-shadow:0 0 0 2px rgba(176,74,62,.08)}
 .field .hint{font-size:11px;color:var(--muted);margin-top:6px}
+.field .field-err{font-size:11px;color:var(--accent-red);font-weight:600;margin-top:6px;display:none}
+.field.has-error .field-err{display:block}
 
 /* Password */
 .pw-wrap{position:relative}
@@ -77,7 +94,7 @@ main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;pad
 .phone-group .prefix{padding:13px 14px;background:var(--bg-soft);color:var(--text-2);font-weight:700;font-size:var(--fs-sm);border-right:1px solid var(--border);display:inline-flex;align-items:center;flex-shrink:0}
 .phone-group input{border:0!important;box-shadow:none!important;border-radius:0!important;flex:1}
 
-/* Strength bar */
+/* Strength */
 .pw-strength{display:flex;gap:4px;margin-top:8px;height:4px}
 .pw-strength span{flex:1;background:var(--border);border-radius:var(--r-pill);transition:background var(--t-fast)}
 .pw-strength.weak span:nth-child(1){background:var(--accent-red)}
@@ -87,11 +104,9 @@ main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;pad
 .pw-strength-label.weak{color:var(--accent-red)}
 .pw-strength-label.medium{color:var(--accent-gold)}
 .pw-strength-label.strong{color:var(--accent-success)}
-
-/* Match indicator */
-.field .match-msg{font-size:11px;margin-top:6px;font-weight:600}
-.field .match-msg.ok{color:var(--accent-success)}
-.field .match-msg.err{color:var(--accent-red)}
+.match-msg{font-size:11px;margin-top:6px;font-weight:600;display:block}
+.match-msg.ok{color:var(--accent-success)}
+.match-msg.err{color:var(--accent-red)}
 
 /* Checkbox */
 .check-row{display:flex;align-items:flex-start;gap:8px;font-size:var(--fs-sm);color:var(--text-2);margin:var(--s-3) 0;cursor:pointer;line-height:1.5}
@@ -106,29 +121,24 @@ main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;pad
 .btn-submit.loading::before{content:"";width:14px;height:14px;border:2px solid #fff;border-right-color:transparent;border-radius:50%;animation:spin .7s linear infinite;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* Forgot link */
 .row-between{display:flex;justify-content:space-between;align-items:center;margin:var(--s-2) 0 var(--s-4);flex-wrap:wrap;gap:8px}
 .row-between .check-row{margin:0;font-size:var(--fs-sm)}
 .row-between .forgot{font-size:var(--fs-sm);font-weight:700;color:var(--primary-700)}
 .row-between .forgot:hover{color:var(--primary-900);text-decoration:underline}
 
-/* Divider */
 .divider-or{display:flex;align-items:center;gap:var(--s-3);margin:var(--s-6) 0;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 .divider-or::before,.divider-or::after{content:"";flex:1;height:1px;background:var(--border)}
 
-/* Social buttons */
 .social-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3)}
 .social-btn{padding:12px;border:1px solid var(--border);border-radius:var(--r-sm);background:#fff;color:var(--text-2);font-weight:600;font-size:var(--fs-sm);display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:not-allowed;opacity:.7;position:relative;transition:all var(--t-fast)}
 .social-btn:hover{border-color:var(--muted-2)}
 .social-btn .soon{position:absolute;top:-8px;right:-6px;background:var(--accent-gold);color:var(--primary-900);font-size:9px;font-weight:700;padding:2px 6px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.04em}
 .social-btn i{font-size:16px}
 
-/* Bottom switch */
 .auth-switch{text-align:center;margin-top:var(--s-6);padding-top:var(--s-6);border-top:1px solid var(--border);font-size:var(--fs-sm);color:var(--text-2)}
 .auth-switch a{color:var(--primary-700);font-weight:700;margin-left:6px}
 .auth-switch a:hover{text-decoration:underline}
 
-/* KVKK note */
 .kvkk-note{margin-top:var(--s-4);font-size:11px;color:var(--muted);text-align:center;line-height:1.5}
 .kvkk-note a{color:var(--primary-700);text-decoration:underline}
 
@@ -158,9 +168,10 @@ main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;pad
   .footer-cols{grid-template-columns:1fr;gap:var(--s-6)}
   .field-row{grid-template-columns:1fr}
   .auth-card{padding:var(--s-6)}
+  .auth-header .ctx-link span{display:none}
 }
 
-/* Toast (shared) */
+/* Toast */
 .toast-stack{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:10px;pointer-events:none}
 .toast{background:var(--primary-900);color:#fff;padding:12px 20px;border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);display:flex;align-items:center;gap:10px;min-width:260px;animation:toastIn .25s ease;pointer-events:auto}
 .toast i{color:var(--accent-gold);font-size:16px}
@@ -169,28 +180,38 @@ main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;pad
 @keyframes toastOut{to{transform:translateY(20px);opacity:0}}
 """
 
-HEAD_TPL = '''<!DOCTYPE html>
+def head_block(title, ctx_label_prefix, ctx_label_link, ctx_target, breadcrumb_label):
+    return f'''<!DOCTYPE html>
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title} — Derik</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
-<style>{css}</style>
+<style>{BASE_CSS}</style>
 </head>
 <body>
 
 <header class="auth-header">
   <div class="container">
     <a href="index.html" class="brand-logo">Derik</a>
-    <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Anasayfaya Dön</a>
+    <a href="{ctx_target}" class="ctx-link"><span>{ctx_label_prefix}</span><b>{ctx_label_link}</b></a>
   </div>
 </header>
+
+<div class="container">
+  <nav class="crumb">
+    <a href="index.html">Anasayfa</a>
+    <i class="fa-solid fa-chevron-right sep"></i>
+    <span class="active">{breadcrumb_label}</span>
+  </nav>
+</div>
 
 <main class="auth-main">
 '''
 
 FOOTER_HTML = '''
+<a href="index.html" class="continue-link"><i class="fa-solid fa-arrow-left"></i> Alışverişe devam et</a>
 </main>
 
 <footer class="footer">
@@ -260,7 +281,6 @@ function showToast(msg, icon){
   setTimeout(() => { t.classList.add('fade-out'); setTimeout(() => t.remove(), 300); }, 2700);
 }
 
-// Password show/hide
 document.querySelectorAll('.pw-toggle').forEach(btn => {
   btn.addEventListener('click', () => {
     const inp = btn.previousElementSibling;
@@ -270,7 +290,6 @@ document.querySelectorAll('.pw-toggle').forEach(btn => {
   });
 });
 
-// Strength
 function calcStrength(pw){
   let s = 0;
   if (pw.length >= 8) s++;
@@ -297,13 +316,10 @@ document.querySelectorAll('[data-pw-strength]').forEach(inp => {
   });
 });
 
-// Match check
 document.querySelectorAll('[data-pw-match]').forEach(inp => {
-  const sourceSel = inp.dataset.pwMatch;
-  const source = document.querySelector(sourceSel);
-  const msg = inp.parentElement.parentElement.querySelector('.match-msg') || (() => {
-    const m = document.createElement('span'); m.className = 'match-msg'; inp.parentElement.parentElement.appendChild(m); return m;
-  })();
+  const source = document.querySelector(inp.dataset.pwMatch);
+  const msg = inp.parentElement.parentElement.querySelector('.match-msg');
+  if (!msg) return;
   function check(){
     if (!inp.value) { msg.textContent = ''; msg.className = 'match-msg'; return; }
     if (inp.value === source.value) { msg.textContent = '✓ Şifreler eşleşiyor'; msg.className = 'match-msg ok'; }
@@ -313,39 +329,53 @@ document.querySelectorAll('[data-pw-match]').forEach(inp => {
   source.addEventListener('input', check);
 });
 
-// Submit simulator helper
-function simulateSubmit(form, fn){
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    if (!form.checkValidity()) { form.reportValidity(); return; }
-    const btn = form.querySelector('.btn-submit');
-    const orig = btn.innerHTML;
-    btn.classList.add('loading');
-    btn.disabled = true;
-    btn.innerHTML = 'İşleniyor...';
-    setTimeout(() => fn(form, btn, orig), 900);
-  });
+// Field error helper
+function setFieldError(inp, msg){
+  const field = inp.closest('.field') || inp.parentElement;
+  inp.classList.add('error');
+  field.classList.add('has-error');
+  let err = field.querySelector('.field-err');
+  if (!err) { err = document.createElement('span'); err.className = 'field-err'; field.appendChild(err); }
+  err.textContent = msg;
+}
+function clearFieldError(inp){
+  const field = inp.closest('.field') || inp.parentElement;
+  inp.classList.remove('error');
+  field.classList.remove('has-error');
+}
+
+function btnLoading(btn){
+  btn.dataset.orig = btn.innerHTML;
+  btn.classList.add('loading');
+  btn.disabled = true;
+  btn.innerHTML = 'İşleniyor...';
+}
+function btnReset(btn){
+  btn.classList.remove('loading');
+  btn.disabled = false;
+  btn.innerHTML = btn.dataset.orig || btn.innerHTML;
 }
 </script>
 '''
 
 # ============ PAGE 1: GIRIS ============
-GIRIS = '''<div class="auth-card">
+GIRIS_HEAD = head_block('Giriş Yap', 'Hesabınız yok mu?', 'Üye Olun', 'kayit.html', 'Üye Girişi')
+GIRIS_BODY = '''<div class="auth-card">
   <div class="auth-head">
     <h1>Hoş geldiniz</h1>
     <p class="lead">Hesabınıza giriş yapın</p>
   </div>
 
-  <form id="loginForm" novalidate>
+  <form id="loginForm" onsubmit="return false" novalidate>
     <div class="field">
       <label for="email">E-posta <span class="req">*</span></label>
-      <input id="email" name="email" type="email" required placeholder="ornek@mail.com" autocomplete="email">
+      <input id="email" name="email" type="email" placeholder="ornek@mail.com" autocomplete="email">
     </div>
 
     <div class="field">
       <label for="pw">Şifre <span class="req">*</span></label>
       <div class="pw-wrap">
-        <input id="pw" name="password" type="password" required placeholder="Şifrenizi girin" autocomplete="current-password" minlength="6">
+        <input id="pw" name="password" type="password" placeholder="Şifrenizi girin" autocomplete="current-password">
         <button type="button" class="pw-toggle" aria-label="Şifreyi göster"><i class="fa-regular fa-eye"></i></button>
       </div>
     </div>
@@ -357,7 +387,7 @@ GIRIS = '''<div class="auth-card">
       <a href="sifremi-unuttum.html" class="forgot">Şifremi unuttum</a>
     </div>
 
-    <button type="submit" class="btn-submit"><i class="fa-solid fa-arrow-right-to-bracket"></i> Giriş Yap</button>
+    <button type="button" id="loginBtn" class="btn-submit"><i class="fa-solid fa-arrow-right-to-bracket"></i> Giriş Yap</button>
 
     <p class="kvkk-note">Giriş yaparak <a href="#">Kullanım Koşulları</a> ve <a href="#">Gizlilik Politikası</a>&apos;nı kabul etmiş olursunuz.</p>
   </form>
@@ -375,50 +405,69 @@ GIRIS = '''<div class="auth-card">
 </div>
 
 <script>
-simulateSubmit(document.getElementById('loginForm'), () => {
-  localStorage.setItem('isLoggedIn', 'true');
-  localStorage.setItem('userEmail', document.getElementById('email').value);
-  location.href = 'uyelik-bilgilerim.html';
+document.getElementById('loginBtn').addEventListener('click', () => {
+  const email = document.getElementById('email');
+  const pw = document.getElementById('pw');
+  const btn = document.getElementById('loginBtn');
+  let ok = true;
+  clearFieldError(email); clearFieldError(pw);
+  if (!email.value.trim() || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email.value)) { setFieldError(email, 'Geçerli bir e-posta girin.'); ok = false; }
+  if (!pw.value || pw.value.length < 6) { setFieldError(pw, 'Şifre en az 6 karakter olmalı.'); ok = false; }
+  if (!ok) return;
+  btnLoading(btn);
+  setTimeout(() => {
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('userEmail', email.value);
+    // Derive userName from email if not set
+    if (!localStorage.getItem('userName')) {
+      const local = email.value.split('@')[0];
+      const name = local.charAt(0).toUpperCase() + local.slice(1);
+      localStorage.setItem('userName', name);
+    }
+    const next = new URLSearchParams(location.search).get('next');
+    location.href = next || 'uyelik-bilgilerim.html';
+  }, 800);
 });
 </script>
 '''
 
 # ============ PAGE 2: KAYIT ============
-KAYIT = '''<div class="auth-card wide">
+KAYIT_HEAD = head_block('Üye Ol', 'Zaten üye misiniz?', 'Giriş Yapın', 'giris.html', 'Üye Ol')
+KAYIT_BODY = '''<div class="auth-card wide">
   <div class="auth-head">
     <h1>Hesap Oluşturun</h1>
     <p class="lead">Derik\'e hoş geldiniz, üyelik avantajlarından faydalanın</p>
   </div>
 
-  <form id="registerForm" novalidate>
+  <form id="registerForm" onsubmit="return false" novalidate>
     <div class="field-row">
       <div class="field">
         <label for="ad">Ad <span class="req">*</span></label>
-        <input id="ad" name="ad" type="text" required>
+        <input id="ad" name="ad" type="text">
       </div>
       <div class="field">
         <label for="soyad">Soyad <span class="req">*</span></label>
-        <input id="soyad" name="soyad" type="text" required>
+        <input id="soyad" name="soyad" type="text">
       </div>
     </div>
 
     <div class="field">
       <label for="email">E-posta <span class="req">*</span></label>
-      <input id="email" name="email" type="email" required placeholder="ornek@mail.com" autocomplete="email">
+      <input id="email" name="email" type="email" placeholder="ornek@mail.com" autocomplete="email">
     </div>
 
     <div class="field">
       <label for="tel">Telefon <span class="req">*</span></label>
       <div class="phone-group">
         <span class="prefix">+90</span>
-        <input id="tel" name="tel" type="tel" required placeholder="(5xx) xxx xx xx" autocomplete="tel-national">
+        <input id="tel" name="tel" type="tel" placeholder="(5xx) xxx xx xx" autocomplete="tel-national">
       </div>
     </div>
 
     <div class="field">
       <label for="pw">Şifre <span class="req">*</span></label>
       <div class="pw-wrap">
-        <input id="pw" name="password" type="password" required minlength="8" placeholder="En az 8 karakter" autocomplete="new-password" data-pw-strength="#pwStrengthBox">
+        <input id="pw" name="password" type="password" placeholder="En az 8 karakter" autocomplete="new-password" data-pw-strength="#pwStrengthBox">
         <button type="button" class="pw-toggle" aria-label="Şifreyi göster"><i class="fa-regular fa-eye"></i></button>
       </div>
       <div id="pwStrengthBox">
@@ -430,14 +479,14 @@ KAYIT = '''<div class="auth-card wide">
     <div class="field">
       <label for="pw2">Şifre Tekrar <span class="req">*</span></label>
       <div class="pw-wrap">
-        <input id="pw2" name="password2" type="password" required placeholder="Şifrenizi tekrar girin" autocomplete="new-password" data-pw-match="#pw">
+        <input id="pw2" name="password2" type="password" placeholder="Şifrenizi tekrar girin" autocomplete="new-password" data-pw-match="#pw">
         <button type="button" class="pw-toggle" aria-label="Şifreyi göster"><i class="fa-regular fa-eye"></i></button>
       </div>
       <span class="match-msg"></span>
     </div>
 
     <label class="check-row">
-      <input type="checkbox" name="kvkk" required>
+      <input type="checkbox" id="kvkk" name="kvkk">
       <span><a href="#">KVKK Aydınlatma Metni</a> ve <a href="#">Üyelik Sözleşmesi</a>&apos;ni okudum, kabul ediyorum. <span class="req">*</span></span>
     </label>
     <label class="check-row">
@@ -445,7 +494,7 @@ KAYIT = '''<div class="auth-card wide">
       <span>Yeni ürün ve kampanyalardan e-posta ile haberdar olmak istiyorum.</span>
     </label>
 
-    <button type="submit" class="btn-submit"><i class="fa-solid fa-user-plus"></i> Üye Ol</button>
+    <button type="button" id="registerBtn" class="btn-submit"><i class="fa-solid fa-user-plus"></i> Üye Ol</button>
   </form>
 
   <div class="auth-switch">
@@ -454,30 +503,53 @@ KAYIT = '''<div class="auth-card wide">
 </div>
 
 <script>
-simulateSubmit(document.getElementById('registerForm'), () => {
-  const pw1 = document.getElementById('pw').value;
-  const pw2 = document.getElementById('pw2').value;
-  if (pw1 !== pw2) { alert('Şifreler eşleşmiyor.'); location.reload(); return; }
-  showToast('Hoş geldin! Şimdi giriş yapabilirsin.', 'fa-circle-check');
-  setTimeout(() => location.href = 'giris.html', 1200);
+document.getElementById('registerBtn').addEventListener('click', () => {
+  const ad = document.getElementById('ad');
+  const soyad = document.getElementById('soyad');
+  const email = document.getElementById('email');
+  const tel = document.getElementById('tel');
+  const pw = document.getElementById('pw');
+  const pw2 = document.getElementById('pw2');
+  const kvkk = document.getElementById('kvkk');
+  const btn = document.getElementById('registerBtn');
+  let ok = true;
+  [ad, soyad, email, tel, pw, pw2].forEach(clearFieldError);
+  if (!ad.value.trim()) { setFieldError(ad, 'Ad zorunlu.'); ok = false; }
+  if (!soyad.value.trim()) { setFieldError(soyad, 'Soyad zorunlu.'); ok = false; }
+  if (!email.value.trim() || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email.value)) { setFieldError(email, 'Geçerli bir e-posta girin.'); ok = false; }
+  if (!tel.value.trim() || tel.value.replace(/\\D/g,'').length < 10) { setFieldError(tel, 'Geçerli bir telefon girin.'); ok = false; }
+  if (!pw.value || pw.value.length < 8) { setFieldError(pw, 'Şifre en az 8 karakter olmalı.'); ok = false; }
+  if (pw.value !== pw2.value) { setFieldError(pw2, 'Şifreler eşleşmiyor.'); ok = false; }
+  if (!kvkk.checked) { showToast('KVKK metnini onaylamanız gerekiyor.', 'fa-circle-exclamation'); ok = false; }
+  if (!ok) return;
+  btnLoading(btn);
+  setTimeout(() => {
+    const fullName = ad.value.trim() + ' ' + soyad.value.trim();
+    localStorage.setItem('isLoggedIn', 'true');
+    localStorage.setItem('userName', fullName);
+    localStorage.setItem('userEmail', email.value.trim());
+    showToast('Hoş geldiniz ' + ad.value.trim() + '!', 'fa-circle-check');
+    setTimeout(() => location.href = 'uyelik-bilgilerim.html', 1500);
+  }, 800);
 });
 </script>
 '''
 
 # ============ PAGE 3: SIFREMI-UNUTTUM ============
-UNUTTUM = '''<div class="auth-card">
+UNUTTUM_HEAD = head_block('Şifremi Unuttum', 'Hatırladınız mı?', 'Giriş Yap', 'giris.html', 'Şifremi Unuttum')
+UNUTTUM_BODY = '''<div class="auth-card" id="forgotCard">
   <div class="auth-head">
     <h1>Şifremi Unuttum</h1>
     <p class="lead">E-posta adresinizi girin, size sıfırlama bağlantısı gönderelim.</p>
   </div>
 
-  <form id="forgotForm" novalidate>
+  <form id="forgotForm" onsubmit="return false" novalidate>
     <div class="field">
       <label for="email">E-posta <span class="req">*</span></label>
-      <input id="email" name="email" type="email" required placeholder="ornek@mail.com" autocomplete="email">
+      <input id="email" name="email" type="email" placeholder="ornek@mail.com" autocomplete="email">
       <span class="hint">Hesabınıza kayıtlı e-posta adresini girin.</span>
     </div>
-    <button type="submit" class="btn-submit"><i class="fa-solid fa-paper-plane"></i> Sıfırlama Bağlantısı Gönder</button>
+    <button type="button" id="forgotBtn" class="btn-submit"><i class="fa-solid fa-paper-plane"></i> Sıfırlama Bağlantısı Gönder</button>
   </form>
 
   <div class="auth-switch">
@@ -492,42 +564,51 @@ UNUTTUM = '''<div class="auth-card">
     <p>E-posta kutunuzu kontrol edin. Spam klasörünüze de bakmayı unutmayın.</p>
     <a href="giris.html" class="btn-submit" style="text-decoration:none">Giriş Sayfasına Dön</a>
     <div class="cooldown" id="cooldownText">Tekrar göndermek için: <b><span id="cdSec">60</span></b> saniye</div>
-    <button type="button" class="forgot" id="resendBtn" style="display:none;border:0;background:transparent;margin-top:var(--s-3);font-weight:700;cursor:pointer">Tekrar Gönder</button>
+    <button type="button" class="forgot" id="resendBtn" style="display:none;border:0;background:transparent;margin-top:var(--s-3);font-weight:700;cursor:pointer;color:var(--primary-700)">Tekrar Gönder</button>
   </div>
 </div>
 
 <script>
-simulateSubmit(document.getElementById('forgotForm'), (form) => {
-  form.closest('.auth-card').style.display = 'none';
-  const succ = document.getElementById('successCard');
-  succ.style.display = 'block';
-  let s = 60;
-  const tick = setInterval(() => {
-    s--;
-    document.getElementById('cdSec').textContent = s;
-    if (s <= 0) {
-      clearInterval(tick);
-      document.getElementById('cooldownText').style.display = 'none';
-      document.getElementById('resendBtn').style.display = 'inline-block';
-    }
-  }, 1000);
+document.getElementById('forgotBtn').addEventListener('click', () => {
+  const email = document.getElementById('email');
+  const btn = document.getElementById('forgotBtn');
+  clearFieldError(email);
+  if (!email.value.trim() || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email.value)) {
+    setFieldError(email, 'Geçerli bir e-posta girin.'); return;
+  }
+  btnLoading(btn);
+  setTimeout(() => {
+    document.getElementById('forgotCard').style.display = 'none';
+    document.getElementById('successCard').style.display = 'block';
+    let s = 60;
+    const tick = setInterval(() => {
+      s--;
+      document.getElementById('cdSec').textContent = s;
+      if (s <= 0) {
+        clearInterval(tick);
+        document.getElementById('cooldownText').style.display = 'none';
+        document.getElementById('resendBtn').style.display = 'inline-block';
+      }
+    }, 1000);
+  }, 700);
 });
 document.getElementById('resendBtn').addEventListener('click', () => location.reload());
 </script>
 '''
 
 # ============ PAGE 4: SIFRE-SIFIRLA ============
-SIFIRLA = '''<div class="auth-card" id="resetCard">
+SIFIRLA_HEAD = head_block('Yeni Şifre Belirle', 'Hesabınız var mı?', 'Giriş Yap', 'giris.html', 'Şifre Sıfırla')
+SIFIRLA_BODY = '''<div class="auth-card" id="resetCard">
   <div class="auth-head">
     <h1>Yeni Şifre Belirle</h1>
     <p class="lead">Hesabınız için güçlü bir şifre seçin.</p>
   </div>
 
-  <form id="resetForm" novalidate>
+  <form id="resetForm" onsubmit="return false" novalidate>
     <div class="field">
       <label for="pw">Yeni Şifre <span class="req">*</span></label>
       <div class="pw-wrap">
-        <input id="pw" name="password" type="password" required minlength="8" placeholder="En az 8 karakter" autocomplete="new-password" data-pw-strength="#pwStrengthBox">
+        <input id="pw" name="password" type="password" placeholder="En az 8 karakter" autocomplete="new-password" data-pw-strength="#pwStrengthBox">
         <button type="button" class="pw-toggle" aria-label="Şifreyi göster"><i class="fa-regular fa-eye"></i></button>
       </div>
       <div id="pwStrengthBox">
@@ -539,13 +620,13 @@ SIFIRLA = '''<div class="auth-card" id="resetCard">
     <div class="field">
       <label for="pw2">Yeni Şifre Tekrar <span class="req">*</span></label>
       <div class="pw-wrap">
-        <input id="pw2" name="password2" type="password" required placeholder="Şifrenizi tekrar girin" autocomplete="new-password" data-pw-match="#pw">
+        <input id="pw2" name="password2" type="password" placeholder="Şifrenizi tekrar girin" autocomplete="new-password" data-pw-match="#pw">
         <button type="button" class="pw-toggle" aria-label="Şifreyi göster"><i class="fa-regular fa-eye"></i></button>
       </div>
       <span class="match-msg"></span>
     </div>
 
-    <button type="submit" class="btn-submit"><i class="fa-solid fa-lock"></i> Şifreyi Güncelle</button>
+    <button type="button" id="resetBtn" class="btn-submit"><i class="fa-solid fa-lock"></i> Şifreyi Güncelle</button>
   </form>
 </div>
 
@@ -559,31 +640,33 @@ SIFIRLA = '''<div class="auth-card" id="resetCard">
 </div>
 
 <script>
-// Demo token validation: read ?token=... from URL
-const params = new URLSearchParams(location.search);
-if (!params.get('token')) {
-  // No token: show warning but allow demo
-  console.warn('No reset token in URL — running demo mode.');
-}
-simulateSubmit(document.getElementById('resetForm'), () => {
-  const pw1 = document.getElementById('pw').value;
-  const pw2 = document.getElementById('pw2').value;
-  if (pw1 !== pw2) { alert('Şifreler eşleşmiyor.'); location.reload(); return; }
-  document.getElementById('resetCard').style.display = 'none';
-  document.getElementById('successCard').style.display = 'block';
+document.getElementById('resetBtn').addEventListener('click', () => {
+  const pw = document.getElementById('pw');
+  const pw2 = document.getElementById('pw2');
+  const btn = document.getElementById('resetBtn');
+  clearFieldError(pw); clearFieldError(pw2);
+  let ok = true;
+  if (!pw.value || pw.value.length < 8) { setFieldError(pw, 'Şifre en az 8 karakter olmalı.'); ok = false; }
+  if (calcStrength(pw.value) === 'weak') { setFieldError(pw, 'Şifre çok zayıf. Büyük harf, sayı ve sembol ekleyin.'); ok = false; }
+  if (pw.value !== pw2.value) { setFieldError(pw2, 'Şifreler eşleşmiyor.'); ok = false; }
+  if (!ok) return;
+  btnLoading(btn);
+  setTimeout(() => {
+    document.getElementById('resetCard').style.display = 'none';
+    document.getElementById('successCard').style.display = 'block';
+  }, 700);
 });
 </script>
 '''
 
 PAGES = [
-    ('giris.html', 'Giriş Yap', GIRIS),
-    ('kayit.html', 'Üye Ol', KAYIT),
-    ('sifremi-unuttum.html', 'Şifremi Unuttum', UNUTTUM),
-    ('sifre-sifirla.html', 'Yeni Şifre Belirle', SIFIRLA),
+    ('giris.html', GIRIS_HEAD, GIRIS_BODY),
+    ('kayit.html', KAYIT_HEAD, KAYIT_BODY),
+    ('sifremi-unuttum.html', UNUTTUM_HEAD, UNUTTUM_BODY),
+    ('sifre-sifirla.html', SIFIRLA_HEAD, SIFIRLA_BODY),
 ]
 
-for fname, title, body in PAGES:
-    head = HEAD_TPL.format(title=title, css=BASE_CSS)
+for fname, head, body in PAGES:
     html = head + body + FOOTER_HTML + JS_COMMON + '\n</body>\n</html>\n'
     (ROOT / fname).write_text(html)
     print(f'Wrote {fname}')

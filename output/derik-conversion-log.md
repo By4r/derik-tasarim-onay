@@ -549,3 +549,55 @@ Her sayfaya `</body>` öncesi `=== AUTH STATE (v3.7) ===` JS bloğu eklendi:
 
 ### Default state
 `isLoggedIn = false` (localStorage flag yok). Demo için: `localStorage.setItem('isLoggedIn','true')` console'da test edilebilir.
+
+---
+
+## v3.7.1 — Auth Form Submit Fix + Dynamic User Data
+
+**Date:** 2026-05-04
+
+### Bug 1: Form GET submit (URL'de query param)
+**Root cause:** `<form>` default behavior `method="get"` + `<button type="submit">` tetikleniyor; bazı durumlarda preventDefault tetiklenmeden navigation oluyordu.
+
+**Fix:** Tüm 4 auth sayfasında:
+- `<form onsubmit="return false" novalidate>` — fail-safe submit blocker
+- Submit butonu artık `<button type="button" id="X" class="btn-submit">` — form submit hiç tetiklenmiyor
+- Click handler: `document.getElementById('X').addEventListener('click', () => {...})`
+- Manuel validation + `setFieldError` / `clearFieldError` helper'ları eklendi (red border + inline mesaj)
+
+### Bug 2: Navigation tutarsızlığı (KD pattern eksik)
+**Fix:** 4 auth sayfasının ortak header'ında:
+- Sol: `Derik` logo (anasayfa linki)
+- Sağ (context-aware):
+  - giris → "Hesabınız yok mu? **Üye Olun**"
+  - kayit → "Zaten üye misiniz? **Giriş Yapın**"
+  - sifremi-unuttum → "Hatırladınız mı? **Giriş Yap**"
+  - sifre-sifirla → "Hesabınız var mı? **Giriş Yap**"
+- "Anasayfaya Dön" linki KALDIRILDI (yerine context-aware switch)
+
+**Eklendi:** Form kartının ÜSTÜNDE breadcrumb (`Anasayfa > Üye Girişi/Üye Ol/Şifremi Unuttum/Şifre Sıfırla`).
+
+**Eklendi:** Form kartının ALTINDA "← Alışverişe devam et" linki — anasayfaya hızlı çıkış.
+
+### Form submit davranışları (spec'e uygun)
+| Sayfa | Davranış |
+|---|---|
+| `giris.html` | E-mail format + şifre min 6 karakter validation. Başarılı: `localStorage.setItem('isLoggedIn','true')` + `userEmail` + `userName` (email'in @ öncesinden capitalize). Loading 800ms → `?next=` veya `uyelik-bilgilerim.html` |
+| `kayit.html` | Tüm zorunlu alanlar + KVKK + şifre eşleşme. Başarılı: `userName = ad + ' ' + soyad`. Toast "Hoş geldiniz [Ad]!" + 1500ms → uyelik-bilgilerim |
+| `sifremi-unuttum.html` | E-mail format. Success state + 60sn cooldown + "Tekrar Gönder" button |
+| `sifre-sifirla.html` | Şifre min 8 + güçlülük != 'weak' + match. Success state + "Giriş Sayfasına Dön" CTA |
+
+### Dynamic User Data (13 sayfada)
+
+`_inject_auth_state.py` (v3.7.1) güncellendi:
+
+1. **Header dropdown'da kullanıcı kartı**: `isLoggedIn` ise dropdown menu üstüne avatar (initial) + ad + e-mail enjekte ediliyor. CSS dynamic eklemede.
+
+2. **Hesap sidebar'da dinamik veri**: `.account-side .user` içindeki `.avatar`, `.user-info b`, `.user-info span` localStorage'dan okuyor (default fallback: 'Hesabım' + boş email).
+
+3. **uyelik-bilgilerim.html form pre-fill**: page load'da `#ad`, `#soyad`, `#email` localStorage'dan dolduruluyor. `userName` boşluğa göre split — 1. kısım ad, kalanı soyad.
+
+4. **Çıkış Yap**: `localStorage.removeItem('isLoggedIn')` + `userName` + `userEmail` → `giris.html`
+
+### Idempotency
+v3.7 marker'ı veya v3.7.1 marker'ı varsa script eski JS bloğunu söküyor, yeniden enjekte ediyor. Tekrar çalıştırmak güvenli.
