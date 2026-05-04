@@ -32,8 +32,18 @@ select:focus{ /* focus state'te chevron rengi değişebilir */ }
 **Tuzaklar:**
 - `<button>` ile `<select>` aynı görünmez. Sıralama dropdown'ı için `<button>` daha kontrol edilebilir ama erişilebilirlik (keyboard navigation, screen reader) için `<select>` daha iyi. Karar gereği farkı gözet.
 - SVG chevron'u inline data URI olarak göm — external dosya istek sayısı arttırır, FOUC riski.
-- `padding-right` `!important` çünkü scoped `.modal .field input,.modal .field select`'i override eden başka bir rule olabilir.
 - Stroke rengini `%23` ile escape et URI içinde (`%23` = `#`).
+- **CRITICAL — shorthand `background:#fff` override (v3.13.1 lesson):** Scoped selector'larda (`.page-head .sort{background:#fff}` veya `.modal .field select{background:#fff}`) **shorthand `background` property** her şeyi resetler — `background-image` dahil. Bizim chevron rule'umuz `select{background-image:...}` sonra yüklense bile **specificity savaşı**'nda kaybeder (scoped 0,2,0 vs element 0,0,1). Çözüm: chevron property'lerinin tamamına `!important` ekle:
+  ```css
+  select{
+    appearance:none!important;
+    background-image:url(...)!important;
+    background-repeat:no-repeat!important;
+    background-position:right 14px center!important;
+    padding-right:38px!important;
+  }
+  ```
+  Alternatif: `background-color:#fff` yazılması (shorthand yerine longhand) ama bu refactor zorlaması demek; `!important` daha pratik. Bu hata v3.13'te yapıldı, v3.13.1'de düzeltildi — chevron tamamen kayboldu çünkü `background:#fff` shorthand `background-image`'i `none`'a resetliyordu.
 
 #### C) Mobile header tasarımında "exception list" kullan
 Genel mobile pattern: hamburger + sepet görünür, geri kalan ikonlar gizlenir. Ama bazı ikonlar (search özellikle) mobile'de KRİTİK çünkü kullanıcı ürün arıyor. Selector formülü:
@@ -47,6 +57,13 @@ Genel mobile pattern: hamburger + sepet görünür, geri kalan ikonlar gizlenir.
 `:not()` zinciri ile **white-list** mantığı kur — gizlenen default, görünür olan exception. Yeni ikon (örn. dil seçici) eklenirse selector'a tek `:not()` eklemek yeter, mantık değişmez.
 
 **Touch target**: mobile'de ikon buton min `44x44px` (Apple HIG + Google Material). `padding` ile büyüt, `width/height` ile değil — visual size küçük kalsın, tıklanabilir alan büyük olsun.
+
+#### D) "Görsel gelmiyor" raporu — `<img>` mı yoksa placeholder `<div>` mi?
+v3.13.1'de patron "ürün görselleri gelmiyor" dedi. İlk hipotez: 404, lazy-loading, Unsplash rate-limit. **Hiçbiri değildi.** `grep -c '<img class="product-img"' arama.html` → **0**. Aynı sayfada `grep -c '<div class="img-fallback">'` → **8**. arama.html ve favoriler.html, kart şablonu olarak `<img>` yerine **placeholder `<div class="img-fallback">`** taşıyordu — gerçek `<img>` tag'i hiç oluşturulmamıştı (template kalıntısı). magaza.html ve index.html'de doğru `<img>` vardı, o yüzden onlar çalışıyordu.
+
+**Workflow:** "X gelmiyor" raporunda **önce element'in HTML'de var olduğunu doğrula** (grep), sonra src/CSS/network audit'a geç. Tersini yapmak (önce 404 testi) zaman kaybı — eğer element zaten yoksa hiçbir network test fail edemez.
+
+**Fix pattern:** Placeholder div'leri Unsplash URL'leri ile rotate eden `<img>` tag'lerine dönüştür, alt-text'i sayfada bulunan `.product-title`'dan otomatik çek (Python regex inject script).
 
 ### Workflow notu — 3 paralel bug aynı release'te
 Üç bug'ı tek release'te (v3.13) çözmek için: (1) her birini önce **bağımsız audit**, (2) sonra tek commit. Audit aşamasında subagent kullanmadım çünkü her bug'ın inspection adımı 2-3 grep'lik iş, subagent overhead karşılığı yok. Düzeltme aşaması da mekanik (perl one-liner, python inject script) — subagent gerekmedi. **Eğer her bug 5+ sayfada judgment-heavy edit gerektirseydi, subagent + paralel kazanırdı.** Karar kuralı: *audit + fix toplam adım ≥10 ise paralel düşün, değilse seri.*

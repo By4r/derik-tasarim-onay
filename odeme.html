@@ -1720,10 +1720,10 @@ document.querySelectorAll('.add-cart, [data-add-cart]').forEach(b => {
 .page-band + *{padding-top:clamp(40px,5vw,64px)}
 .page-band + .container{padding-top:clamp(40px,5vw,64px)}
 @media(max-width:768px){.page-band{padding:36px 0}.page-band--minimal{padding:18px 0}.page-band--compact{padding:28px 0}.page-band h1{font-size:26px}.page-band .lead,.page-band>.container>p,.page-band .legal-hero p{font-size:14px;padding:0 16px}.page-band + *,.page-band + .container{padding-top:clamp(28px,5vw,40px)}}
-/* ===== v3.13 SELECT CHEVRON ===== */
-select{appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%236B5847' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px!important}
+/* ===== v3.13 SELECT CHEVRON (revised v3.13.1 — !important to beat shorthand background:#fff) ===== */
+select{appearance:none!important;-webkit-appearance:none!important;-moz-appearance:none!important;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%236B5847' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>")!important;background-repeat:no-repeat!important;background-position:right 14px center!important;padding-right:38px!important}
 select::-ms-expand{display:none}
-select:focus{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%233B4A2A' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>")}
+select:focus{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%233B4A2A' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>")!important}
 </style>
 
 <script>
