@@ -250,6 +250,38 @@ KD'deki ürün kartı askısı/yarım daire dekoratif eleman bilinçli olarak al
 ### Build
 `output/_build_v2.py`'ye `build_hikayemiz()` modülü eklendi, FILES sözlüğüne girdi yapıldı. Tek seferde 4 sayfa build ediliyor (`hikayemiz.html` 42 KB).
 
+---
+
+## v2.5 — uretim.html (yeni sayfa, skill ile KD referansı)
+
+Tarih: 2026-05-04
+Skill kullanımı: `web-replicator` → `https://www.kahvedunyasi.com/uretim`
+- FETCH: HTML + 5 CSS bundle (`output/_fetch/kahvedunyasi-uretim/`)
+- ANALYZE: WebFetch ile KD'nin 3 ürün kategorisi (Kahve / Çikolata / Pastacılık) layout pattern'ı çıkarıldı
+- ADAPT: Derik karşılığı 3 kategori (Zeytinyağı / Zeytin / Sabun & Doğal Ürünler)
+
+### Bilinçli sapma — KD'den ayrılan tasarım kararı
+KD'nin "Kakao Çekirdeği: Çikolatanın Kalbi" / "Çikolata Tutkusu Kakao Tanesinde Başlar" gibi alt başlıklı kart stack'i Derik'te **kullanılmadı** (kullanıcı kararı: hizalama sorunu yaratıyor). Yerine sağ tarafta **akıcı 2 paragraf düz yazı** kullanıldı.
+
+### Sayfa yapısı
+1. **Breadcrumb** — Anasayfa › Hakkımızda › Üretim
+2. **HERO** (`.uretim-hero`) — primary-700 zemin, ortada eyebrow + h1 + p (centered, max-w 880)
+3. **SECTION 1 — Zeytinyağı** — 2-col head (sol başlık, sağ akıcı 2 paragraf) + altta 21:9 full-width görsel
+4. **SECTION 2 — Zeytin** — aynı layout, `.alt` (krem zemin)
+5. **SECTION 3 — Sabun & Doğal Ürünler** — aynı layout, beyaz zemin
+6. Her section'ın altta border ile ayrımı, alternating bg, hover'da görsel yumuşak scale 1.02
+
+### Header dropdown güncellemesi
+"Hakkımızda ▾" altındaki "Üretim" linki 5 sayfada (`index/magaza/urun-detay/hikayemiz/uretim`) artık `uretim.html`'e gidiyor.
+
+### Görsel reuse (önceki sayfalardan)
+- Zeytinyağı section: `story_grove` (zeytinlik manzara)
+- Zeytin section: `cat_zeyt`
+- Sabun section: `cat_sabun`
+
+### Build
+`output/_build_v2.py`'ye `build_uretim()` modülü + `.uretim-*` CSS sınıfları eklendi. Tek seferde 5 sayfa build oluyor.
+
 ## Park Edilenler (sonraki revize için)
 1. **Canlı Destek floating buton** (sağ alt köşe, FA `fa-comments`)
 2. **Mega menu**: kategori hover'da 3-sütun alt menü (KD'deki gibi)
