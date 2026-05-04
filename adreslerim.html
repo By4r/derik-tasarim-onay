@@ -197,7 +197,13 @@ ul{list-style:none}
 .addr-card .addr-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--s-4);padding-bottom:var(--s-3);border-bottom:1px solid var(--border)}
 .addr-card .addr-title{display:inline-flex;align-items:center;gap:var(--s-2);font-size:var(--fs-md);font-weight:700;color:var(--text)}
 .addr-card .addr-title i{color:var(--primary-700)}
-.addr-card .default-tag{display:inline-block;background:var(--primary-100);color:var(--primary-700);font-size:10px;font-weight:700;padding:3px 8px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.06em;margin-left:6px}
+.addr-tags{display:inline-flex;gap:6px;align-items:center;margin-left:8px;flex-wrap:wrap}
+.addr-tag{display:inline-block;font-size:10px;font-weight:700;padding:4px 10px;border-radius:var(--r-sm);text-transform:uppercase;letter-spacing:.06em;line-height:1.2}
+.addr-tag.default{background:var(--primary-700);color:var(--bg)}
+.addr-tag.bireysel{background:var(--bg-soft);color:var(--text);border:1px solid var(--border)}
+.addr-tag.kurumsal{background:var(--accent-gold);color:var(--primary-900)}
+.addr-corp{margin-top:var(--s-3);padding-top:var(--s-3);border-top:1px dashed var(--border);display:flex;flex-direction:column;gap:4px;font-size:var(--fs-xs);color:var(--text-2)}
+.addr-corp b{color:var(--text);font-weight:700}
 .addr-card .addr-actions{display:flex;gap:var(--s-2)}
 .addr-card .addr-actions button{width:32px;height:32px;border-radius:var(--r-sm);background:var(--bg-soft);color:var(--text-2);display:inline-flex;align-items:center;justify-content:center;transition:all var(--t-fast)}
 .addr-card .addr-actions button:hover{background:var(--primary-700);color:#fff}
@@ -372,7 +378,7 @@ body.modal-open{overflow:hidden}
 
 <div class="container account-page-head">
   <h1>Adreslerim</h1>
-  <p class="lead">Teslimat ve fatura adreslerinizi yönetin.</p>
+  <p class="lead">Teslimat ve fatura adreslerinizi tek yerden yönetin.</p>
 </div>
 
 <div class="container">
@@ -397,45 +403,63 @@ body.modal-open{overflow:hidden}
 </aside>
 
     <div class="account-content">
-      <div class="acc-tabs">
-        <button class="active" data-tab="tab-teslimat">Teslimat Adreslerim</button>
-        <button data-tab="tab-fatura">Fatura Bilgilerim</button>
-      </div>
-
-      <div id="tab-teslimat" class="acc-tab-panel active">
-        <div class="addr-grid">
-          <div class="addr-card" id="addr-1"
-               data-ad="Beyar" data-soyad="Güneş" data-tel="5461234575"
-               data-il="34" data-ilce="kadikoy" data-mah="caferaga"
-               data-adres="Caferağa Mahallesi, Moda Caddesi No:42 Daire 5"
-               data-baslik="Ev">
-            <div class="addr-head">
-              <span class="addr-title"><i class="fa-solid fa-house"></i> Ev <span class="default-tag">Varsayılan</span></span>
-              <div class="addr-actions">
-                <button aria-label="Düzenle" data-edit-addr="addr-1"><i class="fa-solid fa-pen"></i></button>
-                <button class="danger" aria-label="Sil"><i class="fa-regular fa-trash-can"></i></button>
-              </div>
+      <div class="addr-grid">
+        <div class="addr-card" id="addr-1"
+             data-ad="Beyar" data-soyad="Güneş" data-tel="5461234575"
+             data-il="34" data-ilce="kadikoy" data-mah="caferaga"
+             data-adres="Caferağa Mahallesi, Moda Caddesi No:42 Daire 5"
+             data-baslik="Ev" data-invoice="bireysel" data-tckn="">
+          <div class="addr-head">
+            <span class="addr-title">
+              <i class="fa-solid fa-house"></i> Ev
+              <span class="addr-tags">
+                <span class="addr-tag default">Varsayılan</span>
+                <span class="addr-tag bireysel">Bireysel</span>
+              </span>
+            </span>
+            <div class="addr-actions">
+              <button aria-label="Düzenle" data-edit-addr="addr-1"><i class="fa-solid fa-pen"></i></button>
+              <button class="danger" aria-label="Sil"><i class="fa-regular fa-trash-can"></i></button>
             </div>
-            <div class="addr-name">Beyar Güneş</div>
-            <p>Caferağa Mahallesi, Moda Caddesi No:42 Daire 5</p>
-            <p>Kadıköy / İstanbul</p>
-            <div class="addr-phone"><i class="fa-solid fa-phone"></i> 0 (546) **** 75</div>
           </div>
-
-          <a href="#" class="addr-add" data-open-modal>
-            <i class="fa-solid fa-plus"></i>
-            Yeni Adres Ekle
-          </a>
+          <div class="addr-name">Beyar Güneş</div>
+          <p>Caferağa Mahallesi, Moda Caddesi No:42 Daire 5</p>
+          <p>Kadıköy / İstanbul</p>
+          <div class="addr-phone"><i class="fa-solid fa-phone"></i> 0 (546) **** 75</div>
         </div>
-      </div>
 
-      <div id="tab-fatura" class="acc-tab-panel">
-        <div class="empty-state">
-          <i class="fa-regular fa-file-lines"></i>
-          <h3>Henüz fatura bilginiz yok</h3>
-          <p>Kurumsal alımlarınız için fatura bilgilerinizi ekleyebilirsiniz.</p>
-          <a href="#" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Fatura Bilgisi Ekle</a>
+        <div class="addr-card" id="addr-2"
+             data-ad="Beyar" data-soyad="Güneş" data-tel="2125550123"
+             data-il="34" data-ilce="sisli" data-mah="moda"
+             data-adres="Esentepe Mahallesi, Büyükdere Caddesi No:120 Kat:8"
+             data-baslik="Ofis" data-invoice="kurumsal"
+             data-vkn="1234567890" data-vd="Şişli" data-firma="Dada İstanbul Tasarım Ltd. Şti.">
+          <div class="addr-head">
+            <span class="addr-title">
+              <i class="fa-solid fa-briefcase"></i> Ofis
+              <span class="addr-tags">
+                <span class="addr-tag kurumsal">Kurumsal</span>
+              </span>
+            </span>
+            <div class="addr-actions">
+              <button aria-label="Düzenle" data-edit-addr="addr-2"><i class="fa-solid fa-pen"></i></button>
+              <button class="danger" aria-label="Sil"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+          </div>
+          <div class="addr-name">Beyar Güneş</div>
+          <p>Esentepe Mahallesi, Büyükdere Caddesi No:120 Kat:8</p>
+          <p>Şişli / İstanbul</p>
+          <div class="addr-phone"><i class="fa-solid fa-phone"></i> 0 (212) **** 23</div>
+          <div class="addr-corp">
+            <span><b>Firma:</b> Dada İstanbul Tasarım Ltd. Şti.</span>
+            <span><b>VKN:</b> 1234567890 · Şişli V.D.</span>
+          </div>
         </div>
+
+        <a href="#" class="addr-add" data-open-modal>
+          <i class="fa-solid fa-plus"></i>
+          Yeni Adres Ekle
+        </a>
       </div>
     </div>
   </div>
@@ -654,10 +678,10 @@ document.querySelectorAll('.acc-tabs').forEach(g => {
   const form = document.getElementById('addrForm');
   const title = document.getElementById('addrModalTitle');
 
-  function openModal(prefill){
+  function openModal(prefill, invoice){
     title.textContent = prefill ? 'Adresi düzenle' : 'Adres ekle';
     form.reset();
-    setInvoice('bireysel');
+    setInvoice(invoice || 'bireysel');
     if (prefill) {
       for (const [k,v] of Object.entries(prefill)) {
         const el = form.querySelector(`[name="${k}"]`);
@@ -691,11 +715,20 @@ document.querySelectorAll('.acc-tabs').forEach(g => {
       e.preventDefault();
       const card = document.getElementById(btn.dataset.editAddr);
       if (!card) return;
-      openModal({
+      const invoice = card.dataset.invoice || 'bireysel';
+      const prefill = {
         ad: card.dataset.ad, soyad: card.dataset.soyad, tel: card.dataset.tel,
         il: card.dataset.il, ilce: card.dataset.ilce, mah: card.dataset.mah,
         adres: card.dataset.adres, baslik: card.dataset.baslik,
-      });
+      };
+      if (invoice === 'kurumsal') {
+        prefill.vkn = card.dataset.vkn || '';
+        prefill.vd = card.dataset.vd || '';
+        prefill.firma = card.dataset.firma || '';
+      } else {
+        prefill.tckn = card.dataset.tckn || '';
+      }
+      openModal(prefill, invoice);
     });
   });
   // Close
