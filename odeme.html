@@ -877,7 +877,7 @@ body.mobile-panel-open{overflow:hidden}
   background:radial-gradient(circle,rgba(201,165,91,.16),transparent 65%);pointer-events:none;
 }
 .cc-back{transform:rotateY(180deg);padding:0}
-.cc-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2}
+.cc-top{display:flex;align-items:center;justify-content:space-between;gap:14px;position:relative;z-index:2}
 .cc-chip-row{display:flex;align-items:center;gap:10px}
 .cc-contactless{width:22px;height:22px;opacity:.92;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
 .cc-chip{width:46px;height:34px;border-radius:6px;background:linear-gradient(135deg,#E8C77A 0%,#C9A55B 45%,#8C6D2F 100%);position:relative;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 1px 2px rgba(0,0,0,.25)}
@@ -885,15 +885,16 @@ body.mobile-panel-open{overflow:hidden}
 .cc-chip::after{inset:15px 7px;border:0;background:linear-gradient(90deg,transparent 0,rgba(0,0,0,.22) 0,rgba(0,0,0,.22) 1px,transparent 1px,transparent 12px,rgba(0,0,0,.22) 12px,rgba(0,0,0,.22) 13px,transparent 13px,transparent 24px,rgba(0,0,0,.22) 24px,rgba(0,0,0,.22) 25px,transparent 25px)}
 .cc-num{display:flex;gap:14px;font-family:ui-monospace,'SF Mono','Menlo',monospace;font-size:21px;font-weight:600;letter-spacing:.04em;font-variant-numeric:tabular-nums lining-nums;text-shadow:0 1px 2px rgba(0,0,0,.35);position:relative;z-index:2}
 .cc-num span{display:inline-block;min-width:64px}
-.cc-bottom{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:end;position:relative;z-index:2;padding-right:80px}
+.cc-bottom{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:end;position:relative;z-index:2}
+.cc-field{min-width:0}
 .cc-field label{display:block;font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;opacity:.65;margin-bottom:4px}
-.cc-field span{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.cc-field span{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;max-width:100%}
+.cc-exp{text-align:right}
 .cc-exp span{font-family:ui-monospace,'SF Mono',monospace;font-size:14px}
-/* All scheme logos pinned to a single fixed coordinate — Visa, Mastercard, Troy and Amex render in the same box.
-   Reference: Visa Brand Standards §4.2 + Mastercard Brand Mark Guidelines §3.1 — scheme mark is right-bottom-fixed regardless of which scheme is shown. */
-.cc-scheme{position:absolute;right:24px;bottom:22px;height:32px;display:flex;align-items:center;justify-content:flex-end;z-index:3;pointer-events:none}
+/* Scheme logo pinned to upper-right corner (opposite the chip), per Visa Brand Standards §4.2 and Mastercard Brand Mark Guidelines §3.1.
+   Lower-right pattern collides with cardholder/expiry row (real Garanti/İş Bankası/Akbank cards confirm upper-right). */
+.cc-scheme{height:32px;display:flex;align-items:center;justify-content:flex-end;z-index:3;flex-shrink:0;pointer-events:none}
 .cc-scheme svg{height:32px;width:auto;display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,.4))}
-.cc-back .cc-scheme{right:22px;bottom:18px}
 /* Back face */
 .cc-stripe{height:48px;background:#0a0a0a;margin-top:26px;width:100%;position:relative;z-index:2}
 .cc-sig-row{padding:16px 22px;display:flex;align-items:center;gap:12px;position:relative;z-index:2}
@@ -1113,12 +1114,12 @@ body.modal-open{overflow:hidden}
                             </g>
                           </svg>
                         </div>
+                        <div class="cc-scheme" id="cardScheme" aria-hidden="true"></div>
                       </div>
                       <div class="cc-num" id="cardVisNum"><span>••••</span><span>••••</span><span>••••</span><span>••••</span></div>
                       <div class="cc-bottom">
                         <div class="cc-field"><label>Kart Sahibi</label><span id="cardVisName">AD SOYAD</span></div>
                         <div class="cc-field cc-exp"><label>Geçerlilik</label><span id="cardVisExp">MM/YY</span></div>
-                        <div class="cc-scheme" id="cardScheme" aria-hidden="true"></div>
                       </div>
                     </div>
                     <div class="cc-face cc-back">
