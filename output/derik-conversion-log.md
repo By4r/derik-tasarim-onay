@@ -482,3 +482,70 @@ CSS injected into 8 pages: `index.html`, `magaza.html`, `urun-detay.html`, `hika
 ### Demo Data
 - Sipariş detayı: 2 ürün (Erken Hasat 500ml ×2 + Halhalı Yeşil 500g ×1) = 1.145 TL ara toplam − 100 TL indirim = 1.045 TL toplam, kredi kartı **** 4575
 - Kargo: Yurtiçi Kargo, takip YK4827193264, 4 done + 1 current + 2 pending step
+
+---
+
+## v3.7 — Auth Flow (4 sayfa + 13 sayfada auth state)
+
+**Date:** 2026-05-04
+**Skill:** web-replicator (KD `/uye-girisi` pattern referansı, fetch yapılmadı; bilinen pattern uygulandı)
+
+### KD'den Alınan Pattern
+
+| Element | KD pattern | Derik uygulaması |
+|---|---|---|
+| Header (auth sayfaları) | Sade — sadece logo + "Anasayfaya dön" linki | ✅ Aynen alındı (`auth-header`) |
+| Form layout | Tek kolon, max ~480px, ortalanmış card | ✅ 480px (kayit için 540px wide) |
+| Card stili | Beyaz arka, hafif border, sade shadow | ✅ Tokens'a uyarlandı (`#fff`, `--border`, `--shadow-1`) |
+| CTA butonu | Full-width, primary, koyu zemin | ✅ `--primary-700` zeytin yeşili (KD'de teal idi) |
+| "Üye değil misin?" | Form altında, divider üstünde | ✅ `auth-switch` border-top ile |
+| KVKK metni | Form altında küçük metin | ✅ `kvkk-note` 11px muted |
+| Sosyal login | KD'de yok | ❌ Eklendi (Google/Apple "Yakında" tooltip — Trendyol pattern) |
+| Footer | Tam footer | ✅ 12 sayfadaki ortak footer |
+
+### Derik'e Özel Değişiklikler (KD'den sapma)
+
+1. **Sosyal login placeholder** — KD'de yok, Trendyol/diğer modern e-ticaret pattern'i. "Yakında" rozeti ile disabled. Patron implementation'a karar verdiğinde aktif edilebilir.
+2. **Şifre güçlülük indicator** — KD'de yok, modern UX gereği eklendi (`pw-strength` 4 segment + Türkçe label "Zayıf/Orta/Güçlü").
+3. **Şifre eşleşme inline mesajı** — KD'de submit'te valide ediliyor; Derik anlık feedback (✓/✗ kayıt + sıfırla'da).
+4. **60sn cooldown** — şifremi-unuttum onay state'inde "Tekrar Gönder" butonu 60sn sonra aktifleşir (rate limiting UX).
+
+### 4 Sayfa Kararları
+
+| Sayfa | Layout | Özel davranış |
+|---|---|---|
+| `giris.html` | 480px card | E-mail + şifre + remember + forgot + Google/Apple placeholder + KVKK note |
+| `kayit.html` | 540px wide card | Ad/Soyad row + e-mail + telefon (+90) + şifre (strength) + tekrar (match) + KVKK zorunlu + bülten ops |
+| `sifremi-unuttum.html` | 480px card | E-mail tek alan → submit → success state + 60sn cooldown counter |
+| `sifre-sifirla.html` | 480px card | URL `?token=xxx` (demo), yeni şifre + tekrar (strength + match) → success state |
+
+### JS Auth Simülasyonu (frontend-only, statik)
+
+- `localStorage.isLoggedIn = 'true'` — giriş başarılı
+- `localStorage.userEmail = '...'` — display name için
+- `localStorage.removeItem` — Çıkış Yap
+- `?next=...` query param ile redirect targeting (protected page → giris)
+
+### 13 Mevcut Sayfada Header Güncellemesi (`_inject_auth_state.py`)
+
+Her sayfaya `</body>` öncesi `=== AUTH STATE (v3.7) ===` JS bloğu eklendi:
+
+1. **User icon davranışı**: `isLoggedIn !== 'true'` ise:
+   - `.user-dd-wrap a.icon-btn[href]` → `giris.html`
+   - `.user-dd-menu` `display:none`
+   - hover behavior CSS override ile devre dışı
+
+2. **Protected pages auth gate**: `uyelik-bilgilerim`, `siparis-gecmisim`, `siparis-detay`, `adreslerim`, `promosyonlarim` — login yoksa `giris.html?next=<here>`'a `location.replace()`
+
+3. **Çıkış Yap handler**: `<a href="#">` içinde "Çıkış" geçen tüm linkler — click event:
+   - `localStorage.removeItem('isLoggedIn')`
+   - `localStorage.removeItem('userEmail')`
+   - `location.href = 'giris.html'`
+
+### Toplam Değişiklik
+- **Yeni:** 4 sayfa (giris, kayit, sifremi-unuttum, sifre-sifirla)
+- **Güncellenen:** 13 sayfa (auth state JS injection)
+- **Yeni script:** `output/_build_auth.py`, `output/_inject_auth_state.py`
+
+### Default state
+`isLoggedIn = false` (localStorage flag yok). Demo için: `localStorage.setItem('isLoggedIn','true')` console'da test edilebilir.

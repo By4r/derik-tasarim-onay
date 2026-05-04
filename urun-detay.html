@@ -1008,5 +1008,46 @@ document.querySelectorAll('.add-cart, [data-add-cart]').forEach(b => {
   b.addEventListener('click', e => { e.preventDefault(); window.bumpCart(1); });
 });
 </script>
+
+<script>
+// === AUTH STATE (v3.7) ===
+(function(){
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  // 1. Header user icon: if not logged in, kill dropdown + redirect to giris
+  document.querySelectorAll('.user-dd-wrap').forEach(wrap => {
+    const link = wrap.querySelector('a.icon-btn');
+    const menu = wrap.querySelector('.user-dd-menu');
+    if (!isLoggedIn) {
+      if (link) link.setAttribute('href', 'giris.html');
+      if (menu) menu.style.display = 'none';
+      wrap.classList.add('logged-out');
+      // disable hover behavior by removing hover-trigger style
+      wrap.style.pointerEvents = 'auto';
+      const css = document.createElement('style');
+      css.textContent = '.user-dd-wrap.logged-out:hover .user-dd-menu{display:none!important}';
+      document.head.appendChild(css);
+    }
+  });
+  // 2. Hesap sayfası protected — redirect to giris.html if not logged in
+  const protectedPages = ['uyelik-bilgilerim.html','siparis-gecmisim.html','siparis-detay.html','adreslerim.html','promosyonlarim.html'];
+  const here = location.pathname.split('/').pop();
+  if (!isLoggedIn && protectedPages.includes(here)) {
+    location.replace('giris.html?next=' + encodeURIComponent(here));
+    return;
+  }
+  // 3. Çıkış Yap handler
+  document.querySelectorAll('a[href="#"]').forEach(a => {
+    if (a.textContent.trim().includes('Çıkış')) {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userEmail');
+        location.href = 'giris.html';
+      });
+    }
+  });
+})();
+</script>
+
 </body>
 </html>

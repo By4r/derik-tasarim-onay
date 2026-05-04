@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Şifremi Unuttum — Derik</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+<style>
+:root{
+  --primary-700:#3B4A2A;--primary-800:#6B7A3F;--primary-900:#2A3520;
+  --primary-100:#F2EBDC;--primary-200:#E8DFC9;
+  --bg:#FAF6EE;--bg-soft:#F2EBDC;--bg-section:#F2EBDC;
+  --bg-card:#E8DFC9;--bg-product:#FAF9F5;
+  --text:#2A1F14;--text-2:#4A3A2A;--muted:#8C7A6A;--muted-2:#B5A693;
+  --border:#E8DFC9;
+  --accent-gold:#C9A55B;--accent-gold-soft:#E8D4A1;
+  --accent-earth:#8C6A4A;--accent-red:#B04A3E;--accent-success:#5A7A3A;
+  --font:"Inter","Helvetica Neue",system-ui,Arial,sans-serif;
+  --fs-xs:12px;--fs-sm:14px;--fs-base:16px;--fs-md:18px;
+  --fs-lg:20px;--fs-xl:24px;--fs-2xl:28px;--fs-3xl:36px;
+  --icon-sm:14px;--icon-md:18px;
+  --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:20px;--s-6:24px;
+  --s-8:32px;--s-10:40px;--s-12:48px;
+  --r-sm:6px;--r-md:10px;--r-lg:12px;--r-pill:100px;
+  --shadow-1:0 2px 8px rgba(0,0,0,.06);
+  --shadow-2:0 6px 20px rgba(42,31,20,.10);
+  --maxw:1320px;--t-fast:.2s ease;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);font-size:var(--fs-base);color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+h1,h2,h3{letter-spacing:-0.015em;line-height:1.2}
+a{color:inherit;text-decoration:none;transition:color var(--t-fast)}
+a:hover{color:var(--primary-700)}
+button{font-family:inherit;cursor:pointer;border:0;background:transparent;color:inherit}
+ul{list-style:none}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 var(--s-8)}
+@media(max-width:768px){.container{padding:0 var(--s-6)}}
+
+/* SADE HEADER (auth only) */
+.auth-header{background:var(--bg);border-bottom:1px solid var(--border);padding:var(--s-5) 0}
+.auth-header .container{display:flex;align-items:center;justify-content:space-between}
+.brand-logo{font-size:30px;font-weight:800;letter-spacing:-0.025em;color:var(--primary-700);font-style:italic}
+.auth-header .back-link{font-size:var(--fs-sm);font-weight:600;color:var(--text-2);display:inline-flex;align-items:center;gap:6px}
+.auth-header .back-link:hover{color:var(--primary-700)}
+
+/* MAIN */
+main.auth-main{flex:1;display:flex;align-items:center;justify-content:center;padding:var(--s-10) var(--s-4)}
+
+.auth-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-10) var(--s-8);max-width:480px;width:100%;box-shadow:var(--shadow-1)}
+.auth-card.wide{max-width:540px}
+.auth-card .auth-head{text-align:center;margin-bottom:var(--s-8)}
+.auth-card h1{font-size:var(--fs-2xl);font-weight:700;margin-bottom:var(--s-2);color:var(--text)}
+.auth-card .lead{color:var(--text-2);font-size:var(--fs-sm)}
+
+.field{display:flex;flex-direction:column;margin-bottom:var(--s-4)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3);margin-bottom:var(--s-4)}
+.field-row .field{margin-bottom:0}
+.field label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.field label .req{color:var(--accent-gold);margin-left:2px}
+.field input{padding:13px 14px;border:1px solid var(--border);border-radius:var(--r-sm);font-family:inherit;font-size:var(--fs-sm);background:#fff;color:var(--text);width:100%;font-weight:500;transition:all var(--t-fast)}
+.field input:focus{outline:none;border-color:var(--primary-700);box-shadow:0 0 0 2px rgba(59,74,42,.08)}
+.field .hint{font-size:11px;color:var(--muted);margin-top:6px}
+
+/* Password */
+.pw-wrap{position:relative}
+.pw-wrap input{padding-right:42px}
+.pw-toggle{position:absolute;top:50%;right:10px;transform:translateY(-50%);width:30px;height:30px;border-radius:var(--r-sm);color:var(--muted);display:inline-flex;align-items:center;justify-content:center;transition:color var(--t-fast)}
+.pw-toggle:hover{color:var(--primary-700);background:var(--bg-soft)}
+
+/* Phone group */
+.phone-group{display:flex;align-items:stretch;border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;background:#fff;transition:all var(--t-fast)}
+.phone-group:focus-within{border-color:var(--primary-700);box-shadow:0 0 0 2px rgba(59,74,42,.08)}
+.phone-group .prefix{padding:13px 14px;background:var(--bg-soft);color:var(--text-2);font-weight:700;font-size:var(--fs-sm);border-right:1px solid var(--border);display:inline-flex;align-items:center;flex-shrink:0}
+.phone-group input{border:0!important;box-shadow:none!important;border-radius:0!important;flex:1}
+
+/* Strength bar */
+.pw-strength{display:flex;gap:4px;margin-top:8px;height:4px}
+.pw-strength span{flex:1;background:var(--border);border-radius:var(--r-pill);transition:background var(--t-fast)}
+.pw-strength.weak span:nth-child(1){background:var(--accent-red)}
+.pw-strength.medium span:nth-child(-n+2){background:var(--accent-gold)}
+.pw-strength.strong span{background:var(--accent-success)}
+.pw-strength-label{font-size:11px;margin-top:6px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.pw-strength-label.weak{color:var(--accent-red)}
+.pw-strength-label.medium{color:var(--accent-gold)}
+.pw-strength-label.strong{color:var(--accent-success)}
+
+/* Match indicator */
+.field .match-msg{font-size:11px;margin-top:6px;font-weight:600}
+.field .match-msg.ok{color:var(--accent-success)}
+.field .match-msg.err{color:var(--accent-red)}
+
+/* Checkbox */
+.check-row{display:flex;align-items:flex-start;gap:8px;font-size:var(--fs-sm);color:var(--text-2);margin:var(--s-3) 0;cursor:pointer;line-height:1.5}
+.check-row input{width:16px;height:16px;accent-color:var(--primary-700);flex-shrink:0;margin-top:3px}
+.check-row a{color:var(--primary-700);font-weight:700;text-decoration:underline}
+
+/* Submit */
+.btn-submit{width:100%;padding:14px;border-radius:var(--r-sm);background:var(--primary-700);color:#fff;font-weight:700;font-size:var(--fs-sm);letter-spacing:.04em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);cursor:pointer;border:0;margin-top:var(--s-4);transition:all var(--t-fast)}
+.btn-submit:hover:not(:disabled){background:var(--primary-900)}
+.btn-submit:disabled{background:var(--muted-2);cursor:not-allowed;opacity:.7}
+.btn-submit.loading{pointer-events:none}
+.btn-submit.loading::before{content:"";width:14px;height:14px;border:2px solid #fff;border-right-color:transparent;border-radius:50%;animation:spin .7s linear infinite;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Forgot link */
+.row-between{display:flex;justify-content:space-between;align-items:center;margin:var(--s-2) 0 var(--s-4);flex-wrap:wrap;gap:8px}
+.row-between .check-row{margin:0;font-size:var(--fs-sm)}
+.row-between .forgot{font-size:var(--fs-sm);font-weight:700;color:var(--primary-700)}
+.row-between .forgot:hover{color:var(--primary-900);text-decoration:underline}
+
+/* Divider */
+.divider-or{display:flex;align-items:center;gap:var(--s-3);margin:var(--s-6) 0;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.divider-or::before,.divider-or::after{content:"";flex:1;height:1px;background:var(--border)}
+
+/* Social buttons */
+.social-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3)}
+.social-btn{padding:12px;border:1px solid var(--border);border-radius:var(--r-sm);background:#fff;color:var(--text-2);font-weight:600;font-size:var(--fs-sm);display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:not-allowed;opacity:.7;position:relative;transition:all var(--t-fast)}
+.social-btn:hover{border-color:var(--muted-2)}
+.social-btn .soon{position:absolute;top:-8px;right:-6px;background:var(--accent-gold);color:var(--primary-900);font-size:9px;font-weight:700;padding:2px 6px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.04em}
+.social-btn i{font-size:16px}
+
+/* Bottom switch */
+.auth-switch{text-align:center;margin-top:var(--s-6);padding-top:var(--s-6);border-top:1px solid var(--border);font-size:var(--fs-sm);color:var(--text-2)}
+.auth-switch a{color:var(--primary-700);font-weight:700;margin-left:6px}
+.auth-switch a:hover{text-decoration:underline}
+
+/* KVKK note */
+.kvkk-note{margin-top:var(--s-4);font-size:11px;color:var(--muted);text-align:center;line-height:1.5}
+.kvkk-note a{color:var(--primary-700);text-decoration:underline}
+
+/* Success state */
+.success-state{text-align:center;padding:var(--s-6) 0}
+.success-state .check-icon{width:72px;height:72px;border-radius:50%;background:#E8F0DC;color:var(--accent-success);display:inline-flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:var(--s-5)}
+.success-state h2{font-size:var(--fs-xl);font-weight:700;margin-bottom:var(--s-3)}
+.success-state p{color:var(--text-2);font-size:var(--fs-sm);margin-bottom:var(--s-5)}
+.cooldown{font-size:var(--fs-sm);color:var(--muted);margin-top:var(--s-3)}
+.cooldown b{color:var(--primary-700)}
+
+/* FOOTER */
+.footer{background:var(--bg-section);padding:var(--s-12) 0 var(--s-6);margin-top:auto}
+.footer-cols{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:var(--s-8);padding-bottom:var(--s-10);border-bottom:1px solid var(--border)}
+.footer h4{font-size:var(--fs-sm);font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-bottom:var(--s-4)}
+.footer ul li{padding:6px 0}
+.footer ul li a{color:var(--text-2);font-size:var(--fs-sm)}
+.footer-brand p{color:var(--muted);font-size:var(--fs-sm);margin-top:var(--s-3);max-width:300px}
+.footer-bottom{padding-top:var(--s-5);display:flex;justify-content:space-between;align-items:center;font-size:var(--fs-xs);color:var(--muted);flex-wrap:wrap;gap:var(--s-4)}
+.socials{display:flex;gap:var(--s-3);margin-top:var(--s-4)}
+.socials a{width:38px;height:38px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:all var(--t-fast)}
+.socials a:hover{background:var(--primary-700);color:#fff}
+.policies{display:flex;gap:var(--s-4);flex-wrap:wrap}
+.contact-line{display:flex;align-items:center;gap:var(--s-2);color:var(--text-2);font-size:var(--fs-sm);padding:6px 0}
+.contact-line i{color:var(--primary-700);width:16px}
+@media(max-width:768px){
+  .footer-cols{grid-template-columns:1fr;gap:var(--s-6)}
+  .field-row{grid-template-columns:1fr}
+  .auth-card{padding:var(--s-6)}
+}
+
+/* Toast (shared) */
+.toast-stack{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+.toast{background:var(--primary-900);color:#fff;padding:12px 20px;border-radius:var(--r-md);font-size:var(--fs-sm);font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);display:flex;align-items:center;gap:10px;min-width:260px;animation:toastIn .25s ease;pointer-events:auto}
+.toast i{color:var(--accent-gold);font-size:16px}
+.toast.fade-out{animation:toastOut .3s ease forwards}
+@keyframes toastIn{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes toastOut{to{transform:translateY(20px);opacity:0}}
+</style>
+</head>
+<body>
+
+<header class="auth-header">
+  <div class="container">
+    <a href="index.html" class="brand-logo">Derik</a>
+    <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Anasayfaya Dön</a>
+  </div>
+</header>
+
+<main class="auth-main">
+<div class="auth-card">
+  <div class="auth-head">
+    <h1>Şifremi Unuttum</h1>
+    <p class="lead">E-posta adresinizi girin, size sıfırlama bağlantısı gönderelim.</p>
+  </div>
+
+  <form id="forgotForm" novalidate>
+    <div class="field">
+      <label for="email">E-posta <span class="req">*</span></label>
+      <input id="email" name="email" type="email" required placeholder="ornek@mail.com" autocomplete="email">
+      <span class="hint">Hesabınıza kayıtlı e-posta adresini girin.</span>
+    </div>
+    <button type="submit" class="btn-submit"><i class="fa-solid fa-paper-plane"></i> Sıfırlama Bağlantısı Gönder</button>
+  </form>
+
+  <div class="auth-switch">
+    <a href="giris.html"><i class="fa-solid fa-arrow-left"></i> Giriş sayfasına dön</a>
+  </div>
+</div>
+
+<div class="auth-card" id="successCard" style="display:none">
+  <div class="success-state">
+    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+    <h2>Bağlantıyı gönderdik</h2>
+    <p>E-posta kutunuzu kontrol edin. Spam klasörünüze de bakmayı unutmayın.</p>
+    <a href="giris.html" class="btn-submit" style="text-decoration:none">Giriş Sayfasına Dön</a>
+    <div class="cooldown" id="cooldownText">Tekrar göndermek için: <b><span id="cdSec">60</span></b> saniye</div>
+    <button type="button" class="forgot" id="resendBtn" style="display:none;border:0;background:transparent;margin-top:var(--s-3);font-weight:700;cursor:pointer">Tekrar Gönder</button>
+  </div>
+</div>
+
+<script>
+simulateSubmit(document.getElementById('forgotForm'), (form) => {
+  form.closest('.auth-card').style.display = 'none';
+  const succ = document.getElementById('successCard');
+  succ.style.display = 'block';
+  let s = 60;
+  const tick = setInterval(() => {
+    s--;
+    document.getElementById('cdSec').textContent = s;
+    if (s <= 0) {
+      clearInterval(tick);
+      document.getElementById('cooldownText').style.display = 'none';
+      document.getElementById('resendBtn').style.display = 'inline-block';
+    }
+  }, 1000);
+});
+document.getElementById('resendBtn').addEventListener('click', () => location.reload());
+</script>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-cols">
+      <div class="footer-brand">
+        <span class="brand-logo">Derik</span>
+        <p>Mardin Derik'ten sofranıza.</p>
+        <div class="contact-line"><i class="fa-solid fa-location-dot"></i> Mardin Derik, Türkiye</div>
+        <div class="contact-line"><i class="fa-solid fa-envelope"></i> info@derikzeytin.com</div>
+        <div class="contact-line"><i class="fa-brands fa-whatsapp"></i> 0 (850) 393 7070</div>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4>Kategoriler</h4>
+        <ul>
+          <li><a href="magaza.html">Zeytinyağları</a></li>
+          <li><a href="#zeytinler">Zeytinler</a></li>
+          <li><a href="#sabunlar">Sabunlar</a></li>
+          <li><a href="#dogal">Doğal Ürünler</a></li>
+          <li><a href="#hediye">Hediye Setleri</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Kurumsal</h4>
+        <ul>
+          <li><a href="hikayemiz.html">Derik'in Hikâyesi</a></li>
+          <li><a href="uretim.html">Üretim Sürecimiz</a></li>
+          <li><a href="kurumsal-satis.html">Kurumsal Satış</a></li>
+          <li><a href="iletisim.html">İletişim</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Yardım</h4>
+        <ul>
+          <li><a href="sss.html">Sıkça Sorulan Sorular</a></li>
+          <li><a href="#iade">İade ve Değişim</a></li>
+          <li><a href="iletisim.html">İletişim</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy;2026 Derik. Tüm hakları saklıdır.</span>
+      <div class="policies">
+        <a href="#">KVKK</a><a href="#">Gizlilik</a><a href="#">Mesafeli Satış</a><a href="#">Çerez Politikası</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+<script>
+function showToast(msg, icon){
+  const stack = document.getElementById('toastStack');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<i class="fa-solid ${icon || 'fa-circle-check'}"></i> ${msg}`;
+  stack.appendChild(t);
+  setTimeout(() => { t.classList.add('fade-out'); setTimeout(() => t.remove(), 300); }, 2700);
+}
+
+// Password show/hide
+document.querySelectorAll('.pw-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const inp = btn.previousElementSibling;
+    const showing = inp.type === 'text';
+    inp.type = showing ? 'password' : 'text';
+    btn.querySelector('i').className = showing ? 'fa-regular fa-eye' : 'fa-regular fa-eye-slash';
+  });
+});
+
+// Strength
+function calcStrength(pw){
+  let s = 0;
+  if (pw.length >= 8) s++;
+  if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) s++;
+  if (/[0-9]/.test(pw)) s++;
+  if (/[^A-Za-z0-9]/.test(pw)) s++;
+  if (pw.length >= 12) s++;
+  if (s <= 1) return 'weak';
+  if (s <= 3) return 'medium';
+  return 'strong';
+}
+const STRENGTH_LABEL = { weak: 'Zayıf', medium: 'Orta', strong: 'Güçlü' };
+document.querySelectorAll('[data-pw-strength]').forEach(inp => {
+  const target = document.querySelector(inp.dataset.pwStrength);
+  if (!target) return;
+  const bar = target.querySelector('.pw-strength');
+  const label = target.querySelector('.pw-strength-label');
+  inp.addEventListener('input', () => {
+    if (!inp.value) { bar.className = 'pw-strength'; label.textContent = ''; label.className = 'pw-strength-label'; return; }
+    const s = calcStrength(inp.value);
+    bar.className = 'pw-strength ' + s;
+    label.className = 'pw-strength-label ' + s;
+    label.textContent = STRENGTH_LABEL[s];
+  });
+});
+
+// Match check
+document.querySelectorAll('[data-pw-match]').forEach(inp => {
+  const sourceSel = inp.dataset.pwMatch;
+  const source = document.querySelector(sourceSel);
+  const msg = inp.parentElement.parentElement.querySelector('.match-msg') || (() => {
+    const m = document.createElement('span'); m.className = 'match-msg'; inp.parentElement.parentElement.appendChild(m); return m;
+  })();
+  function check(){
+    if (!inp.value) { msg.textContent = ''; msg.className = 'match-msg'; return; }
+    if (inp.value === source.value) { msg.textContent = '✓ Şifreler eşleşiyor'; msg.className = 'match-msg ok'; }
+    else { msg.textContent = '✗ Şifreler eşleşmiyor'; msg.className = 'match-msg err'; }
+  }
+  inp.addEventListener('input', check);
+  source.addEventListener('input', check);
+});
+
+// Submit simulator helper
+function simulateSubmit(form, fn){
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    const btn = form.querySelector('.btn-submit');
+    const orig = btn.innerHTML;
+    btn.classList.add('loading');
+    btn.disabled = true;
+    btn.innerHTML = 'İşleniyor...';
+    setTimeout(() => fn(form, btn, orig), 900);
+  });
+}
+</script>
+
+</body>
+</html>
