@@ -538,13 +538,6 @@ GIRIS_BODY = '''<div class="auth-card">
     <p class="kvkk-note">Giriş yaparak <a href="#">Kullanım Koşulları</a> ve <a href="#">Gizlilik Politikası</a>&apos;nı kabul etmiş olursunuz.</p>
   </form>
 
-  <div class="divider-or">veya</div>
-
-  <div class="social-row">
-    <button type="button" class="social-btn" disabled><i class="fa-brands fa-google"></i> Google<span class="soon">Yakında</span></button>
-    <button type="button" class="social-btn" disabled><i class="fa-brands fa-apple"></i> Apple<span class="soon">Yakında</span></button>
-  </div>
-
   <div class="auth-switch">
     Üye değil misiniz?<a href="kayit.html">Hemen Üye Olun</a>
   </div>
