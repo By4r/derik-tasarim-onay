@@ -1,5 +1,64 @@
 # Web Replicator — Öğrenilen Pattern'ler
 
+## L03 — Page-header band component'i: 3 varyant + DOM hierarşi + spacing
+**Kaynak:** Derik v3.12 → v3.12.1 patron geri bildirimi (centering bug + spacing bug + minimal varyant ihtiyacı).
+
+### Kural
+Site genelinde uygulanan "page-header band" (sayfa başlığı için koyu zeminli ince bant) component'i **3 varyant** gerektirir; tek bir `.page-band` class yetmez.
+
+### Varyantlar
+1. **Full** — `.page-band` (default) — h1 + açıklama + breadcrumb. Padding 56px desktop, 36px mobile.
+2. **Minimal** — `.page-band--minimal` — sadece breadcrumb, h1 yok. Padding 22px desktop, 18px mobile. Listeleme/sub-page sayfalarında kullan.
+3. **Compact** — `.page-band--compact` — h1 var ama altında form/checkout/cart gibi yoğun içerik var. Padding 36px desktop, 28px mobile. Çıkış akışı (sepet, ödeme, başarılı/başarısız) için.
+
+### DOM Hierarşisi (KRİTİK)
+Bant **MAİN GRID'İN DIŞINDA**, full-width KARDEŞ element olmalı:
+```
+<header>...</header>
+<section class="page-band"> ← body veya main'in direct child'ı
+  <div class="container">
+    <nav class="crumb">...</nav>
+    <h1>Başlık</h1>
+    <p class="lead">Açıklama</p>
+  </div>
+</section>
+<section class="page-content"> ← AYRI kardeş, içinde sidebar+main grid
+  ...
+</section>
+```
+
+Bant `account-layout` veya `shop-layout` gibi grid'in **içine** nested edilirse sidebar'ın grid track'ine sticking yapar, viewport center'a hizalanmaz.
+
+### Container hizalama
+`.page-band > .container` site genelindeki `--maxw` değişkeni ile **AYNI max-width** kullanmalı. Daha küçük (1200px vs 1320px gibi) verirseniz altındaki content'ten dar kalır → optik olarak ortalanmamış görünür.
+
+```css
+.page-band > .container{max-width:var(--maxw);margin:0 auto;padding:0 var(--s-8);text-align:center}
+```
+
+### Bant ↔ sonraki content spacing
+Bant ile sonraki section/container arasında **clamp(40px, 5vw, 64px)** padding-top zorunlu. Aksi halde "yapışık" görünür. Mobile'de clamp(28px, 5vw, 40px).
+
+```css
+.page-band + *,.page-band + .container{padding-top:clamp(40px,5vw,64px)}
+```
+
+### Varyant kararı (otomatik mi manuel mi?)
+- **Manuel modifier class** (önerilen) — `.page-band--minimal`, `.page-band--compact` — explicit, predictable.
+- `:has(h1)` selector ile otomatik mümkün ama Safari < 15.4 desteklemez ve yanlış pozitif riski var (h1'i sonradan eklerseniz padding değişir, beklenmedik).
+
+### Yanlış pattern (kaçınılacak)
+- Bant'ı `.account-layout` veya `.shop-layout` grid'in içine koymak — sidebar grid track'ine takılır.
+- Bant container'ına `max-width:1200px` gibi sayfanın `--maxw`'inden farklı sabit değer vermek — alt içerikle hizasız.
+- Bant'a `margin-bottom` koymak yerine sonraki section'a `padding-top` vermek daha güvenli (margin-collapse riskini önler).
+- Tüm sayfalara aynı padding (48px) ile uygulamak — checkout/cart sayfalarında gereksiz dikey alan tüketir.
+
+### Test kriteri
+1. KVKK/iletisim/magaza/hakkimizda gibi 5 farklı A sayfasında: bant'ın H1'i ve breadcrumb'ı viewport horizontal center'da mı (DevTools'la `getBoundingClientRect().left` ile sol/sağ marj eşit olmalı).
+2. Bant + sonraki section arasında ≥40px boşluk var mı.
+3. Listeleme sayfasında (sadece crumb) bant <30px mi (minimal varyant).
+4. Mobile (375px width) bant padding'i ≤36px mi.
+
 ## L02 — Component port: CSS property diff TEK BAŞINA yetersiz, visual diff zorunlu
 **Kaynak:** Derik v3.11.5 → v3.11.7 patron geri bildirimi (modal sync, "FATURA TÜRÜ" centered+highlighted bug).
 
