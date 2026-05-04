@@ -950,6 +950,47 @@ body.mobile-panel-open{overflow:hidden}
   .co-summary{position:static}
   .form-grid-co,.addr-cards{grid-template-columns:1fr}
 }
+
+/* ===== v3.11.3 Address Modal (ported from adreslerim.html) ===== */
+body.modal-open{overflow:hidden}
+.modal-backdrop{position:fixed;inset:0;background:rgba(42,31,20,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:9300;display:none;align-items:flex-start;justify-content:center;padding:var(--s-6) var(--s-4);overflow-y:auto}
+.modal-backdrop.open{display:flex;animation:caFade .2s ease}
+@keyframes caFade{from{opacity:0}to{opacity:1}}
+.modal-backdrop .modal{background:#fff;width:100%;max-width:600px;max-height:calc(100vh - 48px);border-radius:var(--r-lg);box-shadow:0 20px 60px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:hidden;margin:auto;animation:caSlide .25s ease}
+@keyframes caSlide{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-backdrop .modal-header{display:flex;align-items:center;justify-content:space-between;padding:var(--s-5) var(--s-6);border-bottom:1px solid var(--border);background:#fff;flex-shrink:0}
+.modal-backdrop .modal-header h2{font-size:var(--fs-lg);font-weight:700;color:var(--text);letter-spacing:-0.01em;margin:0}
+.modal-backdrop .modal-close{width:36px;height:36px;border-radius:var(--r-sm);background:var(--bg-soft);color:var(--text-2);display:inline-flex;align-items:center;justify-content:center;font-size:16px;border:0;cursor:pointer;transition:all var(--t-fast)}
+.modal-backdrop .modal-close:hover{background:var(--accent-red,#C84B3D);color:#fff}
+.modal-backdrop .modal-body{padding:var(--s-6);overflow-y:auto;flex:1}
+.modal-backdrop .modal-body::-webkit-scrollbar{width:8px}
+.modal-backdrop .modal-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:var(--r-pill)}
+.modal-backdrop .modal-footer{padding:var(--s-5) var(--s-6);border-top:1px solid var(--border);background:#fff;flex-shrink:0}
+.modal-backdrop .modal-footer .btn-save{width:100%;padding:14px;border-radius:var(--r-sm);background:var(--primary-700);color:#fff;font-weight:700;font-size:var(--fs-sm);letter-spacing:.04em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);cursor:pointer;border:0;transition:background var(--t-fast)}
+.modal-backdrop .modal-footer .btn-save:hover{background:var(--primary-900)}
+.modal-backdrop .modal .form-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4);margin-bottom:var(--s-4)}
+.modal-backdrop .modal .field{display:flex;flex-direction:column}
+.modal-backdrop .modal .field.full{grid-column:1/-1}
+.modal-backdrop .modal .field label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.modal-backdrop .modal .field label .req{color:var(--accent-gold);margin-left:2px}
+.modal-backdrop .modal .field input,.modal-backdrop .modal .field select,.modal-backdrop .modal .field textarea{padding:12px 14px;border:1px solid var(--border);border-radius:var(--r-sm);font-family:inherit;font-size:var(--fs-sm);background:#fff;color:var(--text);width:100%;font-weight:500}
+.modal-backdrop .modal .field input:focus,.modal-backdrop .modal .field select:focus,.modal-backdrop .modal .field textarea:focus{outline:none;border-color:var(--primary-700);box-shadow:0 0 0 2px rgba(59,74,42,.08)}
+.modal-backdrop .modal .field textarea{resize:vertical;min-height:90px;line-height:1.5}
+.modal-backdrop .phone-group{display:flex;align-items:stretch;border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden;background:#fff}
+.modal-backdrop .phone-group:focus-within{border-color:var(--primary-700);box-shadow:0 0 0 2px rgba(59,74,42,.08)}
+.modal-backdrop .phone-group .prefix{padding:12px 14px;background:var(--bg-soft);color:var(--text-2);font-weight:700;font-size:var(--fs-sm);border-right:1px solid var(--border);display:inline-flex;align-items:center;flex-shrink:0}
+.modal-backdrop .phone-group input{border:0!important;box-shadow:none!important;border-radius:0!important;flex:1}
+.modal-backdrop .alert-info{display:flex;align-items:flex-start;gap:var(--s-3);padding:var(--s-4);background:#FBF1DC;border:1px solid var(--accent-gold);border-radius:var(--r-sm);margin-bottom:var(--s-4);font-size:var(--fs-xs);color:var(--text-2);line-height:1.55}
+.modal-backdrop .alert-info i{color:var(--accent-gold);font-size:16px;flex-shrink:0;margin-top:1px}
+.modal-backdrop .invoice-toggle{display:flex;gap:var(--s-2);padding:4px;background:var(--bg-soft);border-radius:var(--r-sm);margin-bottom:var(--s-4);width:max-content}
+.modal-backdrop .invoice-toggle button{padding:10px 22px;border-radius:var(--r-sm);background:transparent;color:var(--text-2);font-weight:700;font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:.04em;transition:all var(--t-fast);cursor:pointer;border:0}
+.modal-backdrop .invoice-toggle button.active{background:var(--accent-gold);color:var(--primary-900)}
+.modal-backdrop .invoice-pane{display:none}
+.modal-backdrop .invoice-pane.active{display:block}
+.modal-backdrop .modal .check-row{display:flex;align-items:center;gap:var(--s-2);font-size:var(--fs-sm);color:var(--text-2);margin:var(--s-3) 0;cursor:pointer;line-height:1.4}
+.modal-backdrop .modal .check-row input{width:16px;height:16px;accent-color:var(--primary-700);flex-shrink:0}
+.modal-backdrop .section-divider{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary-700);margin:var(--s-5) 0 var(--s-3);padding-bottom:var(--s-2);border-bottom:1px solid var(--border)}
+@media(max-width:600px){.modal-backdrop .modal .form-row{grid-template-columns:1fr}.modal-backdrop .modal-header h2{font-size:var(--fs-md)}}
 </style>
 
 <div class="container">
@@ -998,7 +1039,7 @@ body.mobile-panel-open{overflow:hidden}
               <div class="ac-line">Bağdat Cad. No:88 K:3<br>Kadıköy / İstanbul</div>
             </label>
           </div>
-          <a href="#" class="addr-add"><i class="fa-solid fa-plus"></i> Yeni Adres Ekle</a>
+          <a href="#" class="addr-add" data-open-checkout-addr-modal><i class="fa-solid fa-plus"></i> Yeni Adres Ekle</a>
 
           <label class="same-row">
             <input type="checkbox" id="sameAddr" checked>
@@ -1710,6 +1751,131 @@ document.addEventListener('click',function(e){
     }
   }
 });
+</script>
+
+<!-- v3.11.3 CHECKOUT ADDRESS MODAL (ported from adreslerim.html) -->
+<div class="modal-backdrop" id="checkoutAddressModal" role="dialog" aria-modal="true" aria-labelledby="caModalTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="caModalTitle">Adres ekle</h2>
+      <button class="modal-close" aria-label="Kapat" data-close-checkout-addr-modal><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form class="modal-body" id="caAddrForm" novalidate>
+      <div class="form-row">
+        <div class="field"><label for="ca-ad">Ad <span class="req">*</span></label><input id="ca-ad" name="ad" type="text" required></div>
+        <div class="field"><label for="ca-soyad">Soyad <span class="req">*</span></label><input id="ca-soyad" name="soyad" type="text" required></div>
+      </div>
+      <div class="field" style="margin-bottom:var(--s-4)">
+        <label for="ca-tel">Telefon <span class="req">*</span></label>
+        <div class="phone-group">
+          <span class="prefix">+90</span>
+          <input id="ca-tel" name="tel" type="tel" placeholder="(5xx) xxx xx xx" required maxlength="14">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label for="ca-il">İl <span class="req">*</span></label>
+          <select id="ca-il" name="il" required>
+            <option value="">Seçiniz</option><option>İstanbul</option><option>Ankara</option><option>İzmir</option><option>Mardin</option><option>Adana</option><option>Antalya</option><option>Bursa</option>
+          </select>
+        </div>
+        <div class="field"><label for="ca-ilce">İlçe <span class="req">*</span></label>
+          <select id="ca-ilce" name="ilce" required>
+            <option value="">Seçiniz</option><option>Kadıköy</option><option>Beşiktaş</option><option>Şişli</option><option>Üsküdar</option><option>Derik</option>
+          </select>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:var(--s-4)">
+        <label for="ca-mah">Mahalle <span class="req">*</span></label>
+        <select id="ca-mah" name="mah" required>
+          <option value="">Seçiniz</option><option>Caferağa Mahallesi</option><option>Moda Mahallesi</option><option>Fenerbahçe Mahallesi</option><option>Koşuyolu Mahallesi</option>
+        </select>
+      </div>
+      <div class="alert-info">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>Kargonuzun size sorunsuz bir şekilde ulaşabilmesi için mahalle, cadde, sokak, bina gibi detay bilgileri eksiksiz girdiğinizden emin olun.</span>
+      </div>
+      <div class="field full" style="margin-bottom:var(--s-4)">
+        <label for="ca-adres">Adres <span class="req">*</span></label>
+        <textarea id="ca-adres" name="adres" placeholder="Cadde, mahalle sokak ve diğer bilgileri giriniz" required></textarea>
+      </div>
+      <div class="field full" style="margin-bottom:var(--s-4)">
+        <label for="ca-baslik">Adres Başlığı <span class="req">*</span></label>
+        <input id="ca-baslik" name="baslik" type="text" placeholder="ev/iş gibi" required>
+      </div>
+      <div class="section-divider">Fatura Türü</div>
+      <div class="invoice-toggle" role="tablist">
+        <button type="button" class="active" data-ca-invoice="bireysel">Bireysel</button>
+        <button type="button" data-ca-invoice="kurumsal">Kurumsal</button>
+      </div>
+      <div class="invoice-pane active" id="ca-pane-bireysel">
+        <div class="field full">
+          <label for="ca-tckn">TC Kimlik No <span style="color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:none">(opsiyonel)</span></label>
+          <input id="ca-tckn" name="tckn" type="text" maxlength="11" placeholder="11 haneli TC kimlik numaranız">
+        </div>
+      </div>
+      <div class="invoice-pane" id="ca-pane-kurumsal">
+        <div class="alert-info"><i class="fa-solid fa-building"></i><span>Şahıs şirketi iseniz TCKN girmeniz önerilir.</span></div>
+        <div class="form-row">
+          <div class="field"><label for="ca-vkn">VKN/TCKN <span class="req">*</span></label><input id="ca-vkn" name="vkn" type="text" maxlength="11" placeholder="10 veya 11 haneli"></div>
+          <div class="field"><label for="ca-vd">Vergi Dairesi <span class="req">*</span></label><input id="ca-vd" name="vd" type="text" placeholder="Vergi dairesi adı"></div>
+        </div>
+        <div class="field full" style="margin-top:var(--s-4)"><label for="ca-firma">Firma Adı <span class="req">*</span></label><input id="ca-firma" name="firma" type="text" placeholder="Firma unvanı"></div>
+        <label class="check-row" style="margin-top:var(--s-4)"><input type="checkbox" name="efatura"> E-fatura mükellefiyim</label>
+      </div>
+    </form>
+    <div class="modal-footer">
+      <button type="submit" form="caAddrForm" class="btn-save"><i class="fa-solid fa-check"></i> Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// === v3.11.3 Checkout Address Modal ===
+(function(){
+  const modal = document.getElementById('checkoutAddressModal');
+  const form = document.getElementById('caAddrForm');
+  if(!modal || !form) return;
+
+  function open(){ form.reset(); setInvoice('bireysel'); modal.classList.add('open'); document.body.classList.add('modal-open'); setTimeout(()=>form.querySelector('input,select')?.focus(),100); }
+  function close(){ modal.classList.remove('open'); document.body.classList.remove('modal-open'); }
+  function setInvoice(kind){
+    modal.querySelectorAll('.invoice-toggle button').forEach(b => b.classList.toggle('active', b.dataset.caInvoice===kind));
+    modal.querySelectorAll('.invoice-pane').forEach(p => p.classList.toggle('active', p.id==='ca-pane-'+kind));
+  }
+
+  document.querySelectorAll('[data-open-checkout-addr-modal]').forEach(el => el.addEventListener('click', e => { e.preventDefault(); open(); }));
+  document.querySelectorAll('[data-close-checkout-addr-modal]').forEach(el => el.addEventListener('click', close));
+  modal.addEventListener('click', e => { if(e.target===modal) close(); });
+  document.addEventListener('keydown', e => { if(e.key==='Escape' && modal.classList.contains('open')) close(); });
+  modal.querySelectorAll('.invoice-toggle button').forEach(b => b.addEventListener('click', () => setInvoice(b.dataset.caInvoice)));
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    if(!form.checkValidity()){ form.reportValidity(); return; }
+    const fd = new FormData(form);
+    const fullName = (fd.get('ad')+' '+fd.get('soyad')).trim();
+    const baslik = (fd.get('baslik')||'Yeni').trim();
+    const adres = fd.get('adres') || '';
+    const ilce = fd.get('ilce') || '';
+    const il = fd.get('il') || '';
+    const tagIcon = baslik.toLowerCase().includes('iş') ? 'fa-briefcase' : 'fa-house';
+    const cardsWrap = document.querySelector('.addr-cards');
+    if(cardsWrap){
+      cardsWrap.querySelectorAll('.addr-card').forEach(c => c.classList.remove('selected'));
+      cardsWrap.querySelectorAll('input[name="addr"]').forEach(r => r.checked = false);
+      const card = document.createElement('label');
+      card.className = 'addr-card selected';
+      card.innerHTML =
+        '<input type="radio" name="addr" checked>'+
+        '<div class="ac-head"><span class="ac-tag"><i class="fa-solid '+tagIcon+'"></i> '+baslik+'</span></div>'+
+        '<div class="ac-name">'+fullName+'</div>'+
+        '<div class="ac-line">'+adres+'<br>'+ilce+(il?' / '+il:'')+'</div>';
+      cardsWrap.appendChild(card);
+    }
+    close();
+    if(window.showToast) window.showToast('<i class="fa-solid fa-check"></i> Adres eklendi','success');
+  });
+})();
 </script>
 
 </body>
