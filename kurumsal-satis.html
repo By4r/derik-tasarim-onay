@@ -430,20 +430,23 @@ ul{list-style:none}
 .ks-form-panel .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4)}
 .ks-form-panel .field{display:flex;flex-direction:column;gap:6px}
 .ks-form-panel .field.full{grid-column:1/-1}
-.ks-form-panel .field label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding-left:14px}
+.ks-form-panel .field label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
 .ks-form-panel .field input,.ks-form-panel .field select,.ks-form-panel .field textarea{
   font-family:inherit;font-size:var(--fs-sm);color:var(--text);
-  padding:14px 18px;border:1px solid var(--border);
-  border-radius:var(--r-pill);
+  padding:12px 14px;border:1px solid var(--border);
+  border-radius:var(--r-sm);
   background:#fff;transition:border-color var(--t-fast),box-shadow var(--t-fast);width:100%
 }
-.ks-form-panel .field textarea{border-radius:var(--r-md);resize:vertical;min-height:120px;line-height:1.5}
+.ks-form-panel .field textarea{resize:vertical;min-height:120px;line-height:1.5}
 .ks-form-panel .field input:focus,.ks-form-panel .field select:focus,.ks-form-panel .field textarea:focus{outline:none;border-color:var(--primary-700);box-shadow:0 0 0 3px rgba(59,74,42,.08)}
+.ks-form-panel .field label{padding-left:0}
 
-.tel-group{display:flex;align-items:stretch;border:1px solid var(--border);border-radius:var(--r-pill);background:#fff;overflow:hidden;transition:border-color var(--t-fast),box-shadow var(--t-fast)}
+/* Telephone input group: single outer border, prefix span borderless */
+.tel-group{display:flex;align-items:stretch;border:1px solid var(--border);border-radius:var(--r-sm);background:#fff;overflow:hidden;transition:border-color var(--t-fast),box-shadow var(--t-fast)}
 .tel-group:focus-within{border-color:var(--primary-700);box-shadow:0 0 0 3px rgba(59,74,42,.08)}
-.tel-group .ccode{display:inline-flex;align-items:center;padding:0 14px 0 18px;font-size:var(--fs-sm);font-weight:700;color:var(--primary-700);border-right:1px solid var(--border);background:var(--primary-100)}
-.tel-group input{border:0;flex:1;padding:14px 18px;font-size:var(--fs-sm);background:transparent;outline:none;color:var(--text);font-family:inherit}
+.tel-group .ccode{display:inline-flex;align-items:center;padding:0 14px;font-size:var(--fs-sm);font-weight:700;color:var(--text-2);background:var(--bg-soft);border-right:1px solid var(--border)}
+.ks-form-panel .field .tel-group input{border:0;border-radius:0;flex:1;padding:12px 14px;font-size:var(--fs-sm);background:transparent;outline:none;color:var(--text);font-family:inherit;width:auto;box-shadow:none}
+.ks-form-panel .field .tel-group input:focus{box-shadow:none;border:0}
 
 .check-row{display:flex;align-items:flex-start;gap:10px;padding:var(--s-4) 0;font-size:var(--fs-sm);color:var(--text-2);line-height:1.5;cursor:pointer}
 .check-row input{flex:0 0 18px;width:18px;height:18px;margin-top:2px;accent-color:var(--primary-700);cursor:pointer}
@@ -651,19 +654,6 @@ ul{list-style:none}
 
     <p>Özel ambalaj, şirket logolu etiket tasarımı, ölçek bazlı fiyatlama ve toplu adres listesine direkt teslimat seçeneklerimizle ihtiyacınıza özel çözümler sunuyoruz.</p>
 
-    <div class="links">
-      <a href="#" class="link-cat" download>
-        <span class="tag"><i class="fa-solid fa-file-pdf"></i></span>
-        <span>Zeytinyağı Kataloğunu İndir<small>PDF · 2.4 MB</small></span>
-        <i class="fa-solid fa-arrow-right arrow"></i>
-      </a>
-      <a href="#" class="link-cat" download>
-        <span class="tag"><i class="fa-solid fa-file-pdf"></i></span>
-        <span>Hediye Setleri Kataloğunu İndir<small>PDF · 3.1 MB</small></span>
-        <i class="fa-solid fa-arrow-right arrow"></i>
-      </a>
-    </div>
-
     <p>Aşağıdaki formu doldurarak ihtiyacınızı bizimle paylaşabilirsiniz; ekibimiz 24 saat içinde size özel teklifle dönüş yapsın. Daha hızlı iletişim için doğrudan telefon veya e-posta ile de ulaşabilirsiniz.</p>
 
     <div class="quick-contact">
@@ -714,7 +704,6 @@ ul{list-style:none}
         <select id="konu" name="konu" required>
           <option value="">Seçiniz</option>
           <option>Restoran / Otel / Gurme</option>
-          <option>Kurumsal Hediye Seti</option>
           <option>Toptan Satış</option>
           <option>İhracat / Distribütörlük</option>
           <option>Diğer</option>
@@ -730,11 +719,6 @@ ul{list-style:none}
         <textarea id="mesaj" name="mesaj" required placeholder="İhtiyacınızı kısaca anlatın (ürün, ambalaj tercihi, teslimat tarihi vb.)"></textarea>
       </div>
     </div>
-
-    <label class="check-row">
-      <input type="checkbox" name="ozel_ambalaj" value="evet">
-      <span>Şirket logolu <b>özel ambalaj / etiket tasarımı</b> hakkında bilgi almak istiyorum.</span>
-    </label>
 
     <label class="check-row kvkk">
       <input type="checkbox" name="kvkk" required>
