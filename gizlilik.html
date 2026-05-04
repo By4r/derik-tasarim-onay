@@ -1296,7 +1296,9 @@ document.querySelectorAll('.add-cart, [data-add-cart]').forEach(b => {
 // === V39 GLOBAL JS ===
 window.showToast=function(msg,type){
   var w=document.getElementById('v39-toast-wrap');if(!w)return;
-  var t=document.createElement('div');t.className='v39-toast '+(type||'success');t.textContent=msg;
+  var last=w.lastChild;if(last&&last.dataset&&last.dataset.msg===msg)return;
+  while(w.children.length>=3)w.firstChild.remove();
+  var t=document.createElement('div');t.className='v39-toast '+(type||'success');t.innerHTML=msg;t.dataset.msg=msg;
   w.appendChild(t);setTimeout(function(){t.style.opacity=0;t.style.transform='translateX(20px)';setTimeout(function(){t.remove()},250)},3000);
 };
 // Cookie banner
