@@ -252,6 +252,46 @@ KD'deki ürün kartı askısı/yarım daire dekoratif eleman bilinçli olarak al
 
 ---
 
+## v2.5.1 — uretim.html iterate (skill ile KD'ye yakınlaştırma)
+
+Tarih: 2026-05-04
+İterasyon: 2 tur (visual diff → uygula → temizlik)
+
+### Tespit (KD ile karşılaştırma)
+KD aslında her section'da aynı layout (text-left/image-right, white bg) ama 3-4 alt başlıklı **kart-stack** ile zenginlik sağlıyor. Kullanıcı kart-stack'i yasakladı (kart hizalama sorunu önlemek için). Çözüm: kart yerine **3 farklı section ritmi** kuruldu — section'lar tek tip değil, her biri farklı görsel kimlik taşıyor.
+
+### Değişiklikler
+
+**Hero**
+- Font 48 → 52px
+- Gold radial glow ::before/::after dekorasyon (sağ üst + sol alt yumuşak ışık)
+
+**Section 1 — Zeytinyağı** (white bg)
+- Layout: 2-col split → **görsel sol (4:5 portre) + metin sağ**
+- Eyebrow'a 24px altın aksan çizgisi (`::before`)
+- Altta tam genişlik **panoramik 21:9 görsel** + sol alt köşede caption chip ("Mardin Derik · Üretim Tesisi")
+
+**Section 2 — Zeytin** (DARK GREEN `--primary-700`)
+- Layout: **metin sol + görsel sağ** (flip)
+- Görsel köşeleri **asimetrik curved** (top-right + bottom-left 120px radius)
+- Eyebrow altın, başlık beyaz, paragraflar `rgba(255,255,255,.88)`
+- 2 paragraf arasına **italik altın pull-quote**: "Zeytin, sabırla olgunlaşır. Biz de o sabra eşlik ediyoruz."
+
+**Section 3 — Sabun & Doğal Ürünler** (cream `--bg-soft`)
+- Layout: 2-col, **görsel sol collage + metin sağ**
+- Collage: büyük görsel (78%) sol-üst + küçük overlap görsel (58%) sağ-alt, beyaz çerçeve + büyük gölge
+- Yumuşak krem zemin → final dinlenme tonu
+
+### KD'den bilinçli sapmalar (kullanıcı kararıyla)
+1. Kart-stack alt başlıkları YOK (KD'nin "Önemli bir adım: Çekirdeğin kavrulması" gibi yapısı değil, akıcı 2 paragraf)
+2. Section bg alternasyonu (KD all-white) — Derik'te white/dark/cream ritm
+
+### Park edilen
+- Section divider olive-leaf SVG (eklenip sonra kaldırıldı; bg alternasyonu yeterli oldu)
+- Numbered process strip (kart hissi verebileceği için eklenmedi)
+
+---
+
 ## v2.5 — uretim.html (yeni sayfa, skill ile KD referansı)
 
 Tarih: 2026-05-04
