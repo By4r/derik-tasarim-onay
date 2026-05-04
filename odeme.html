@@ -1212,12 +1212,12 @@ body.mobile-panel-open{overflow:hidden}
   const cardSchemeBack = document.getElementById('cardSchemeBack');
   const cardVisLast4 = document.getElementById('cardVisLast4');
   const SCHEMES = {
-    // Visa — white italic wordmark + signature gold notch on the V (Visa brand pattern for dark backgrounds)
-    visa: '<svg viewBox="0 0 100 32" xmlns="http://www.w3.org/2000/svg"><g transform="skewX(-12)" font-family="Helvetica,Arial,sans-serif" font-weight="900" font-size="26" letter-spacing=".5"><text x="14" y="24" fill="#fff">VISA</text><polygon points="22,4 30,4 26,11" fill="#F7B600"/></g></svg>',
+    // Visa — wordmark only, italic Helvetica Neue Bold (closest stand-in for proprietary Visa Sans)
+    visa: '<svg viewBox="0 0 80 28" xmlns="http://www.w3.org/2000/svg"><text x="0" y="22" font-family="Helvetica Neue,Helvetica,Arial,sans-serif" font-weight="900" font-style="italic" font-size="26" fill="#fff" letter-spacing="-.5">VISA</text></svg>',
     // Mastercard (kept as-is, patron approved)
     mc:   '<svg viewBox="0 0 64 40" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="20" r="16" fill="#EB001B"/><circle cx="40" cy="20" r="16" fill="#F79E1B" opacity=".9"/><path d="M32 8a16 16 0 0 1 0 24 16 16 0 0 1 0-24z" fill="#FF5F00"/></svg>',
-    // Troy — overlapping red + teal blobs + lowercase white wordmark (TR payment scheme palette)
-    troy: '<svg viewBox="0 0 100 32" xmlns="http://www.w3.org/2000/svg"><g><path d="M60 6 q-9 0 -12 8 q3 8 12 8 q9 0 12 -8 q-3 -8 -12 -8z" fill="#ED1B2E"/><path d="M76 6 q-9 0 -12 8 q3 8 12 8 q9 0 12 -8 q-3 -8 -12 -8z" fill="#00ADBC" opacity=".88"/></g><text x="0" y="24" font-family="Helvetica,Arial,sans-serif" font-weight="800" font-size="20" fill="#fff" letter-spacing=".5">troy</text></svg>',
+    // Troy — wordmark only, lowercase Inter Medium (geometric modern sans)
+    troy: '<svg viewBox="0 0 80 28" xmlns="http://www.w3.org/2000/svg"><text x="0" y="22" font-family="Inter,Helvetica,Arial,sans-serif" font-weight="600" font-size="22" fill="#fff" letter-spacing=".5">troy</text></svg>',
     amex: '<svg viewBox="0 0 80 28" xmlns="http://www.w3.org/2000/svg"><rect width="80" height="28" rx="3" fill="#2671B9"/><text x="40" y="19" text-anchor="middle" font-family="Inter,Arial" font-weight="800" font-size="11" fill="#fff" letter-spacing=".8">AMEX</text></svg>'
   };
   function detectScheme(d){
