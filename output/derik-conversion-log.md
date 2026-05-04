@@ -252,6 +252,40 @@ KD'deki ürün kartı askısı/yarım daire dekoratif eleman bilinçli olarak al
 
 ---
 
+## v2.7 — kurumsal-satis.html (yeni sayfa, skill ile KD referansı)
+
+Tarih: 2026-05-04
+Skill kullanımı: `web-replicator` → `https://www.kahvedunyasi.com/kurumsal-hediyeler`
+
+### Skill yorumu — KD'den çıkan ve değiştirilen kararlar
+- **Sol sidebar/katalog linkleri**: KD'de YOK → bizde de eklemedik (single-column akış)
+- **Hero**: KD sade text-only → bizde de yeşil hero YOK, sade krem zemin başlık (iletişim sayfasıyla tutarlı)
+- **PDF kataloglar**: KD'de var → bizde de 2 kart-buton (Zeytinyağı + Hediye Setleri)
+- **Özel ambalaj checkbox**: KD'de var ("Özel kutu tasarımı istiyorum") → bizde **"Şirket logolu özel ambalaj / etiket tasarımı"** olarak Derik'e uyarlandı
+- **Form alanları**: KD'nin (ad, soyad, telefon, e-posta, şirket, mesaj + checkbox) yapısına ek olarak **Talep Türü select** + **Tahmini Adet/Ölçek** alanı eklendi (kurumsal kapsam için faydalı)
+- **Hedef kitle ayrımı**: KD tek tip "kurumsal hediye" iken Derik'te kullanıcı isteğiyle **2 audience card** (Restoran/Otel/Gurme + Kurumsal Hediye/Özel Günler) eklendi
+
+### Sayfa yapısı
+1. Breadcrumb — Anasayfa › Kurumsal Satış
+2. Sade title block (eyebrow + h1 + lead paragraf, krem zemin)
+3. 2 PDF katalog buton (Zeytinyağı / Hediye Setleri Kataloğu)
+4. **2 Hedef Kitle kartı**: Restoran-Otel + Kurumsal Hediye, ikon + 4'er madde
+5. **2-col grid**: SOL koyu yeşil info card (telefon/mail/saat/adres + "Neden Derik" 4 madde), SAĞ Netlify form
+6. Form alanları: Ad Soyad, Şirket, E-posta, Telefon, Talep Türü (5 seçenek), Tahmini Adet, Mesaj + **Özel ambalaj checkbox** + **KVKK checkbox** + Gönder butonu
+
+### Cross-link güncellemesi
+Tüm sayfalarda `href="#kurumsal"` → `href="kurumsal-satis.html"` (build script'te global replace, 7 sayfa):
+- Top ribbon "Kurumsal Hediyeler" linki
+- Header sağ üst "Kurumsal Satış" linki
+- Footer "Kurumsal Satış" linki
+- index banner "Kurumsal" kartı
+- Diğer içerik linkleri
+
+### Netlify Forms
+`name="kurumsal-satis"` + `data-netlify="true"` + honeypot + `?gonderildi=1` success state. KVKK ve özel ambalaj checkbox'ları form payload'una dahil.
+
+---
+
 ## v2.5.1 — uretim.html iterate (skill ile KD'ye yakınlaştırma)
 
 Tarih: 2026-05-04

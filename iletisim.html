@@ -403,6 +403,57 @@ ul{list-style:none}
   .story-hero,.story-intro,.divider-section,.stats-section{padding:56px 0}
 }
 
+/* KURUMSAL SATIS */
+.ks-title{padding:var(--s-6) 0 var(--s-8);max-width:780px}
+.ks-title .eyebrow{display:inline-block;font-size:var(--fs-xs);font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--primary-700);margin-bottom:var(--s-3)}
+.ks-title h1{font-size:42px;font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:var(--s-4);color:var(--text);position:relative;padding-bottom:var(--s-3)}
+.ks-title h1::after{content:"";position:absolute;left:0;bottom:0;width:40px;height:3px;background:var(--primary-700);border-radius:var(--r-pill)}
+.ks-title p{color:var(--text-2);font-size:var(--fs-md);line-height:1.7}
+
+.ks-catalogs{display:flex;gap:var(--s-3);flex-wrap:wrap;padding:0 0 var(--s-10)}
+.ks-catalog{display:inline-flex;align-items:center;gap:var(--s-3);padding:14px 22px;border:1px solid var(--border);border-radius:var(--r-sm);background:#fff;color:var(--text);font-size:var(--fs-sm);font-weight:600;transition:border-color var(--t-fast),transform var(--t-fast),background var(--t-fast)}
+.ks-catalog i.cat-icon{width:36px;height:36px;border-radius:var(--r-sm);background:var(--primary-100);color:var(--primary-700);display:inline-flex;align-items:center;justify-content:center;font-size:16px}
+.ks-catalog .arrow{color:var(--muted);font-size:14px;transition:transform var(--t-fast),color var(--t-fast)}
+.ks-catalog:hover{border-color:var(--primary-700);transform:translateY(-2px)}
+.ks-catalog:hover .arrow{color:var(--primary-700);transform:translateX(3px)}
+.ks-catalog small{display:block;font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+
+.ks-audience{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-5);padding:0 0 80px}
+.ks-aud-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-8);position:relative;overflow:hidden;transition:border-color var(--t-fast),box-shadow var(--t-fast),transform var(--t-fast)}
+.ks-aud-card:hover{border-color:var(--accent-gold);box-shadow:var(--shadow-2);transform:translateY(-4px)}
+.ks-aud-card .ks-ico{width:52px;height:52px;border-radius:50%;background:var(--primary-100);color:var(--primary-700);display:inline-flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:var(--s-5)}
+.ks-aud-card h3{font-size:var(--fs-xl);font-weight:700;margin-bottom:var(--s-3);color:var(--primary-900)}
+.ks-aud-card p{color:var(--text-2);line-height:1.65;font-size:var(--fs-sm);margin-bottom:var(--s-4)}
+.ks-aud-card ul{padding-left:var(--s-5)}
+.ks-aud-card li{font-size:var(--fs-sm);color:var(--text-2);padding:4px 0;list-style:disc}
+
+.ks-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:var(--s-10);padding:0 0 80px}
+.ks-info{background:var(--primary-700);color:#fff;border-radius:var(--r-lg);padding:var(--s-10);align-self:start}
+.ks-info h2{font-size:var(--fs-xl);font-weight:700;margin-bottom:var(--s-6);color:#fff}
+.ks-info .row{display:flex;gap:var(--s-3);padding:var(--s-3) 0;border-top:1px solid rgba(255,255,255,.16)}
+.ks-info .row:first-of-type{border-top:0;padding-top:0}
+.ks-info .row .ic{flex:0 0 36px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.12);color:var(--accent-gold);display:inline-flex;align-items:center;justify-content:center;font-size:14px}
+.ks-info .row b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent-gold);font-weight:700;margin-bottom:2px}
+.ks-info .row a,.ks-info .row span{color:#fff;font-size:var(--fs-sm);font-weight:500;line-height:1.5}
+.ks-info .row a:hover{color:var(--accent-gold)}
+.ks-info .why{margin-top:var(--s-6);padding-top:var(--s-5);border-top:1px solid rgba(255,255,255,.16)}
+.ks-info .why h3{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent-gold);margin-bottom:var(--s-3)}
+.ks-info .why li{display:flex;align-items:flex-start;gap:10px;font-size:var(--fs-sm);padding:5px 0;color:rgba(255,255,255,.92)}
+.ks-info .why li i{color:var(--accent-gold);margin-top:5px;font-size:11px}
+
+.ks-form{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-10)}
+.ks-form h2{font-size:var(--fs-xl);font-weight:700;margin-bottom:var(--s-2);color:var(--primary-900)}
+.ks-form .lead{color:var(--text-2);margin-bottom:var(--s-6);font-size:var(--fs-sm)}
+.ks-form .check-row{display:flex;align-items:flex-start;gap:10px;padding:var(--s-4) 0;font-size:var(--fs-sm);color:var(--text-2);line-height:1.5;cursor:pointer}
+.ks-form .check-row input{flex:0 0 18px;width:18px;height:18px;margin-top:2px;accent-color:var(--primary-700);cursor:pointer}
+.ks-form .check-row a{color:var(--primary-700);text-decoration:underline}
+.ks-form .kvkk{padding:var(--s-3) 0 var(--s-5);border-top:1px solid var(--border);margin-top:var(--s-3)}
+
+@media(max-width:1024px){
+  .ks-audience{grid-template-columns:1fr}
+  .ks-grid{grid-template-columns:1fr;padding:0 0 56px}
+}
+
 /* CONTACT */
 .contact-title{padding:var(--s-6) 0 var(--s-8);max-width:780px}
 .contact-title h1{font-size:40px;font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:var(--s-4);color:var(--text);position:relative;padding-bottom:var(--s-3)}
@@ -530,7 +581,7 @@ ul{list-style:none}
 <!-- TOP RIBBON 3-col -->
 <div class="topbar" id="topRibbon">
   <div class="container">
-    <a class="tb-left" href="#kurumsal">Kurumsal Hediyeler · kurumlara özel fiyatlarla <i class="fa-solid fa-arrow-right" style="font-size:11px;margin-left:4px;"></i></a>
+    <a class="tb-left" href="kurumsal-satis.html">Kurumsal Hediyeler · kurumlara özel fiyatlarla <i class="fa-solid fa-arrow-right" style="font-size:11px;margin-left:4px;"></i></a>
     <span class="tb-mid">750 TL ÜZERİ <b>KARGO ÜCRETSİZ</b> · YENİ HASAT ÜRÜNLERİ STOKTA</span>
     <span class="tb-right">
       <button class="tb-close" aria-label="Kapat" onclick="document.getElementById('topRibbon').classList.add('hidden')"><i class="fa-solid fa-xmark"></i></button>
@@ -541,7 +592,7 @@ ul{list-style:none}
 <!-- HEADER TOP (Kurumsal + Hakkımızda) -->
 <div class="header-top">
   <div class="container">
-    <a href="#kurumsal" class="top-link">Kurumsal Satış</a>
+    <a href="kurumsal-satis.html" class="top-link">Kurumsal Satış</a>
     <span class="top-link has-dd">Hakkımızda <i class="fa-solid fa-chevron-down"></i>
       <span class="dd-menu">
         <a href="hikayemiz.html">Hikayemiz</a>
@@ -724,7 +775,7 @@ if (location.search.includes("gonderildi=1")) {
           <li><a href="#hakkimizda">Hakkımızda</a></li>
           <li><a href="#hikaye">Derik'in Hikâyesi</a></li>
           <li><a href="#uretim">Üretim Sürecimiz</a></li>
-          <li><a href="#kurumsal">Kurumsal Satış</a></li>
+          <li><a href="kurumsal-satis.html">Kurumsal Satış</a></li>
           <li><a href="iletisim.html">İletişim</a></li>
         </ul>
       </div>
