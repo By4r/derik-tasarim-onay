@@ -264,7 +264,7 @@ ul{list-style:none}
 .mobile-burger{display:none;width:42px;height:42px;border-radius:50%;align-items:center;justify-content:center;color:var(--text);cursor:pointer;background:transparent;border:0;transition:background var(--t-fast)}
 .mobile-burger:hover{background:var(--primary-100,#F2EBDC);color:var(--primary-700)}
 .mobile-burger i{font-size:20px}
-@media(max-width:1024px){.mobile-burger{display:inline-flex} .header-actions>.icon-btn:not(.cart-badge){display:none} .header-actions .user-dd-wrap{display:none} .header-actions .search-wrap{display:none} .header-actions{margin-left:auto;gap:var(--s-2)} .header-row1{gap:var(--s-2)}}
+@media(max-width:1024px){.mobile-burger{display:inline-flex} .header-actions>.icon-btn:not(.cart-badge):not([data-search-trigger]){display:none} .header-actions .user-dd-wrap{display:none} .header-actions .search-wrap{display:none} .header-actions{margin-left:auto;gap:var(--s-2)} .header-row1{gap:var(--s-2)}}
 
 .mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s}
 .mobile-overlay.open{opacity:1;visibility:visible}
@@ -319,6 +319,7 @@ body.mobile-panel-open{overflow:hidden}
 }
 /* ===== MOBILE V3.8 END ===== */
 
+{SNIPPET}
 </style>
 </head>
 <body>
@@ -1005,6 +1006,10 @@ document.querySelectorAll('.fav-btn').forEach(b => {
 .page-band + *{padding-top:clamp(40px,5vw,64px)}
 .page-band + .container{padding-top:clamp(40px,5vw,64px)}
 @media(max-width:768px){.page-band{padding:36px 0}.page-band--minimal{padding:18px 0}.page-band--compact{padding:28px 0}.page-band h1{font-size:26px}.page-band .lead,.page-band>.container>p,.page-band .legal-hero p{font-size:14px;padding:0 16px}.page-band + *,.page-band + .container{padding-top:clamp(28px,5vw,40px)}}
+/* ===== v3.13 SELECT CHEVRON ===== */
+select{appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%236B5847' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px!important}
+select::-ms-expand{display:none}
+select:focus{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%233B4A2A' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>")}
 </style>
 
 <script>

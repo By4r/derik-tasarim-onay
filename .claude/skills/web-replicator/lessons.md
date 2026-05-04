@@ -1,5 +1,58 @@
 # Web Replicator — Öğrenilen Pattern'ler
 
+## L04 — Form control native styling, mobile header açıklığı, "missing" bug'ları responsive'i mi?
+**Kaynak:** Derik v3.13 — 3 paralel bug (top ribbon eksiklik, dropdown chevron tutarsızlığı, mobile search ikonu).
+
+### Üç ayrı pattern, üçü de hızlı ayrıştırılmalı
+
+#### A) "Missing element" rapor edildiğinde — önce CSS responsive davranışı kontrol et
+Patron "X sayfasında Y çıkmıyor" derse, **kod inject etmeden önce** byte-level diff al (`diff <(sed -n '/<header/,/</header>/p' a.html) <(... b.html)`). Eğer header'lar identical ise bug **HTML eksikliği değil**:
+- `@media(max-width:NNN)` koşulunda `display:none`
+- JS ile koşullu `classList.add('hidden')` (örn. ribbon X kapatma butonu)
+- localStorage state (popup tek sefer)
+- Browser cache
+
+Derik v3.13'te 31 sayfanın TAMAMI byte-identical header taşıyor; "secondary nav eksik" şikayeti aslında `@media(max-width:1024px){.header-top{display:none}}` design tercihiydi. **Bug değil, responsive davranış.** Patron'a bunu belirtmek zorunda — sessizce "düzeltmek" başka bir şeyi bozar.
+
+#### B) Native form control'lerinin görünümü cross-page'te tutarsız mı? — `appearance:none` + custom SVG chevron şart
+`<select>` elementi default olarak işletim sistemi/tarayıcı chevron'u render eder. macOS Safari ile Windows Chrome arasında bile farklı görünür. Custom design dilinde tutarlı olmak için global reset + custom chevron zorunlu:
+
+```css
+select{
+  appearance:none; -webkit-appearance:none; -moz-appearance:none;
+  background-image:url("data:image/svg+xml;utf8,<svg ...><path d='M1 1l5 5 5-5' stroke='%236B5847' .../></svg>");
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+  padding-right:38px !important; /* chevron için rezerve alan */
+}
+select::-ms-expand{display:none} /* legacy IE/Edge */
+select:focus{ /* focus state'te chevron rengi değişebilir */ }
+```
+
+**Tuzaklar:**
+- `<button>` ile `<select>` aynı görünmez. Sıralama dropdown'ı için `<button>` daha kontrol edilebilir ama erişilebilirlik (keyboard navigation, screen reader) için `<select>` daha iyi. Karar gereği farkı gözet.
+- SVG chevron'u inline data URI olarak göm — external dosya istek sayısı arttırır, FOUC riski.
+- `padding-right` `!important` çünkü scoped `.modal .field input,.modal .field select`'i override eden başka bir rule olabilir.
+- Stroke rengini `%23` ile escape et URI içinde (`%23` = `#`).
+
+#### C) Mobile header tasarımında "exception list" kullan
+Genel mobile pattern: hamburger + sepet görünür, geri kalan ikonlar gizlenir. Ama bazı ikonlar (search özellikle) mobile'de KRİTİK çünkü kullanıcı ürün arıyor. Selector formülü:
+
+```css
+@media(max-width:1024px){
+  .header-actions>.icon-btn:not(.cart-badge):not([data-search-trigger]){display:none}
+}
+```
+
+`:not()` zinciri ile **white-list** mantığı kur — gizlenen default, görünür olan exception. Yeni ikon (örn. dil seçici) eklenirse selector'a tek `:not()` eklemek yeter, mantık değişmez.
+
+**Touch target**: mobile'de ikon buton min `44x44px` (Apple HIG + Google Material). `padding` ile büyüt, `width/height` ile değil — visual size küçük kalsın, tıklanabilir alan büyük olsun.
+
+### Workflow notu — 3 paralel bug aynı release'te
+Üç bug'ı tek release'te (v3.13) çözmek için: (1) her birini önce **bağımsız audit**, (2) sonra tek commit. Audit aşamasında subagent kullanmadım çünkü her bug'ın inspection adımı 2-3 grep'lik iş, subagent overhead karşılığı yok. Düzeltme aşaması da mekanik (perl one-liner, python inject script) — subagent gerekmedi. **Eğer her bug 5+ sayfada judgment-heavy edit gerektirseydi, subagent + paralel kazanırdı.** Karar kuralı: *audit + fix toplam adım ≥10 ise paralel düşün, değilse seri.*
+
+---
+
 ## L03 — Page-header band component'i: 3 varyant + DOM hierarşi + spacing
 **Kaynak:** Derik v3.12 → v3.12.1 patron geri bildirimi (centering bug + spacing bug + minimal varyant ihtiyacı).
 
