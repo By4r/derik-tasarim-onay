@@ -191,7 +191,9 @@ ul{list-style:none}
 .badge{position:absolute;top:var(--s-3);left:var(--s-3);background:var(--primary-900);color:var(--bg);font-size:10px;font-weight:700;padding:5px 10px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.08em;z-index:1}
 .badge.sale{background:var(--accent-red)}
 .badge.gold{background:var(--accent-gold);color:var(--primary-900)}
-.fav-btn{display:none}
+.fav-btn{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:transparent;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);z-index:2;transition:color var(--t-fast),transform var(--t-fast)}
+.fav-btn i{font-size:16px;text-shadow:0 1px 2px rgba(255,255,255,.8)}
+.fav-btn:hover{color:var(--accent-red);transform:scale(1.1)}
 .product-body{padding:var(--s-4);display:flex;flex-direction:column;gap:var(--s-3);flex:1}
 .product-title{font-size:var(--fs-sm);font-weight:600;min-height:42px;line-height:1.4;color:var(--text)}
 .product-title:hover{color:var(--primary-700)}
@@ -492,7 +494,7 @@ ul{list-style:none}
       <p>Mardin Derik'in bereketli topraklarında yetişen Halhalı zeytinleri, kuşaktan kuşağa aktarılan üretim bilgisiyle harmanlanarak özgün lezzetler oluşturuyor. Sizleri, Derik'in kadim zeytin yolculuğunun bir parçası olmaya davet ediyoruz.</p>
     </div>
     <div class="visual">
-      <img src="https://images.unsplash.com/photo-1601000937856-7c4a3a5c5f1a?w=1200&q=80&auto=format&fit=crop" alt="Derik zeytinleri ve zeytinyağı" loading="eager" data-fallback>
+      <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=1200&q=80&auto=format&fit=crop" alt="Derik zeytinleri ve zeytinyağı" loading="eager" data-fallback>
     </div>
   </div>
 </section>

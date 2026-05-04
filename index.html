@@ -191,7 +191,9 @@ ul{list-style:none}
 .badge{position:absolute;top:var(--s-3);left:var(--s-3);background:var(--primary-900);color:var(--bg);font-size:10px;font-weight:700;padding:5px 10px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.08em;z-index:1}
 .badge.sale{background:var(--accent-red)}
 .badge.gold{background:var(--accent-gold);color:var(--primary-900)}
-.fav-btn{display:none}
+.fav-btn{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:transparent;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);z-index:2;transition:color var(--t-fast),transform var(--t-fast)}
+.fav-btn i{font-size:16px;text-shadow:0 1px 2px rgba(255,255,255,.8)}
+.fav-btn:hover{color:var(--accent-red);transform:scale(1.1)}
 .product-body{padding:var(--s-4);display:flex;flex-direction:column;gap:var(--s-3);flex:1}
 .product-title{font-size:var(--fs-sm);font-weight:600;min-height:42px;line-height:1.4;color:var(--text)}
 .product-title:hover{color:var(--primary-700)}
@@ -503,12 +505,12 @@ ul{list-style:none}
       <a href="magaza.html" class="more">Tümünü Gör <i class="fa-solid fa-arrow-right"></i></a>
     </div>
     <div class="cat-grid">
-      <a class="cat reveal" href="magaza.html"><img src="https://images.unsplash.com/photo-1611171711791-b34b41b1ccca?w=600&q=80&auto=format&fit=crop" alt="Zeytinyağları" loading="lazy" data-fallback><span class="label">Zeytinyağları</span></a>
+      <a class="cat reveal" href="magaza.html"><img src="https://images.unsplash.com/photo-1474440692490-2e83ae13ba29?w=600&q=80&auto=format&fit=crop" alt="Zeytinyağları" loading="lazy" data-fallback><span class="label">Zeytinyağları</span></a>
       <a class="cat reveal" href="#zeytinler"><img src="https://images.unsplash.com/photo-1593001872095-7d5b3868fb1d?w=600&q=80&auto=format&fit=crop" alt="Zeytinler" loading="lazy" data-fallback><span class="label">Zeytinler</span></a>
       <a class="cat reveal" href="#sabunlar"><img src="https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=600&q=80&auto=format&fit=crop" alt="Sabunlar" loading="lazy" data-fallback><span class="label">Sabunlar</span></a>
       <a class="cat reveal" href="#dogal"><img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=600&q=80&auto=format&fit=crop" alt="Doğal Ürünler" loading="lazy" data-fallback><span class="label">Doğal Ürünler</span></a>
-      <a class="cat reveal" href="#hediye"><img src="https://images.unsplash.com/photo-1607344645866-009c320c5ab8?w=600&q=80&auto=format&fit=crop" alt="Hediye Setleri" loading="lazy" data-fallback><span class="label">Hediye Setleri</span></a>
-      <a class="cat reveal" href="#kurumsal"><img src="https://images.unsplash.com/photo-1606471838963-d5ff6e2e2bb1?w=600&q=80&auto=format&fit=crop" alt="Kurumsal" loading="lazy" data-fallback><span class="label">Kurumsal</span></a>
+      <a class="cat reveal" href="#hediye"><img src="https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?w=600&q=80&auto=format&fit=crop" alt="Hediye Setleri" loading="lazy" data-fallback><span class="label">Hediye Setleri</span></a>
+      <a class="cat reveal" href="#kurumsal"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&q=80&auto=format&fit=crop" alt="Kurumsal" loading="lazy" data-fallback><span class="label">Kurumsal</span></a>
     </div>
   </div>
 </section>
@@ -538,7 +540,7 @@ ul{list-style:none}
         <div class="img-wrap">
           
           <a href="urun-detay.html" class="fav-btn" aria-label="Favorilere ekle"><i class="fa-regular fa-heart"></i></a>
-          <a href="urun-detay.html"><img class="product-img" src="https://images.unsplash.com/photo-1611171711791-b34b41b1ccca?w=500&q=80&auto=format&fit=crop" alt="Soğuk Sıkım Zeytinyağı 1L" loading="lazy" data-fallback></a>
+          <a href="urun-detay.html"><img class="product-img" src="https://images.unsplash.com/photo-1474440692490-2e83ae13ba29?w=500&q=80&auto=format&fit=crop" alt="Soğuk Sıkım Zeytinyağı 1L" loading="lazy" data-fallback></a>
         </div>
         <div class="product-body">
           <a href="urun-detay.html" class="product-title">Soğuk Sıkım Zeytinyağı 1L</a>
@@ -564,7 +566,7 @@ ul{list-style:none}
         <div class="img-wrap">
           
           <a href="urun-detay.html" class="fav-btn" aria-label="Favorilere ekle"><i class="fa-regular fa-heart"></i></a>
-          <a href="urun-detay.html"><img class="product-img" src="https://images.unsplash.com/photo-1607344645866-009c320c5ab8?w=500&q=80&auto=format&fit=crop" alt="Hediye Seti Premium" loading="lazy" data-fallback></a>
+          <a href="urun-detay.html"><img class="product-img" src="https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?w=500&q=80&auto=format&fit=crop" alt="Hediye Seti Premium" loading="lazy" data-fallback></a>
         </div>
         <div class="product-body">
           <a href="urun-detay.html" class="product-title">Hediye Seti Premium</a>
@@ -595,7 +597,7 @@ ul{list-style:none}
         </div>
       </a>
       <a class="banner reveal" href="#kurumsal">
-        <img src="https://images.unsplash.com/photo-1606471838963-d5ff6e2e2bb1?w=1000&q=80&auto=format&fit=crop" alt="Kurumsal" loading="lazy" data-fallback>
+        <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=1000&q=80&auto=format&fit=crop" alt="Kurumsal" loading="lazy" data-fallback>
         <div class="banner-text">
           <small>Kurumsal</small>
           <h3>Kurumsal Hediye Setleri için Teklif Al</h3>
@@ -644,7 +646,7 @@ ul{list-style:none}
         <div class="img-wrap">
           
           <a href="urun-detay.html" class="fav-btn" aria-label="Favorilere ekle"><i class="fa-regular fa-heart"></i></a>
-          <a href="urun-detay.html"><img class="product-img" src="https://images.unsplash.com/photo-1606471838963-d5ff6e2e2bb1?w=500&q=80&auto=format&fit=crop" alt="Teneke 5L Zeytinyağı" loading="lazy" data-fallback></a>
+          <a href="urun-detay.html"><img class="product-img" src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=500&q=80&auto=format&fit=crop" alt="Teneke 5L Zeytinyağı" loading="lazy" data-fallback></a>
         </div>
         <div class="product-body">
           <a href="urun-detay.html" class="product-title">Teneke 5L Zeytinyağı</a>
@@ -657,7 +659,7 @@ ul{list-style:none}
         <div class="img-wrap">
           
           <a href="urun-detay.html" class="fav-btn" aria-label="Favorilere ekle"><i class="fa-regular fa-heart"></i></a>
-          <a href="urun-detay.html"><img class="product-img" src="https://images.unsplash.com/photo-1607344645866-009c320c5ab8?w=500&q=80&auto=format&fit=crop" alt="Mini Hediye Kutusu" loading="lazy" data-fallback></a>
+          <a href="urun-detay.html"><img class="product-img" src="https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?w=500&q=80&auto=format&fit=crop" alt="Mini Hediye Kutusu" loading="lazy" data-fallback></a>
         </div>
         <div class="product-body">
           <a href="urun-detay.html" class="product-title">Mini Hediye Kutusu</a>
