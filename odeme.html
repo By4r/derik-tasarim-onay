@@ -837,11 +837,56 @@ body.mobile-panel-open{overflow:hidden}
 .pay-tabs button.active{color:var(--primary-700);border-bottom-color:var(--primary-700)}
 .pay-panel{display:none}
 .pay-panel.active{display:block}
-.card-vis{background:linear-gradient(135deg,var(--primary-700),var(--primary-900));color:#fff;border-radius:var(--r-md);padding:var(--s-5);margin-bottom:var(--s-5);position:relative;overflow:hidden}
-.card-vis::before{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(201,165,91,.25),transparent 70%)}
-.card-vis .cv-num{font-family:'Courier New',monospace;font-size:20px;letter-spacing:3px;margin:var(--s-5) 0 var(--s-3);position:relative}
-.card-vis .cv-row{display:flex;justify-content:space-between;font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:.08em;opacity:.85;position:relative}
-.card-vis .cv-brand{position:absolute;top:var(--s-4);right:var(--s-5);font-size:var(--fs-md);font-weight:800;letter-spacing:.04em;color:var(--accent-gold)}
+/* ===== v3.10 Premium Credit Card + Split Layout ===== */
+.card-split{display:grid;grid-template-columns:minmax(280px,40%) 1fr;gap:32px;align-items:start}
+.card-split .card-side{position:sticky;top:96px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.card-split .form-side{min-width:0}
+@media(max-width:1023px){.card-split{grid-template-columns:1fr;gap:24px}.card-split .card-side{position:static;align-items:center}}
+
+.credit-card-display{
+  --card-from:#3B4A2A;--card-mid:#2A3520;--card-to:#1A2014;
+  position:relative;width:100%;max-width:380px;aspect-ratio:1.586/1;
+  border-radius:18px;color:#fff;padding:22px 24px;
+  background:
+    radial-gradient(120% 80% at 0% 0%,rgba(201,165,91,.18),transparent 55%),
+    radial-gradient(80% 60% at 100% 100%,rgba(201,165,91,.10),transparent 60%),
+    linear-gradient(135deg,var(--card-from) 0%,var(--card-mid) 55%,var(--card-to) 100%);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.08) inset,
+    0 0 0 1px rgba(255,255,255,.04) inset,
+    0 4px 20px rgba(0,0,0,.18),
+    0 18px 50px rgba(59,74,42,.28);
+  display:flex;flex-direction:column;justify-content:space-between;
+  font-family:'Inter',system-ui,sans-serif;
+  transform-style:preserve-3d;transition:transform .35s ease,box-shadow .35s ease;
+  overflow:hidden;isolation:isolate;
+}
+@media(hover:hover){.credit-card-display:hover{transform:rotateY(-3deg) rotateX(2deg) translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.18),0 28px 70px rgba(59,74,42,.42)}}
+.credit-card-display::before{
+  content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.04 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity:.7;mix-blend-mode:overlay;pointer-events:none;
+}
+.credit-card-display::after{
+  content:"";position:absolute;right:-30px;bottom:-30px;width:200px;height:200px;z-index:-1;
+  background:radial-gradient(circle,rgba(201,165,91,.16),transparent 65%);pointer-events:none;
+}
+.cc-watermark{position:absolute;right:14px;top:42%;transform:translateY(-50%);font-size:120px;opacity:.05;line-height:1;pointer-events:none;font-weight:700;color:#fff}
+.cc-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2}
+.cc-chip{width:42px;height:32px;border-radius:6px;background:linear-gradient(135deg,#E8C77A 0%,#C9A55B 45%,#8C6D2F 100%);position:relative;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 1px 2px rgba(0,0,0,.25)}
+.cc-chip::before,.cc-chip::after{content:"";position:absolute;inset:6px;border-radius:3px;border:1px solid rgba(0,0,0,.22)}
+.cc-chip::after{inset:14px 6px;border:0;background:linear-gradient(90deg,transparent 0,rgba(0,0,0,.22) 0,rgba(0,0,0,.22) 1px,transparent 1px,transparent 12px,rgba(0,0,0,.22) 12px,rgba(0,0,0,.22) 13px,transparent 13px,transparent 24px,rgba(0,0,0,.22) 24px,rgba(0,0,0,.22) 25px,transparent 25px)}
+.cc-brand{font-family:'Inter',serif;font-style:italic;font-size:22px;font-weight:700;letter-spacing:.02em;color:var(--accent-gold);text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.cc-num{display:flex;gap:14px;font-family:ui-monospace,'SF Mono','Menlo',monospace;font-size:21px;font-weight:600;letter-spacing:.04em;font-variant-numeric:tabular-nums lining-nums;text-shadow:0 1px 2px rgba(0,0,0,.35);position:relative;z-index:2}
+.cc-num span{display:inline-block;min-width:64px}
+.cc-bottom{display:grid;grid-template-columns:1fr auto auto;gap:16px;align-items:end;position:relative;z-index:2}
+.cc-field label{display:block;font-size:9px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;opacity:.65;margin-bottom:4px}
+.cc-field span{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.cc-exp span{font-family:ui-monospace,'SF Mono',monospace;font-size:14px}
+.cc-scheme{height:28px;display:flex;align-items:center;justify-content:flex-end;min-width:48px;opacity:.95;transition:opacity .25s}
+.cc-scheme svg{height:24px;width:auto;filter:drop-shadow(0 1px 2px rgba(0,0,0,.3))}
+.cc-trust{display:flex;gap:14px;font-size:12px;color:var(--text-2,#6B5847);font-weight:600;letter-spacing:.04em}
+.cc-trust i{color:var(--primary-700);margin-right:4px}
 .cvv-wrap{position:relative}
 .cvv-wrap input{padding-right:42px}
 .cvv-wrap .eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:var(--r-sm);color:var(--muted);display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
@@ -990,31 +1035,49 @@ body.mobile-panel-open{overflow:hidden}
           </div>
 
           <div class="pay-panel active" id="pay-card">
-            <div class="card-vis">
-              <span class="cv-brand">DERIK</span>
-              <div class="cv-num" id="cardVisNum">•••• •••• •••• ••••</div>
-              <div class="cv-row"><span id="cardVisName">KART SAHİBİ</span><span id="cardVisExp">MM/YY</span></div>
-            </div>
-            <div class="form-grid-co">
-              <div class="field-co full"><label>Kart Sahibi</label><input type="text" id="cardName" placeholder="Ad Soyad"></div>
-              <div class="field-co full"><label>Kart Numarası</label><input type="text" id="cardNum" maxlength="19" placeholder="1234 5678 9012 3456"></div>
-              <div class="field-co"><label>Son Kullanma (MM/YY)</label><input type="text" id="cardExp" maxlength="5" placeholder="MM/YY"></div>
-              <div class="field-co"><label>CVV</label>
-                <div class="cvv-wrap">
-                  <input type="password" id="cardCvv" maxlength="3" placeholder="123">
-                  <button type="button" class="eye" id="cvvToggle" aria-label="Göster"><i class="fa-regular fa-eye"></i></button>
+            <div class="card-split">
+              <div class="card-side">
+                <div class="credit-card-display" id="creditCard" aria-label="Kart önizlemesi">
+                  <span class="cc-watermark" aria-hidden="true">D</span>
+                  <div class="cc-top">
+                    <div class="cc-chip" aria-hidden="true"></div>
+                    <span class="cc-brand">Derik</span>
+                  </div>
+                  <div class="cc-num" id="cardVisNum"><span>••••</span><span>••••</span><span>••••</span><span>••••</span></div>
+                  <div class="cc-bottom">
+                    <div class="cc-field"><label>Kart Sahibi</label><span id="cardVisName">AD SOYAD</span></div>
+                    <div class="cc-field cc-exp"><label>Geçerlilik</label><span id="cardVisExp">MM/YY</span></div>
+                    <div class="cc-scheme" id="cardScheme" aria-hidden="true"></div>
+                  </div>
+                </div>
+                <div class="cc-trust">
+                  <span><i class="fa-solid fa-lock"></i>256-bit SSL</span>
+                  <span><i class="fa-solid fa-shield-halved"></i>3D Secure</span>
                 </div>
               </div>
-              <div class="field-co full"><label>Taksit Seçenekleri</label>
-                <select>
-                  <option>Tek Çekim</option>
-                  <option>2 Taksit (1.144,60 TL/ay)</option>
-                  <option>3 Taksit (763,07 TL/ay)</option>
-                  <option>6 Taksit (381,53 TL/ay)</option>
-                </select>
+              <div class="form-side">
+                <div class="form-grid-co">
+                  <div class="field-co full"><label>Kart Sahibi</label><input type="text" id="cardName" placeholder="Ad Soyad" autocomplete="cc-name"></div>
+                  <div class="field-co full"><label>Kart Numarası</label><input type="text" id="cardNum" maxlength="19" placeholder="1234 5678 9012 3456" autocomplete="cc-number" inputmode="numeric"></div>
+                  <div class="field-co"><label>Son Kullanma (MM/YY)</label><input type="text" id="cardExp" maxlength="5" placeholder="MM/YY" autocomplete="cc-exp" inputmode="numeric"></div>
+                  <div class="field-co"><label>CVV</label>
+                    <div class="cvv-wrap">
+                      <input type="password" id="cardCvv" maxlength="3" placeholder="123" autocomplete="cc-csc" inputmode="numeric">
+                      <button type="button" class="eye" id="cvvToggle" aria-label="Göster"><i class="fa-regular fa-eye"></i></button>
+                    </div>
+                  </div>
+                  <div class="field-co full"><label>Taksit Seçenekleri</label>
+                    <select>
+                      <option>Tek Çekim</option>
+                      <option>2 Taksit (1.144,60 TL/ay)</option>
+                      <option>3 Taksit (763,07 TL/ay)</option>
+                      <option>6 Taksit (381,53 TL/ay)</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="threed"><i class="fa-solid fa-shield-halved"></i><span><b>3D Secure ile güvenli ödeme</b><br>Kart bilgileriniz bankanız tarafından doğrulanır, sistemimizde saklanmaz.</span></div>
               </div>
             </div>
-            <div class="threed"><i class="fa-solid fa-shield-halved"></i><span><b>3D Secure ile güvenli ödeme</b><br>Kart bilgileriniz bankanız tarafından doğrulanır, sistemimizde saklanmaz.</span></div>
           </div>
 
           <div class="pay-panel" id="pay-havale">
@@ -1105,12 +1168,41 @@ body.mobile-panel-open{overflow:hidden}
     document.getElementById('pay-' + b.dataset.tab).classList.add('active');
   }));
 
-  // Card number auto-group 4-4-4-4
+  // Card number auto-group 4-4-4-4 + live preview + scheme detection
   const cardNum = document.getElementById('cardNum');
+  const cardVisNum = document.getElementById('cardVisNum');
+  const cardScheme = document.getElementById('cardScheme');
+  const SCHEMES = {
+    visa: '<svg viewBox="0 0 60 20" xmlns="http://www.w3.org/2000/svg"><text x="0" y="16" font-family="Inter,Arial" font-weight="900" font-size="18" font-style="italic" fill="#fff" letter-spacing="1">VISA</text></svg>',
+    mc:   '<svg viewBox="0 0 50 30" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="15" r="11" fill="#EB001B"/><circle cx="32" cy="15" r="11" fill="#F79E1B" opacity=".88"/><path d="M25 7a10.8 10.8 0 0 1 0 16 10.8 10.8 0 0 1 0-16z" fill="#FF5F00"/></svg>',
+    troy: '<svg viewBox="0 0 60 20" xmlns="http://www.w3.org/2000/svg"><text x="0" y="16" font-family="Inter,Arial" font-weight="800" font-size="16" fill="#fff" letter-spacing="2">troy</text><circle cx="50" cy="10" r="4" fill="#EB001B"/><circle cx="56" cy="10" r="4" fill="#fff" opacity=".7"/></svg>',
+    amex: '<svg viewBox="0 0 60 20" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="20" rx="2" fill="#2671B9"/><text x="30" y="14" text-anchor="middle" font-family="Inter,Arial" font-weight="800" font-size="9" fill="#fff" letter-spacing=".5">AMEX</text></svg>'
+  };
+  function detectScheme(d){
+    if(!d) return '';
+    if(d[0]==='4') return 'visa';
+    if(d[0]==='5' || (d[0]==='2' && +d.slice(0,2)>=22 && +d.slice(0,2)<=27)) return 'mc';
+    if(d[0]==='9') return 'troy';
+    if(d[0]==='3' && (d[1]==='4'||d[1]==='7')) return 'amex';
+    return '';
+  }
+  function renderCardNum(raw){
+    const digits = raw.replace(/\D/g,'').slice(0,16);
+    const groups = [0,1,2,3].map(i => {
+      const seg = digits.slice(i*4,i*4+4);
+      // Show first group fully; mask middle 2 groups; show last 4
+      if(i===0 || i===3) return seg.padEnd(4,'•');
+      if(seg.length===0) return '••••';
+      return '•'.repeat(seg.length).padEnd(4,'•');
+    });
+    cardVisNum.innerHTML = groups.map(g => '<span>'+g+'</span>').join('');
+    const scheme = detectScheme(digits);
+    cardScheme.innerHTML = SCHEMES[scheme] || '';
+  }
   cardNum.addEventListener('input', e => {
-    let v = e.target.value.replace(/\D/g,'').slice(0,16);
-    e.target.value = v.replace(/(.{4})/g,'$1 ').trim();
-    document.getElementById('cardVisNum').textContent = (e.target.value || '•••• •••• •••• ••••').padEnd(19,'•');
+    let d = e.target.value.replace(/\D/g,'').slice(0,16);
+    e.target.value = d.replace(/(.{4})/g,'$1 ').trim();
+    renderCardNum(d);
   });
   // Exp MM/YY
   const cardExp = document.getElementById('cardExp');
@@ -1121,7 +1213,7 @@ body.mobile-panel-open{overflow:hidden}
     document.getElementById('cardVisExp').textContent = v || 'MM/YY';
   });
   document.getElementById('cardName').addEventListener('input', e => {
-    document.getElementById('cardVisName').textContent = (e.target.value || 'KART SAHİBİ').toUpperCase();
+    document.getElementById('cardVisName').textContent = (e.target.value || 'AD SOYAD').toUpperCase();
   });
 
   // CVV eye toggle
