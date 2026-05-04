@@ -464,6 +464,42 @@ ul{list-style:none}
   .ks-form-panel .form-grid{grid-template-columns:1fr}
 }
 
+/* SSS */
+.sss-title{padding:var(--s-6) 0 var(--s-8);max-width:780px}
+.sss-title .eyebrow{display:inline-block;font-size:var(--fs-xs);font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--primary-700);margin-bottom:var(--s-3)}
+.sss-title h1{font-size:42px;font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:var(--s-4);color:var(--text);position:relative;padding-bottom:var(--s-3)}
+.sss-title h1::after{content:"";position:absolute;left:0;bottom:0;width:40px;height:3px;background:var(--primary-700);border-radius:var(--r-pill)}
+.sss-title p{color:var(--text-2);font-size:var(--fs-md);line-height:1.6}
+
+.sss-layout{display:grid;grid-template-columns:260px 1fr;gap:var(--s-10);padding:var(--s-6) 0 96px;align-items:start}
+.sss-nav{position:sticky;top:120px;background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-5);align-self:start}
+.sss-nav h3{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:var(--s-3);padding:0 var(--s-3)}
+.sss-nav ul li a{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;font-size:var(--fs-sm);color:var(--text-2);border-radius:var(--r-sm);font-weight:500;transition:background var(--t-fast),color var(--t-fast)}
+.sss-nav ul li a:hover,.sss-nav ul li a.active{background:var(--primary-100);color:var(--primary-700);font-weight:700}
+.sss-nav ul li a .num{font-size:11px;color:var(--muted);font-weight:600}
+.sss-nav ul li a:hover .num,.sss-nav ul li a.active .num{color:var(--primary-700)}
+
+.sss-cats{display:flex;flex-direction:column;gap:var(--s-12)}
+.sss-cat h2{font-size:var(--fs-2xl);font-weight:700;color:var(--primary-900);margin-bottom:var(--s-2);scroll-margin-top:120px}
+.sss-cat .cat-lead{color:var(--muted);font-size:var(--fs-sm);margin-bottom:var(--s-5)}
+.sss-list{display:flex;flex-direction:column;gap:var(--s-2)}
+.qa{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;transition:border-color var(--t-fast),box-shadow var(--t-fast)}
+.qa:hover{border-color:var(--primary-200)}
+.qa.open{border-color:var(--primary-700);box-shadow:var(--shadow-1)}
+.qa-q{display:flex;justify-content:space-between;align-items:center;width:100%;padding:18px 22px;font-size:var(--fs-md);font-weight:600;color:var(--text);text-align:left;line-height:1.4;gap:var(--s-4)}
+.qa-q .qa-icon{flex:0 0 32px;width:32px;height:32px;border-radius:50%;background:var(--bg-product);color:var(--text-2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;transition:background var(--t-fast),color var(--t-fast),transform var(--t-fast)}
+.qa.open .qa-q{color:var(--primary-700)}
+.qa.open .qa-icon{background:var(--primary-700);color:#fff;transform:rotate(180deg)}
+.qa-a{display:none;padding:0 22px 22px;color:var(--text-2);font-size:var(--fs-sm);line-height:1.7;max-width:780px}
+.qa.open .qa-a{display:block}
+.qa-a a{color:var(--primary-700);text-decoration:underline}
+
+@media(max-width:1024px){
+  .sss-layout{grid-template-columns:1fr;gap:var(--s-6);padding:var(--s-4) 0 56px}
+  .sss-nav{position:static}
+  .sss-title h1{font-size:32px}
+}
+
 /* CONTACT */
 .contact-title{padding:var(--s-6) 0 var(--s-8);max-width:780px}
 .contact-title h1{font-size:40px;font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:var(--s-4);color:var(--text);position:relative;padding-bottom:var(--s-3)}
@@ -778,7 +814,7 @@ if (location.search.includes("gonderildi=1")) {
       <div>
         <h4>Yardım</h4>
         <ul>
-          <li><a href="#sss">Sıkça Sorulan Sorular</a></li>
+          <li><a href="sss.html">Sıkça Sorulan Sorular</a></li>
           <li><a href="#iade">İade ve Değişim</a></li>
           <li><a href="iletisim.html">İletişim</a></li>
         </ul>

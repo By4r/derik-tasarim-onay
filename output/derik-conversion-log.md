@@ -252,6 +252,26 @@ KD'deki ürün kartı askısı/yarım daire dekoratif eleman bilinçli olarak al
 
 ---
 
+## v2.8 — sss.html (yeni sayfa)
+
+Tarih: 2026-05-04
+Skill referansı: `https://www.kahvedunyasi.com/sikca-sorulan-sorular`
+
+### Yapı
+- Breadcrumb + sade title block (krem zemin, yeşil hero YOK)
+- 2-col layout: SOL 260px sticky kategori navigasyonu (her kategoride soru sayısı), SAĞ accordion'lı kategori bölümleri
+- 6 kategori: Sipariş ve Ödeme (5) · Kargo ve Teslimat (5) · Ürünler ve Üretim (6) · İade ve Değişim (4) · Üyelik ve Hesap (4) · Kurumsal Satış (4) — toplam **28 Q&A**
+- Accordion: chevron-down ikon, açıkken yuvarlak primary zeminde döner (180°), tek aktif (single-open)
+- Soldaki kategori nav'ı scroll ile auto-active highlight (IntersectionObserver alt + bound check)
+
+### İçerik
+Halhalı zeytini, soğuk sıkım, asit oranı, Mardin Derik üretim tesisi, KVKK, kurumsal etiket gibi Derik markasına özgü cevaplar üretildi. İçerideki linkler aktif (`iletisim.html`, `kurumsal-satis.html`).
+
+### Footer link
+"Yardım" kolonundaki "Sıkça Sorulan Sorular" linki artık `sss.html`'e gidiyor (8 sayfada güncellendi).
+
+---
+
 ## v2.7 — kurumsal-satis.html (yeni sayfa, skill ile KD referansı)
 
 Tarih: 2026-05-04
