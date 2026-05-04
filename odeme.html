@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hikayemiz — Derik</title>
+<title>Ödeme — Derik</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
 <style>
 :root {
@@ -734,6 +734,7 @@ body.mobile-panel-open{overflow:hidden}
       <span class="dd-menu">
         <a href="hikayemiz.html">Hikayemiz</a>
         <a href="uretim.html">Üretim</a>
+        <a href="#magazalar">Mağazalar</a>
         <a href="iletisim.html">İletişim</a>
       </span>
     </span>
@@ -746,13 +747,13 @@ body.mobile-panel-open{overflow:hidden}
     <a href="index.html" class="brand-logo">Derik</a>
     <nav class="nav">
       <a href="magaza.html">Zeytinyağları</a>
-      <a href="magaza.html?kategori=zeytinler">Zeytinler</a>
-      <a href="magaza.html?kategori=sabunlar">Sabunlar</a>
-      <a href="magaza.html?kategori=dogal-urunler">Doğal Ürünler</a>
-      <a href="magaza.html?kategori=hediye-setleri">Hediye Setleri</a>
+      <a href="#zeytinler">Zeytinler</a>
+      <a href="#sabunlar">Sabunlar</a>
+      <a href="#dogal">Doğal Ürünler</a>
+      <a href="#hediye">Hediye Setleri</a>
     </nav>
     <div class="header-actions">
-      <a href="#ara" class="icon-btn" data-search-trigger aria-label="Ara"><i class="fa-solid fa-magnifying-glass"></i></a>
+      <a href="#ara" class="icon-btn" aria-label="Ara"><i class="fa-solid fa-magnifying-glass"></i></a>
       <span class="user-dd-wrap">
         <a href="uyelik-bilgilerim.html" class="icon-btn" aria-label="Hesabım"><i class="fa-regular fa-user"></i></a>
         <span class="user-dd-menu">
@@ -761,115 +762,401 @@ body.mobile-panel-open{overflow:hidden}
           <a href="adreslerim.html"><i class="fa-solid fa-location-dot"></i> Adreslerim</a>
           <a href="promosyonlarim.html"><i class="fa-solid fa-ticket"></i> Promosyonlarım</a>
           <span class="divider"></span>
-          <a href="giris.html" data-logout><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</a>
+          <a href="#"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</a>
         </span>
       </span>
-      <a href="favoriler.html" class="icon-btn" aria-label="Favoriler"><i class="fa-regular fa-heart"></i></a>
-      <a href="sepet.html" class="icon-btn cart-badge" data-mini-cart-trigger aria-label="Sepetim"><i class="fa-solid fa-bag-shopping"></i><span class="cart-num">0</span></a>
+      <a href="#favoriler" class="icon-btn" aria-label="Favoriler"><i class="fa-regular fa-heart"></i></a>
+      <a href="#sepet" class="icon-btn cart-badge" aria-label="Sepetim"><i class="fa-solid fa-bag-shopping"></i><span class="cart-num">0</span></a>
       <button class="mobile-burger" aria-label="Menü" data-open-mpanel><i class="fa-solid fa-bars"></i></button>
     </div>
   </div>
 </header>
 
+<style>
+/* PAGE: odeme */
+.checkout-wrap{padding:var(--s-4) 0 96px}
+.checkout-head{margin-bottom:var(--s-6)}
+.checkout-head h1{font-size:32px;font-weight:700;letter-spacing:-0.02em}
+.checkout-grid{display:grid;grid-template-columns:1fr 380px;gap:var(--s-8);align-items:start}
+.co-step{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;margin-bottom:var(--s-4)}
+.co-step > summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:var(--s-3);padding:var(--s-5) var(--s-6);font-size:var(--fs-md);font-weight:700;color:var(--primary-900);background:var(--bg-product);border-bottom:1px solid var(--border)}
+.co-step > summary::-webkit-details-marker{display:none}
+.co-step > summary .num{flex:0 0 32px;width:32px;height:32px;border-radius:50%;background:var(--primary-700);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:var(--fs-sm);font-weight:800}
+.co-step > summary .arr{margin-left:auto;font-size:12px;color:var(--muted);transition:transform .2s}
+.co-step[open] > summary .arr{transform:rotate(180deg)}
+.co-step .step-body{padding:var(--s-6)}
+
+.info-bar{background:#E8F0FE;color:var(--primary-700);padding:var(--s-4) var(--s-5);border-radius:var(--r-sm);font-size:var(--fs-sm);margin-bottom:var(--s-5);line-height:1.55}
+.info-bar a{color:var(--primary-700);text-decoration:underline;font-weight:700}
+.info-bar small{display:block;margin-top:6px;color:var(--text-2);font-size:var(--fs-xs);opacity:.85}
+
+.form-grid-co{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4)}
+.form-grid-co .field.full{grid-column:1/-1}
+.field-co{display:flex;flex-direction:column;gap:6px}
+.field-co label{font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-2)}
+.field-co input,.field-co select{font-family:inherit;font-size:var(--fs-sm);color:var(--text);padding:12px 14px;border:1px solid var(--border);border-radius:var(--r-sm);background:#fff;width:100%;transition:border-color var(--t-fast),box-shadow var(--t-fast)}
+.field-co input:focus,.field-co select:focus{outline:none;border-color:var(--primary-700);box-shadow:0 0 0 3px rgba(59,74,42,.08)}
+
+.addr-cards{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3);margin-bottom:var(--s-4)}
+.addr-card{position:relative;border:2px solid var(--border);border-radius:var(--r-md);padding:var(--s-4);cursor:pointer;background:#fff;transition:border-color var(--t-fast),background var(--t-fast)}
+.addr-card input{position:absolute;opacity:0;pointer-events:none}
+.addr-card .ac-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.addr-card .ac-tag{font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--primary-700);display:inline-flex;align-items:center;gap:6px}
+.addr-card .ac-tag i{font-size:11px}
+.addr-card .ac-name{font-size:var(--fs-sm);font-weight:700;color:var(--text);margin-bottom:2px}
+.addr-card .ac-line{font-size:var(--fs-xs);color:var(--text-2);line-height:1.5}
+.addr-card.selected,.addr-card:has(input:checked){border-color:var(--primary-700);background:var(--primary-100)}
+.addr-add{display:inline-flex;align-items:center;gap:8px;color:var(--primary-700);font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:10px 0;cursor:pointer}
+.addr-add:hover{color:var(--primary-900)}
+
+.same-row{display:flex;align-items:center;gap:10px;padding:var(--s-3) 0;font-size:var(--fs-sm);color:var(--text);cursor:pointer;border-top:1px solid var(--border);margin-top:var(--s-2)}
+.same-row input{width:18px;height:18px;accent-color:var(--primary-700)}
+.invoice-block{display:none;padding-top:var(--s-3);border-top:1px solid var(--border);margin-top:var(--s-2)}
+.invoice-block.show{display:block}
+.radio-row{display:flex;gap:var(--s-5);margin-bottom:var(--s-4)}
+.radio-row label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:var(--fs-sm);font-weight:600;color:var(--text)}
+.radio-row input{accent-color:var(--primary-700)}
+.kurumsal-fields{display:none;margin-top:var(--s-3)}
+.kurumsal-fields.show{display:block}
+
+/* shipping options */
+.ship-opts{display:flex;flex-direction:column;gap:var(--s-3)}
+.ship-opt{display:flex;align-items:center;gap:var(--s-4);padding:var(--s-4) var(--s-5);border:2px solid var(--border);border-radius:var(--r-md);cursor:pointer;background:#fff;transition:border-color var(--t-fast),background var(--t-fast)}
+.ship-opt input{accent-color:var(--primary-700);width:18px;height:18px}
+.ship-opt .so-icon{width:42px;height:42px;border-radius:50%;background:var(--primary-100);color:var(--primary-700);display:inline-flex;align-items:center;justify-content:center;font-size:18px}
+.ship-opt .so-info{flex:1}
+.ship-opt .so-info b{display:block;font-size:var(--fs-sm);font-weight:700;color:var(--text)}
+.ship-opt .so-info span{display:block;font-size:var(--fs-xs);color:var(--muted);margin-top:2px}
+.ship-opt .so-price{font-size:var(--fs-sm);font-weight:800;color:var(--primary-700)}
+.ship-opt .so-price.free{color:var(--accent-success)}
+.ship-opt:has(input:checked){border-color:var(--primary-700);background:var(--primary-100)}
+
+/* Payment tabs */
+.pay-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:var(--s-5);overflow-x:auto}
+.pay-tabs button{padding:var(--s-3) var(--s-5);font-size:var(--fs-sm);font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;border-bottom:3px solid transparent;white-space:nowrap;transition:all var(--t-fast);display:inline-flex;align-items:center;gap:8px}
+.pay-tabs button.active{color:var(--primary-700);border-bottom-color:var(--primary-700)}
+.pay-panel{display:none}
+.pay-panel.active{display:block}
+.card-vis{background:linear-gradient(135deg,var(--primary-700),var(--primary-900));color:#fff;border-radius:var(--r-md);padding:var(--s-5);margin-bottom:var(--s-5);position:relative;overflow:hidden}
+.card-vis::before{content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(201,165,91,.25),transparent 70%)}
+.card-vis .cv-num{font-family:'Courier New',monospace;font-size:20px;letter-spacing:3px;margin:var(--s-5) 0 var(--s-3);position:relative}
+.card-vis .cv-row{display:flex;justify-content:space-between;font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:.08em;opacity:.85;position:relative}
+.card-vis .cv-brand{position:absolute;top:var(--s-4);right:var(--s-5);font-size:var(--fs-md);font-weight:800;letter-spacing:.04em;color:var(--accent-gold)}
+.cvv-wrap{position:relative}
+.cvv-wrap input{padding-right:42px}
+.cvv-wrap .eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:var(--r-sm);color:var(--muted);display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.cvv-wrap .eye:hover{color:var(--primary-700);background:var(--bg-product)}
+.threed{display:flex;align-items:center;gap:var(--s-3);padding:var(--s-3) var(--s-4);background:var(--bg-product);border-radius:var(--r-sm);font-size:var(--fs-xs);color:var(--text-2);margin-top:var(--s-4)}
+.threed i{color:var(--primary-700);font-size:18px}
+.threed b{color:var(--text);font-weight:700}
+
+.iban-list{display:flex;flex-direction:column;gap:var(--s-3)}
+.iban-row{display:flex;align-items:center;gap:var(--s-3);padding:var(--s-4);background:var(--bg-product);border-radius:var(--r-sm);font-size:var(--fs-sm);flex-wrap:wrap}
+.iban-row .bank{font-weight:700;color:var(--text);min-width:80px}
+.iban-row .num{font-family:'Courier New',monospace;color:var(--text-2);flex:1;min-width:200px;letter-spacing:1px;font-size:var(--fs-xs)}
+.iban-row .copy-btn{background:var(--primary-700);color:#fff;padding:8px 14px;border-radius:var(--r-sm);font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:inline-flex;align-items:center;gap:6px}
+.iban-row .copy-btn:hover{background:var(--primary-900)}
+.note-bar{margin-top:var(--s-4);padding:var(--s-3) var(--s-4);background:#FFF8E1;color:#7A5A1A;border-left:3px solid var(--accent-gold);border-radius:var(--r-sm);font-size:var(--fs-xs);line-height:1.6}
+
+.kapida{padding:var(--s-5);background:var(--bg-product);border-radius:var(--r-sm);font-size:var(--fs-sm);color:var(--text-2);line-height:1.6}
+.kapida b{color:var(--text);display:block;margin-bottom:6px}
+
+.legal-checks{padding:var(--s-5) 0;border-top:1px solid var(--border);margin-top:var(--s-4)}
+.legal-checks label{display:flex;align-items:flex-start;gap:10px;padding:8px 0;font-size:var(--fs-sm);color:var(--text-2);cursor:pointer;line-height:1.5}
+.legal-checks input{flex:0 0 18px;width:18px;height:18px;margin-top:2px;accent-color:var(--primary-700)}
+.legal-checks a{color:var(--primary-700);text-decoration:underline}
+.submit-zone{margin-top:var(--s-5)}
+
+/* Right summary */
+.co-summary{position:sticky;top:120px;background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s-6)}
+.co-summary h3{font-size:var(--fs-md);font-weight:700;color:var(--primary-900);padding-bottom:var(--s-3);border-bottom:1px solid var(--border)}
+.mini-toggle{display:flex;justify-content:space-between;align-items:center;width:100%;padding:var(--s-3) 0;font-size:var(--fs-sm);font-weight:700;color:var(--text);cursor:pointer}
+.mini-toggle i{transition:transform .2s;font-size:11px;color:var(--muted)}
+.mini-toggle.open i{transform:rotate(180deg)}
+.mini-list{display:none;flex-direction:column;gap:var(--s-3);padding:var(--s-3) 0;border-top:1px dashed var(--border)}
+.mini-list.open{display:flex}
+.mini-row{display:flex;gap:var(--s-3);align-items:center}
+.mini-row .mt{width:46px;height:46px;border-radius:var(--r-sm);overflow:hidden;background:var(--bg-product);flex-shrink:0;position:relative}
+.mini-row .mt img{width:100%;height:100%;object-fit:cover}
+.mini-row .mt .qb{position:absolute;top:-6px;right:-6px;background:var(--primary-700);color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.mini-row .mn{flex:1;font-size:var(--fs-xs);color:var(--text);font-weight:600;line-height:1.3}
+.mini-row .mp{font-size:var(--fs-sm);font-weight:800;color:var(--primary-900)}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:var(--text-2);font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-top:var(--s-3)}
+.back-link:hover{color:var(--primary-700)}
+
+@media(max-width:1024px){
+  .checkout-grid{grid-template-columns:1fr;gap:var(--s-4)}
+  .co-summary{position:static}
+  .form-grid-co,.addr-cards{grid-template-columns:1fr}
+}
+</style>
+
 <div class="container">
   <nav class="crumb">
     <a href="index.html">Anasayfa</a>
     <i class="fa-solid fa-chevron-right sep"></i>
-    <a href="hakkimizda.html">Hakkımızda</a>
+    <a href="sepet.html">Sepetim</a>
     <i class="fa-solid fa-chevron-right sep"></i>
-    <span class="active">Hikayemiz</span>
+    <span class="active">Ödeme</span>
   </nav>
 </div>
 
-<!-- HERO -->
-<section class="story-hero">
-  <div class="container wrap">
+<div class="container checkout-wrap">
+  <div class="checkout-head"><h1>Ödeme</h1></div>
+
+  <form class="checkout-grid" id="checkoutForm" onsubmit="return false">
     <div>
-      <span class="eyebrow">Ana Sayfa / Hikayemiz</span>
-      <h1>Hepimizin Ortak Mirası: <em>Derik Zeytini</em></h1>
-      <p>Mardin Derik'in bereketli topraklarında yetişen Halhalı zeytinleri, kuşaktan kuşağa aktarılan üretim bilgisiyle harmanlanarak özgün lezzetler oluşturuyor. Sizleri, Derik'in kadim zeytin yolculuğunun bir parçası olmaya davet ediyoruz.</p>
-    </div>
-    <div class="visual">
-      <img src="https://images.unsplash.com/photo-1593001872095-7d5b3868fb1d?w=400&h=400&fit=crop&q=80" alt="Derik zeytinleri ve zeytinyağı" loading="eager" data-fallback width="400" height="400">
-    </div>
-  </div>
-</section>
-
-<!-- SECTION 1 — Marka tanıtımı -->
-<section class="story-intro">
-  <div class="container">
-    <div class="lead">
-      <h2>Derik, Mardin'in Köklü Zeytin Mirasının Bir Parçasıdır.</h2>
-      <p>Yüzyıllardır zeytinin anavatanı olan Mardin'in Derik ilçesi, eşsiz iklimi ve verimli topraklarıyla Türkiye'nin en kaliteli zeytinlerinin yetiştiği bölgelerden biridir. Derik markası, bu kadim mirası modern üretim anlayışıyla buluşturarak, yöre halkının emeğini ve toprağın bereketini bir damla saf zeytinyağında bir araya getiriyor.</p>
-    </div>
-
-    <div class="pillars">
-      <div class="pillar reveal">
-        <span class="num">01</span>
-        <div>
-          <h3>Halhalı Zeytin Mirası</h3>
-          <p>Derik'in karakteristik Halhalı zeytinleri, kendine has aroması ve karakteriyle dünya çapında ün yapan bir zeytin türüdür. Soğuk sıkım yöntemiyle, tüm doğal değerini koruyarak sofralara ulaşıyor.</p>
+      <details class="co-step" open>
+        <summary><span class="num">1</span> Teslimat Bilgileri <i class="fa-solid fa-chevron-down arr"></i></summary>
+        <div class="step-body">
+          <div class="info-bar">
+            <strong>Üye misiniz?</strong> Hızlı ödeme için <a href="giris.html">Giriş Yap</a>
+            <small>Üye olmadan da alışveriş yapabilirsiniz, kayıtlı bilgileriniz e-posta ile gönderilir.</small>
+          </div>
+          <div class="form-grid-co">
+            <div class="field-co"><label>E-posta *</label><input type="email" required placeholder="ornek@eposta.com"></div>
+            <div class="field-co"><label>Telefon *</label><input type="tel" required placeholder="0 (5XX) XXX XX XX"></div>
+          </div>
         </div>
-      </div>
-      <div class="pillar reveal">
-        <span class="num">02</span>
-        <div>
-          <h3>Geleneksel Üretim</h3>
-          <p>Yöresel ustalarla bütünleşmiş üretim bant sistemi, Mardin'in kadim zeytin işleme bilgisini modern hijyen standartlarıyla buluşturuyor. Her bir damla, geçmişin bilgisi ve günümüzün teknolojisinin birleşimidir.</p>
-        </div>
-      </div>
-      <div class="pillar reveal">
-        <span class="num">03</span>
-        <div>
-          <h3>Sofradan Sofraya</h3>
-          <p>Türkiye'nin dört bir yanına ulaşan zeytin ve zeytinyağı çeşitleriyle, Derik'in özgün lezzetini gurmelerden ev sofralarına kadar her tüketiciye sunuyoruz. Amacımız bu kadim lezzeti yeni nesillerle buluşturmak.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+      </details>
 
-<!-- SECTION 2 — Mağazalarımız ayraç -->
-<section class="divider-section">
-  <div class="container wrap">
-    <div>
-      <h2><em>Mardin Derik'ten</em> <em>12 ile</em>, <em>50'den fazla</em> satış noktasında müşterilerimizle buluşmaya devam ediyoruz.</h2>
-      <p>Yolculuğumuz, Mardin Derik'in bereketli topraklarında başladı. 2018 yılında ilk üretim tesisimizi açtığımız günden bu yana, Halhalı zeytininin eşsiz aroması ve geleneksel üretim yöntemlerimizle Türk sofralarına özgün lezzetler sunmayı amaçladık. Bugün, Türkiye genelinde gurme marketler, restoranlar ve özel satış noktalarımızla doğal lezzetleri tüketicilerle buluşturuyoruz.</p>
-      <a href="#" class="btn-light">Tüm Satış Noktaları <i class="fa-solid fa-arrow-right"></i></a>
-    </div>
-    <div class="visual">
-      <img src="https://images.unsplash.com/photo-1601001435957-74f0958a93c5?w=400&h=400&fit=crop&q=80" alt="Derik üretim tesisi" loading="lazy" data-fallback width="400" height="400">
-    </div>
-  </div>
-</section>
+      <details class="co-step" open>
+        <summary><span class="num">2</span> Teslimat Adresi <i class="fa-solid fa-chevron-down arr"></i></summary>
+        <div class="step-body">
+          <div class="addr-cards">
+            <label class="addr-card selected">
+              <input type="radio" name="addr" checked>
+              <div class="ac-head"><span class="ac-tag"><i class="fa-solid fa-house"></i> Ev</span></div>
+              <div class="ac-name">Yasin Güneş</div>
+              <div class="ac-line">Cumhuriyet Mah. Atatürk Cad. No:12 D:5<br>Derik / Mardin</div>
+            </label>
+            <label class="addr-card">
+              <input type="radio" name="addr">
+              <div class="ac-head"><span class="ac-tag"><i class="fa-solid fa-briefcase"></i> İş</span></div>
+              <div class="ac-name">Dada İstanbul Ofis</div>
+              <div class="ac-line">Bağdat Cad. No:88 K:3<br>Kadıköy / İstanbul</div>
+            </label>
+          </div>
+          <a href="#" class="addr-add"><i class="fa-solid fa-plus"></i> Yeni Adres Ekle</a>
 
-<!-- SECTION 3 — Global Başarılarımız (3 stat-card, harita yok) -->
-<section class="stats-section">
-  <div class="container">
-    <div class="lead">
-      <span class="eyebrow">Global Başarılarımız</span>
-      <h2>Derik Lezzetinin Türkiye ve Dünya Yolculuğu</h2>
-      <p>2018 yılında Mardin Derik'te kurulan üretim tesisimizden, bugün Türkiye'nin gurme marketlerine ve uluslararası tedarikçilere ulaşıyoruz. Her bir damla zeytinyağımızda Halhalı zeytininin köklü mirası ve özenli üretim anlayışımız var.</p>
+          <label class="same-row">
+            <input type="checkbox" id="sameAddr" checked>
+            <span>Fatura adresim teslimat adresim ile aynı</span>
+          </label>
+
+          <div class="invoice-block" id="invoiceBlock">
+            <div class="radio-row">
+              <label><input type="radio" name="inv" value="bireysel" checked> Bireysel</label>
+              <label><input type="radio" name="inv" value="kurumsal"> Kurumsal</label>
+            </div>
+            <div class="kurumsal-fields" id="kurumsalFields">
+              <div class="form-grid-co">
+                <div class="field-co full"><label>Firma Adı</label><input type="text" placeholder="Firma ünvanı"></div>
+                <div class="field-co"><label>Vergi Dairesi</label><input type="text" placeholder="Vergi dairesi"></div>
+                <div class="field-co"><label>Vergi No / TCKN</label><input type="text" placeholder="10 veya 11 hane"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="co-step" open>
+        <summary><span class="num">3</span> Teslimat Yöntemi <i class="fa-solid fa-chevron-down arr"></i></summary>
+        <div class="step-body">
+          <div class="ship-opts">
+            <label class="ship-opt">
+              <input type="radio" name="ship" value="standart" checked>
+              <span class="so-icon"><i class="fa-solid fa-truck"></i></span>
+              <span class="so-info"><b>Standart Kargo</b><span>2-4 iş günü içinde teslim</span></span>
+              <span class="so-price free">ÜCRETSİZ</span>
+            </label>
+            <label class="ship-opt">
+              <input type="radio" name="ship" value="hizli">
+              <span class="so-icon"><i class="fa-solid fa-bolt"></i></span>
+              <span class="so-info"><b>Hızlı Kargo</b><span>1-2 iş günü içinde teslim</span></span>
+              <span class="so-price">+29,90 TL</span>
+            </label>
+          </div>
+        </div>
+      </details>
+
+      <details class="co-step" open>
+        <summary><span class="num">4</span> Ödeme Yöntemi <i class="fa-solid fa-chevron-down arr"></i></summary>
+        <div class="step-body">
+          <div class="pay-tabs">
+            <button type="button" class="active" data-tab="card"><i class="fa-regular fa-credit-card"></i> Kredi/Banka Kartı</button>
+            <button type="button" data-tab="havale"><i class="fa-solid fa-building-columns"></i> Havale/EFT</button>
+            <button type="button" data-tab="kapida"><i class="fa-solid fa-money-bill-wave"></i> Kapıda Ödeme</button>
+          </div>
+
+          <div class="pay-panel active" id="pay-card">
+            <div class="card-vis">
+              <span class="cv-brand">DERIK</span>
+              <div class="cv-num" id="cardVisNum">•••• •••• •••• ••••</div>
+              <div class="cv-row"><span id="cardVisName">KART SAHİBİ</span><span id="cardVisExp">MM/YY</span></div>
+            </div>
+            <div class="form-grid-co">
+              <div class="field-co full"><label>Kart Sahibi</label><input type="text" id="cardName" placeholder="Ad Soyad"></div>
+              <div class="field-co full"><label>Kart Numarası</label><input type="text" id="cardNum" maxlength="19" placeholder="1234 5678 9012 3456"></div>
+              <div class="field-co"><label>Son Kullanma (MM/YY)</label><input type="text" id="cardExp" maxlength="5" placeholder="MM/YY"></div>
+              <div class="field-co"><label>CVV</label>
+                <div class="cvv-wrap">
+                  <input type="password" id="cardCvv" maxlength="3" placeholder="123">
+                  <button type="button" class="eye" id="cvvToggle" aria-label="Göster"><i class="fa-regular fa-eye"></i></button>
+                </div>
+              </div>
+              <div class="field-co full"><label>Taksit Seçenekleri</label>
+                <select>
+                  <option>Tek Çekim</option>
+                  <option>2 Taksit (1.144,60 TL/ay)</option>
+                  <option>3 Taksit (763,07 TL/ay)</option>
+                  <option>6 Taksit (381,53 TL/ay)</option>
+                </select>
+              </div>
+            </div>
+            <div class="threed"><i class="fa-solid fa-shield-halved"></i><span><b>3D Secure ile güvenli ödeme</b><br>Kart bilgileriniz bankanız tarafından doğrulanır, sistemimizde saklanmaz.</span></div>
+          </div>
+
+          <div class="pay-panel" id="pay-havale">
+            <div class="iban-list">
+              <div class="iban-row">
+                <span class="bank">Ziraat Bankası</span>
+                <span class="num">TR12 0001 0024 1234 5678 9012 34</span>
+                <button type="button" class="copy-btn" data-iban="TR120001002412345678901234"><i class="fa-regular fa-copy"></i> Kopyala</button>
+              </div>
+              <div class="iban-row">
+                <span class="bank">İş Bankası</span>
+                <span class="num">TR34 0006 4000 0011 1234 5678 90</span>
+                <button type="button" class="copy-btn" data-iban="TR340006400000111234567890"><i class="fa-regular fa-copy"></i> Kopyala</button>
+              </div>
+              <div class="iban-row">
+                <span class="bank">Garanti BBVA</span>
+                <span class="num">TR56 0006 2000 1234 0006 6666 77</span>
+                <button type="button" class="copy-btn" data-iban="TR560006200012340006666677"><i class="fa-regular fa-copy"></i> Kopyala</button>
+              </div>
+            </div>
+            <div class="note-bar"><strong>Not:</strong> Açıklama kısmına sipariş numaranızı yazınız. Ödemeniz onaylandıktan sonra siparişiniz hazırlanacaktır (1-2 iş günü).</div>
+          </div>
+
+          <div class="pay-panel" id="pay-kapida">
+            <div class="kapida">
+              <b>Kapıda Ödeme</b>
+              Yalnızca nakit veya kart ile ödeme yapabilirsiniz. Bu seçenekte <strong>+15 TL hizmet bedeli</strong> uygulanır.
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <div class="legal-checks">
+        <label><input type="checkbox" id="chk1" required><span>Mesafeli Satış Sözleşmesi'ni okudum, onaylıyorum. <a href="#">Sözleşmeyi görüntüle</a></span></label>
+        <label><input type="checkbox" id="chk2" required><span>Ön Bilgilendirme Formu'nu okudum, onaylıyorum. <a href="#">Formu görüntüle</a></span></label>
+      </div>
+
+      <div class="submit-zone">
+        <button type="button" class="btn btn-primary btn-block" id="completeOrder"><i class="fa-solid fa-lock"></i> SİPARİŞİ TAMAMLA</button>
+      </div>
     </div>
-    <div class="stats-grid">
-      <div class="stat-card reveal">
-        <div class="big">12+</div>
-        <h3>Şehirde Gurme Marketler</h3>
-        <p>İstanbul, Ankara, İzmir başta olmak üzere Türkiye'nin önde gelen gurme marketlerinde Derik ürünleri.</p>
+
+    <aside class="co-summary">
+      <h3>Sipariş Özeti</h3>
+      <button type="button" class="mini-toggle" id="miniToggle">Ürünler (3) <i class="fa-solid fa-chevron-down"></i></button>
+      <div class="mini-list" id="miniList">
+        <div class="mini-row"><span class="mt"><img src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=120&q=70" alt="" data-fallback><span class="qb">2</span></span><span class="mn">Erken Hasat 500ml</span><span class="mp">640 TL</span></div>
+        <div class="mini-row"><span class="mt"><img src="https://images.unsplash.com/photo-1620706857370-e1b9770e8bb1?auto=format&fit=crop&w=120&q=70" alt="" data-fallback><span class="qb">1</span></span><span class="mn">Soğuk Sıkım 1L</span><span class="mp">450 TL</span></div>
+        <div class="mini-row"><span class="mt"><img src="https://images.unsplash.com/photo-1549049950-48d5887197a0?auto=format&fit=crop&w=120&q=70" alt="" data-fallback><span class="qb">1</span></span><span class="mn">Hediye Seti Premium</span><span class="mp">850 TL</span></div>
       </div>
-      <div class="stat-card reveal">
-        <div class="big">50+</div>
-        <h3>Satış Noktası</h3>
-        <p>Restoran, otel, kurumsal kanal ve özel ambalajlı ürünlerimizin yer aldığı satış kanalları.</p>
+
+      <div class="sum-line" style="display:flex;justify-content:space-between;padding:8px 0;font-size:var(--fs-sm);color:var(--text-2)"><span>Ara Toplam</span><span style="font-weight:600;color:var(--text)">1.940,00 TL</span></div>
+      <div class="sum-line" style="display:flex;justify-content:space-between;padding:8px 0;font-size:var(--fs-sm);color:var(--text-2)"><span>KDV (%18)</span><span style="font-weight:600;color:var(--text)">349,20 TL</span></div>
+      <div class="sum-line" style="display:flex;justify-content:space-between;padding:8px 0;font-size:var(--fs-sm);color:var(--text-2)"><span>Kargo</span><span style="font-weight:700;color:var(--accent-success)"><s style="color:var(--muted);font-weight:400;margin-right:6px">39,90 TL</s>ÜCRETSİZ</span></div>
+
+      <div style="display:flex;justify-content:space-between;align-items:baseline;padding:var(--s-4) 0;border-top:1px solid var(--border);margin-top:var(--s-2)">
+        <span style="font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.06em">Toplam</span>
+        <span style="font-size:24px;font-weight:800;color:var(--primary-700)">2.289,20 TL</span>
       </div>
-      <div class="stat-card reveal">
-        <div class="big">5</div>
-        <h3>Ülkeye İhracat</h3>
-        <p>Almanya, Hollanda, BAE, Suudi Arabistan ve Katar'a yapılan ihracat ortaklıklarımız.</p>
-      </div>
-    </div>
-  </div>
-</section>
+      <a href="sepet.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Sepete dön</a>
+    </aside>
+  </form>
+</div>
+
+<script>
+(function(){
+  // Same address toggle
+  const sameAddr = document.getElementById('sameAddr');
+  const invBlock = document.getElementById('invoiceBlock');
+  sameAddr.addEventListener('change', () => invBlock.classList.toggle('show', !sameAddr.checked));
+
+  // Bireysel/Kurumsal toggle
+  document.querySelectorAll('input[name="inv"]').forEach(r => r.addEventListener('change', () => {
+    document.getElementById('kurumsalFields').classList.toggle('show', document.querySelector('input[name="inv"]:checked').value === 'kurumsal');
+  }));
+
+  // Address card visual selection (label has-input fallback)
+  document.querySelectorAll('.addr-card input').forEach(r => r.addEventListener('change', () => {
+    document.querySelectorAll('.addr-card').forEach(c => c.classList.remove('selected'));
+    r.closest('.addr-card').classList.add('selected');
+  }));
+
+  // Payment tabs
+  document.querySelectorAll('.pay-tabs button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.pay-tabs button').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.pay-panel').forEach(p => p.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById('pay-' + b.dataset.tab).classList.add('active');
+  }));
+
+  // Card number auto-group 4-4-4-4
+  const cardNum = document.getElementById('cardNum');
+  cardNum.addEventListener('input', e => {
+    let v = e.target.value.replace(/\D/g,'').slice(0,16);
+    e.target.value = v.replace(/(.{4})/g,'$1 ').trim();
+    document.getElementById('cardVisNum').textContent = (e.target.value || '•••• •••• •••• ••••').padEnd(19,'•');
+  });
+  // Exp MM/YY
+  const cardExp = document.getElementById('cardExp');
+  cardExp.addEventListener('input', e => {
+    let v = e.target.value.replace(/\D/g,'').slice(0,4);
+    if (v.length >= 3) v = v.slice(0,2) + '/' + v.slice(2);
+    e.target.value = v;
+    document.getElementById('cardVisExp').textContent = v || 'MM/YY';
+  });
+  document.getElementById('cardName').addEventListener('input', e => {
+    document.getElementById('cardVisName').textContent = (e.target.value || 'KART SAHİBİ').toUpperCase();
+  });
+
+  // CVV eye toggle
+  const cvvToggle = document.getElementById('cvvToggle');
+  cvvToggle.addEventListener('click', () => {
+    const inp = document.getElementById('cardCvv');
+    const isPwd = inp.type === 'password';
+    inp.type = isPwd ? 'text' : 'password';
+    cvvToggle.innerHTML = isPwd ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>';
+  });
+
+  // IBAN copy
+  document.querySelectorAll('.copy-btn').forEach(b => b.addEventListener('click', () => {
+    navigator.clipboard?.writeText(b.dataset.iban);
+    const orig = b.innerHTML;
+    b.innerHTML = '<i class="fa-solid fa-check"></i> Kopyalandı';
+    setTimeout(() => b.innerHTML = orig, 1500);
+  }));
+
+  // Mini toggle
+  const mini = document.getElementById('miniToggle');
+  mini.addEventListener('click', () => {
+    mini.classList.toggle('open');
+    document.getElementById('miniList').classList.toggle('open');
+  });
+
+  // Submit
+  document.getElementById('completeOrder').addEventListener('click', () => {
+    const c1 = document.getElementById('chk1').checked;
+    const c2 = document.getElementById('chk2').checked;
+    if (!c1 || !c2) { alert('Lütfen sözleşmeleri onaylayın.'); return; }
+    location.href = (Math.random() < 0.9) ? 'odeme-basarili.html' : 'odeme-basarisiz.html';
+  });
+})();
+</script>
 
 <footer class="footer">
   <div class="container">
@@ -891,18 +1178,18 @@ body.mobile-panel-open{overflow:hidden}
         <h4>Kategoriler</h4>
         <ul>
           <li><a href="magaza.html">Zeytinyağları</a></li>
-          <li><a href="magaza.html?kategori=zeytinler">Zeytinler</a></li>
-          <li><a href="magaza.html?kategori=sabunlar">Sabunlar</a></li>
-          <li><a href="magaza.html?kategori=dogal-urunler">Doğal Ürünler</a></li>
-          <li><a href="magaza.html?kategori=hediye-setleri">Hediye Setleri</a></li>
+          <li><a href="#zeytinler">Zeytinler</a></li>
+          <li><a href="#sabunlar">Sabunlar</a></li>
+          <li><a href="#dogal">Doğal Ürünler</a></li>
+          <li><a href="#hediye">Hediye Setleri</a></li>
         </ul>
       </div>
       <div>
         <h4>Kurumsal</h4>
         <ul>
-          <li><a href="hakkimizda.html">Hakkımızda</a></li>
-          <li><a href="hikayemiz.html">Derik'in Hikâyesi</a></li>
-          <li><a href="uretim.html">Üretim Sürecimiz</a></li>
+          <li><a href="#hakkimizda">Hakkımızda</a></li>
+          <li><a href="#hikaye">Derik'in Hikâyesi</a></li>
+          <li><a href="#uretim">Üretim Sürecimiz</a></li>
           <li><a href="kurumsal-satis.html">Kurumsal Satış</a></li>
           <li><a href="iletisim.html">İletişim</a></li>
         </ul>
@@ -911,7 +1198,7 @@ body.mobile-panel-open{overflow:hidden}
         <h4>Yardım</h4>
         <ul>
           <li><a href="sss.html">Sıkça Sorulan Sorular</a></li>
-          <li><a href="iade-degisim.html">İade ve Değişim</a></li>
+          <li><a href="#iade">İade ve Değişim</a></li>
           <li><a href="iletisim.html">İletişim</a></li>
         </ul>
       </div>
@@ -934,10 +1221,10 @@ body.mobile-panel-open{overflow:hidden}
     <div class="footer-bottom">
       <span>©2026 Derik. Tüm hakları saklıdır.</span>
       <div class="policies">
-        <a href="kvkk.html">KVKK</a>
-        <a href="gizlilik.html">Gizlilik</a>
-        <a href="mesafeli-satis.html">Mesafeli Satış</a>
-        <a href="cerez-politikasi.html">Çerez Politikası</a>
+        <a href="#">KVKK</a>
+        <a href="#">Gizlilik</a>
+        <a href="#">Mesafeli Satış</a>
+        <a href="#">Çerez Politikası</a>
       </div>
     </div>
   </div>

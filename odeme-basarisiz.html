@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hikayemiz — Derik</title>
+<title>Ödeme Başarısız — Derik</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
 <style>
 :root {
@@ -734,6 +734,7 @@ body.mobile-panel-open{overflow:hidden}
       <span class="dd-menu">
         <a href="hikayemiz.html">Hikayemiz</a>
         <a href="uretim.html">Üretim</a>
+        <a href="#magazalar">Mağazalar</a>
         <a href="iletisim.html">İletişim</a>
       </span>
     </span>
@@ -746,13 +747,13 @@ body.mobile-panel-open{overflow:hidden}
     <a href="index.html" class="brand-logo">Derik</a>
     <nav class="nav">
       <a href="magaza.html">Zeytinyağları</a>
-      <a href="magaza.html?kategori=zeytinler">Zeytinler</a>
-      <a href="magaza.html?kategori=sabunlar">Sabunlar</a>
-      <a href="magaza.html?kategori=dogal-urunler">Doğal Ürünler</a>
-      <a href="magaza.html?kategori=hediye-setleri">Hediye Setleri</a>
+      <a href="#zeytinler">Zeytinler</a>
+      <a href="#sabunlar">Sabunlar</a>
+      <a href="#dogal">Doğal Ürünler</a>
+      <a href="#hediye">Hediye Setleri</a>
     </nav>
     <div class="header-actions">
-      <a href="#ara" class="icon-btn" data-search-trigger aria-label="Ara"><i class="fa-solid fa-magnifying-glass"></i></a>
+      <a href="#ara" class="icon-btn" aria-label="Ara"><i class="fa-solid fa-magnifying-glass"></i></a>
       <span class="user-dd-wrap">
         <a href="uyelik-bilgilerim.html" class="icon-btn" aria-label="Hesabım"><i class="fa-regular fa-user"></i></a>
         <span class="user-dd-menu">
@@ -761,115 +762,74 @@ body.mobile-panel-open{overflow:hidden}
           <a href="adreslerim.html"><i class="fa-solid fa-location-dot"></i> Adreslerim</a>
           <a href="promosyonlarim.html"><i class="fa-solid fa-ticket"></i> Promosyonlarım</a>
           <span class="divider"></span>
-          <a href="giris.html" data-logout><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</a>
+          <a href="#"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</a>
         </span>
       </span>
-      <a href="favoriler.html" class="icon-btn" aria-label="Favoriler"><i class="fa-regular fa-heart"></i></a>
-      <a href="sepet.html" class="icon-btn cart-badge" data-mini-cart-trigger aria-label="Sepetim"><i class="fa-solid fa-bag-shopping"></i><span class="cart-num">0</span></a>
+      <a href="#favoriler" class="icon-btn" aria-label="Favoriler"><i class="fa-regular fa-heart"></i></a>
+      <a href="#sepet" class="icon-btn cart-badge" aria-label="Sepetim"><i class="fa-solid fa-bag-shopping"></i><span class="cart-num">0</span></a>
       <button class="mobile-burger" aria-label="Menü" data-open-mpanel><i class="fa-solid fa-bars"></i></button>
     </div>
   </div>
 </header>
 
+<style>
+/* PAGE: odeme-basarisiz */
+.fail-wrap{padding:96px 0;text-align:center}
+.fail-icon{font-size:64px;color:#C0392B;margin-bottom:var(--s-5);animation:shake .5s ease-out}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.fail-wrap h1{font-size:36px;font-weight:800;letter-spacing:-0.02em;margin-bottom:var(--s-4);color:var(--text)}
+.fail-desc{color:var(--text-2);font-size:var(--fs-md);max-width:580px;margin:0 auto var(--s-5);line-height:1.6}
+.err-chip{display:inline-flex;align-items:center;gap:8px;background:#FBEBE8;color:#C0392B;padding:8px 16px;border-radius:var(--r-pill);font-size:var(--fs-xs);font-weight:700;letter-spacing:.04em;margin-bottom:var(--s-8);font-family:'Courier New',monospace}
+.err-chip i{font-size:11px}
+.reasons-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s-8);max-width:600px;margin:0 auto var(--s-8);text-align:left;box-shadow:var(--shadow-1)}
+.reasons-card h3{font-size:var(--fs-md);font-weight:700;color:var(--primary-900);margin-bottom:var(--s-4);display:flex;align-items:center;gap:10px}
+.reasons-card h3 i{color:var(--accent-gold)}
+.reasons-card ul{display:flex;flex-direction:column;gap:var(--s-3)}
+.reasons-card li{display:flex;gap:var(--s-3);align-items:flex-start;font-size:var(--fs-sm);color:var(--text-2);line-height:1.55}
+.reasons-card li i{color:var(--primary-700);margin-top:4px;font-size:12px;flex-shrink:0}
+.reasons-card li b{color:var(--text);display:block;margin-bottom:2px;font-weight:700}
+.fail-cta{display:flex;gap:var(--s-4);justify-content:center;align-items:center;flex-wrap:wrap}
+.fail-cta .text-link{color:var(--primary-700);font-size:var(--fs-sm);font-weight:700;text-decoration:underline;display:inline-flex;align-items:center;gap:6px}
+.fail-cta .text-link:hover{color:var(--primary-900)}
+@media(max-width:640px){
+  .fail-wrap{padding:56px 0}
+  .fail-wrap h1{font-size:26px}
+  .reasons-card{padding:var(--s-5)}
+}
+</style>
+
 <div class="container">
   <nav class="crumb">
     <a href="index.html">Anasayfa</a>
     <i class="fa-solid fa-chevron-right sep"></i>
-    <a href="hakkimizda.html">Hakkımızda</a>
+    <a href="sepet.html">Sepetim</a>
     <i class="fa-solid fa-chevron-right sep"></i>
-    <span class="active">Hikayemiz</span>
+    <span class="active">Ödeme Başarısız</span>
   </nav>
 </div>
 
-<!-- HERO -->
-<section class="story-hero">
-  <div class="container wrap">
-    <div>
-      <span class="eyebrow">Ana Sayfa / Hikayemiz</span>
-      <h1>Hepimizin Ortak Mirası: <em>Derik Zeytini</em></h1>
-      <p>Mardin Derik'in bereketli topraklarında yetişen Halhalı zeytinleri, kuşaktan kuşağa aktarılan üretim bilgisiyle harmanlanarak özgün lezzetler oluşturuyor. Sizleri, Derik'in kadim zeytin yolculuğunun bir parçası olmaya davet ediyoruz.</p>
-    </div>
-    <div class="visual">
-      <img src="https://images.unsplash.com/photo-1593001872095-7d5b3868fb1d?w=400&h=400&fit=crop&q=80" alt="Derik zeytinleri ve zeytinyağı" loading="eager" data-fallback width="400" height="400">
-    </div>
-  </div>
-</section>
+<div class="container fail-wrap">
+  <div class="fail-icon"><i class="fa-solid fa-circle-exclamation"></i></div>
+  <h1>Ödeme tamamlanamadı</h1>
+  <p class="fail-desc">Bankanız işlemi onaylamadı. Sipariş tutarı kartınızdan tahsil edilmedi. Lütfen kart bilgilerinizi kontrol edip tekrar deneyin.</p>
 
-<!-- SECTION 1 — Marka tanıtımı -->
-<section class="story-intro">
-  <div class="container">
-    <div class="lead">
-      <h2>Derik, Mardin'in Köklü Zeytin Mirasının Bir Parçasıdır.</h2>
-      <p>Yüzyıllardır zeytinin anavatanı olan Mardin'in Derik ilçesi, eşsiz iklimi ve verimli topraklarıyla Türkiye'nin en kaliteli zeytinlerinin yetiştiği bölgelerden biridir. Derik markası, bu kadim mirası modern üretim anlayışıyla buluşturarak, yöre halkının emeğini ve toprağın bereketini bir damla saf zeytinyağında bir araya getiriyor.</p>
-    </div>
+  <div class="err-chip"><i class="fa-solid fa-triangle-exclamation"></i> Hata kodu: ERR-3DS-DECLINED</div>
 
-    <div class="pillars">
-      <div class="pillar reveal">
-        <span class="num">01</span>
-        <div>
-          <h3>Halhalı Zeytin Mirası</h3>
-          <p>Derik'in karakteristik Halhalı zeytinleri, kendine has aroması ve karakteriyle dünya çapında ün yapan bir zeytin türüdür. Soğuk sıkım yöntemiyle, tüm doğal değerini koruyarak sofralara ulaşıyor.</p>
-        </div>
-      </div>
-      <div class="pillar reveal">
-        <span class="num">02</span>
-        <div>
-          <h3>Geleneksel Üretim</h3>
-          <p>Yöresel ustalarla bütünleşmiş üretim bant sistemi, Mardin'in kadim zeytin işleme bilgisini modern hijyen standartlarıyla buluşturuyor. Her bir damla, geçmişin bilgisi ve günümüzün teknolojisinin birleşimidir.</p>
-        </div>
-      </div>
-      <div class="pillar reveal">
-        <span class="num">03</span>
-        <div>
-          <h3>Sofradan Sofraya</h3>
-          <p>Türkiye'nin dört bir yanına ulaşan zeytin ve zeytinyağı çeşitleriyle, Derik'in özgün lezzetini gurmelerden ev sofralarına kadar her tüketiciye sunuyoruz. Amacımız bu kadim lezzeti yeni nesillerle buluşturmak.</p>
-        </div>
-      </div>
-    </div>
+  <div class="reasons-card">
+    <h3><i class="fa-solid fa-circle-info"></i> Olası sebepler</h3>
+    <ul>
+      <li><i class="fa-solid fa-circle"></i><span><b>Kart limiti yetersiz</b>Kartınızda sipariş tutarı kadar bakiye/limit bulunmuyor olabilir.</span></li>
+      <li><i class="fa-solid fa-circle"></i><span><b>Yanlış kart bilgisi</b>Kart numarası, son kullanma tarihi veya CVV hatalı girilmiş olabilir.</span></li>
+      <li><i class="fa-solid fa-circle"></i><span><b>3D Secure doğrulaması başarısız</b>SMS doğrulama kodu yanlış girilmiş veya zaman aşımına uğramış olabilir.</span></li>
+      <li><i class="fa-solid fa-circle"></i><span><b>Banka tarafından engellendi</b>Bankanız işlemi güvenlik nedeniyle reddetmiş olabilir; bankanızla iletişime geçin.</span></li>
+    </ul>
   </div>
-</section>
 
-<!-- SECTION 2 — Mağazalarımız ayraç -->
-<section class="divider-section">
-  <div class="container wrap">
-    <div>
-      <h2><em>Mardin Derik'ten</em> <em>12 ile</em>, <em>50'den fazla</em> satış noktasında müşterilerimizle buluşmaya devam ediyoruz.</h2>
-      <p>Yolculuğumuz, Mardin Derik'in bereketli topraklarında başladı. 2018 yılında ilk üretim tesisimizi açtığımız günden bu yana, Halhalı zeytininin eşsiz aroması ve geleneksel üretim yöntemlerimizle Türk sofralarına özgün lezzetler sunmayı amaçladık. Bugün, Türkiye genelinde gurme marketler, restoranlar ve özel satış noktalarımızla doğal lezzetleri tüketicilerle buluşturuyoruz.</p>
-      <a href="#" class="btn-light">Tüm Satış Noktaları <i class="fa-solid fa-arrow-right"></i></a>
-    </div>
-    <div class="visual">
-      <img src="https://images.unsplash.com/photo-1601001435957-74f0958a93c5?w=400&h=400&fit=crop&q=80" alt="Derik üretim tesisi" loading="lazy" data-fallback width="400" height="400">
-    </div>
+  <div class="fail-cta">
+    <a href="odeme.html" class="btn btn-primary"><i class="fa-solid fa-rotate-right"></i> TEKRAR DENE</a>
+    <a href="iletisim.html" class="text-link"><i class="fa-solid fa-headset"></i> Destek ile İletişime Geç</a>
   </div>
-</section>
-
-<!-- SECTION 3 — Global Başarılarımız (3 stat-card, harita yok) -->
-<section class="stats-section">
-  <div class="container">
-    <div class="lead">
-      <span class="eyebrow">Global Başarılarımız</span>
-      <h2>Derik Lezzetinin Türkiye ve Dünya Yolculuğu</h2>
-      <p>2018 yılında Mardin Derik'te kurulan üretim tesisimizden, bugün Türkiye'nin gurme marketlerine ve uluslararası tedarikçilere ulaşıyoruz. Her bir damla zeytinyağımızda Halhalı zeytininin köklü mirası ve özenli üretim anlayışımız var.</p>
-    </div>
-    <div class="stats-grid">
-      <div class="stat-card reveal">
-        <div class="big">12+</div>
-        <h3>Şehirde Gurme Marketler</h3>
-        <p>İstanbul, Ankara, İzmir başta olmak üzere Türkiye'nin önde gelen gurme marketlerinde Derik ürünleri.</p>
-      </div>
-      <div class="stat-card reveal">
-        <div class="big">50+</div>
-        <h3>Satış Noktası</h3>
-        <p>Restoran, otel, kurumsal kanal ve özel ambalajlı ürünlerimizin yer aldığı satış kanalları.</p>
-      </div>
-      <div class="stat-card reveal">
-        <div class="big">5</div>
-        <h3>Ülkeye İhracat</h3>
-        <p>Almanya, Hollanda, BAE, Suudi Arabistan ve Katar'a yapılan ihracat ortaklıklarımız.</p>
-      </div>
-    </div>
-  </div>
-</section>
+</div>
 
 <footer class="footer">
   <div class="container">
@@ -891,18 +851,18 @@ body.mobile-panel-open{overflow:hidden}
         <h4>Kategoriler</h4>
         <ul>
           <li><a href="magaza.html">Zeytinyağları</a></li>
-          <li><a href="magaza.html?kategori=zeytinler">Zeytinler</a></li>
-          <li><a href="magaza.html?kategori=sabunlar">Sabunlar</a></li>
-          <li><a href="magaza.html?kategori=dogal-urunler">Doğal Ürünler</a></li>
-          <li><a href="magaza.html?kategori=hediye-setleri">Hediye Setleri</a></li>
+          <li><a href="#zeytinler">Zeytinler</a></li>
+          <li><a href="#sabunlar">Sabunlar</a></li>
+          <li><a href="#dogal">Doğal Ürünler</a></li>
+          <li><a href="#hediye">Hediye Setleri</a></li>
         </ul>
       </div>
       <div>
         <h4>Kurumsal</h4>
         <ul>
-          <li><a href="hakkimizda.html">Hakkımızda</a></li>
-          <li><a href="hikayemiz.html">Derik'in Hikâyesi</a></li>
-          <li><a href="uretim.html">Üretim Sürecimiz</a></li>
+          <li><a href="#hakkimizda">Hakkımızda</a></li>
+          <li><a href="#hikaye">Derik'in Hikâyesi</a></li>
+          <li><a href="#uretim">Üretim Sürecimiz</a></li>
           <li><a href="kurumsal-satis.html">Kurumsal Satış</a></li>
           <li><a href="iletisim.html">İletişim</a></li>
         </ul>
@@ -911,7 +871,7 @@ body.mobile-panel-open{overflow:hidden}
         <h4>Yardım</h4>
         <ul>
           <li><a href="sss.html">Sıkça Sorulan Sorular</a></li>
-          <li><a href="iade-degisim.html">İade ve Değişim</a></li>
+          <li><a href="#iade">İade ve Değişim</a></li>
           <li><a href="iletisim.html">İletişim</a></li>
         </ul>
       </div>
@@ -934,10 +894,10 @@ body.mobile-panel-open{overflow:hidden}
     <div class="footer-bottom">
       <span>©2026 Derik. Tüm hakları saklıdır.</span>
       <div class="policies">
-        <a href="kvkk.html">KVKK</a>
-        <a href="gizlilik.html">Gizlilik</a>
-        <a href="mesafeli-satis.html">Mesafeli Satış</a>
-        <a href="cerez-politikasi.html">Çerez Politikası</a>
+        <a href="#">KVKK</a>
+        <a href="#">Gizlilik</a>
+        <a href="#">Mesafeli Satış</a>
+        <a href="#">Çerez Politikası</a>
       </div>
     </div>
   </div>

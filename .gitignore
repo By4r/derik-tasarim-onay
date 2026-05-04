@@ -8,3 +8,4 @@ output/_fetch/
 # Claude harness iç notları (deploy'a gitmesin)
 .claude/plans/
 .claude/todos/
+.claude/scheduled_tasks.lock

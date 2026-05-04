@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hikayemiz — Derik</title>
+<title>Mesafeli Satış Sözleşmesi — Derik</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
 <style>
 :root {
@@ -711,10 +711,73 @@ body.mobile-panel-open{overflow:hidden}
 }
 /* ===== MOBILE V3.8 END ===== */
 
+
+/* ===== LEGAL PAGES (v3.x) ===== */
+.legal-hero{padding:var(--s-8) 0 var(--s-6);max-width:780px}
+.legal-hero h1{font-size:40px;font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:var(--s-4);color:var(--text);position:relative;padding-bottom:var(--s-3)}
+.legal-hero h1::after{content:"";position:absolute;left:0;bottom:0;width:40px;height:3px;background:var(--primary-700);border-radius:var(--r-pill)}
+.legal-hero p{color:var(--text-2);font-size:var(--fs-md);line-height:1.6}
+
+.legal-notice{background:#FFF3CD;border:1px solid #F2DDA0;color:#5C4A1A;padding:14px 18px;border-radius:var(--r-sm);font-size:var(--fs-sm);line-height:1.55;display:flex;gap:10px;align-items:flex-start;margin:0 0 var(--s-8)}
+.legal-notice i{color:#A07820;font-size:16px;margin-top:2px;flex-shrink:0}
+.legal-notice b{color:#3E2F0F}
+
+.legal-layout{display:grid;grid-template-columns:280px 1fr;gap:var(--s-12);padding:var(--s-4) 0 96px;align-items:start}
+.legal-toc{position:sticky;top:120px;background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-5);align-self:start;max-height:calc(100vh - 140px);overflow-y:auto}
+.legal-toc h3{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:var(--s-3);padding:0 var(--s-3)}
+.legal-toc ul{display:flex;flex-direction:column;gap:2px}
+.legal-toc ul li a{display:flex;align-items:center;gap:8px;padding:9px 12px;font-size:var(--fs-sm);color:var(--text-2);border-radius:var(--r-sm);font-weight:500;line-height:1.3;transition:background var(--t-fast),color var(--t-fast),border-color var(--t-fast);border-left:3px solid transparent}
+.legal-toc ul li a:hover{background:var(--primary-100);color:var(--primary-700)}
+.legal-toc ul li a.active{background:var(--primary-100);color:var(--primary-700);font-weight:700;border-left-color:var(--primary-700)}
+.legal-toc ul li a .num{font-size:11px;color:var(--muted);font-weight:600;min-width:18px}
+.legal-toc ul li a:hover .num,.legal-toc ul li a.active .num{color:var(--primary-700)}
+
+.legal-content{max-width:760px}
+.legal-content section{margin-bottom:var(--s-10);scroll-margin-top:120px}
+.legal-content h2{font-size:24px;font-weight:700;color:var(--primary-900);margin-bottom:var(--s-4);letter-spacing:-0.015em;padding-bottom:var(--s-2);border-bottom:1px solid var(--border)}
+.legal-content p{color:var(--text-2);font-size:16px;line-height:1.75;margin-bottom:var(--s-4);max-width:720px}
+.legal-content ul.bullets{list-style:disc;padding-left:24px;margin:0 0 var(--s-4);color:var(--text-2);max-width:720px}
+.legal-content ul.bullets li{padding:4px 0;line-height:1.7;font-size:16px}
+.legal-content strong{color:var(--text);font-weight:700}
+.legal-content a{color:var(--primary-700);text-decoration:underline}
+.legal-content .last-updated{font-size:var(--fs-xs);color:var(--muted);margin-bottom:var(--s-6);padding:var(--s-3) var(--s-4);background:var(--bg-soft);border-radius:var(--r-sm);display:inline-block}
+
+/* Mobile TOC accordion */
+.legal-toc-mobile{display:none;margin-bottom:var(--s-6);background:#fff;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden}
+.legal-toc-mobile summary{padding:14px 18px;font-size:var(--fs-sm);font-weight:700;color:var(--text);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.legal-toc-mobile summary::-webkit-details-marker{display:none}
+.legal-toc-mobile summary i{transition:transform var(--t-fast);color:var(--muted);font-size:12px}
+.legal-toc-mobile[open] summary i{transform:rotate(180deg)}
+.legal-toc-mobile ul{padding:0 18px 14px;display:flex;flex-direction:column;gap:2px}
+.legal-toc-mobile ul li a{display:block;padding:8px 10px;font-size:var(--fs-sm);color:var(--text-2);border-radius:var(--r-sm)}
+.legal-toc-mobile ul li a:hover,.legal-toc-mobile ul li a.active{background:var(--primary-100);color:var(--primary-700);font-weight:700}
+
+/* Shipping fee table */
+.legal-table{width:100%;max-width:720px;border-collapse:collapse;margin:var(--s-3) 0 var(--s-5);background:#fff;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden}
+.legal-table thead th{background:var(--primary-700);color:#fff;font-size:var(--fs-sm);font-weight:700;text-align:left;padding:14px 18px;letter-spacing:.04em;text-transform:uppercase}
+.legal-table tbody td{padding:14px 18px;font-size:var(--fs-sm);color:var(--text);border-top:1px solid var(--border);line-height:1.5}
+.legal-table tbody tr:nth-child(even) td{background:var(--bg-product)}
+.legal-table .free{color:var(--accent-success);font-weight:800;letter-spacing:.04em}
+.legal-table .gold{color:var(--accent-gold);font-weight:700}
+
+/* Numbered process steps */
+.legal-steps{list-style:none;padding:0;margin:var(--s-4) 0 var(--s-6);max-width:720px;display:flex;flex-direction:column;gap:0;position:relative}
+.legal-steps::before{content:"";position:absolute;left:18px;top:18px;bottom:18px;width:2px;background:var(--border);z-index:0}
+.legal-steps li{display:flex;align-items:flex-start;gap:var(--s-4);padding:var(--s-4) 0;position:relative;z-index:1}
+.legal-steps li .num{flex:0 0 38px;width:38px;height:38px;border-radius:50%;background:var(--accent-gold);color:var(--primary-900);font-weight:800;font-size:var(--fs-md);display:inline-flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(201,165,91,.35);border:3px solid var(--bg)}
+.legal-steps li .body b{display:block;font-size:var(--fs-md);font-weight:700;color:var(--text);margin-bottom:4px}
+.legal-steps li .body p{margin:0;color:var(--text-2);font-size:var(--fs-sm);line-height:1.6}
+
+@media(max-width:1024px){
+  .legal-layout{grid-template-columns:1fr;gap:var(--s-4);padding:var(--s-2) 0 56px}
+  .legal-toc{display:none}
+  .legal-toc-mobile{display:block}
+  .legal-hero h1{font-size:30px}
+}
+
 </style>
 </head>
 <body>
-
 <!-- TOP RIBBON 3-col -->
 <div class="topbar" id="topRibbon">
   <div class="container">
@@ -770,107 +833,100 @@ body.mobile-panel-open{overflow:hidden}
     </div>
   </div>
 </header>
-
 <div class="container">
   <nav class="crumb">
     <a href="index.html">Anasayfa</a>
     <i class="fa-solid fa-chevron-right sep"></i>
-    <a href="hakkimizda.html">Hakkımızda</a>
-    <i class="fa-solid fa-chevron-right sep"></i>
-    <span class="active">Hikayemiz</span>
+    <span class="active">Mesafeli Satış Sözleşmesi</span>
   </nav>
 </div>
 
-<!-- HERO -->
-<section class="story-hero">
-  <div class="container wrap">
-    <div>
-      <span class="eyebrow">Ana Sayfa / Hikayemiz</span>
-      <h1>Hepimizin Ortak Mirası: <em>Derik Zeytini</em></h1>
-      <p>Mardin Derik'in bereketli topraklarında yetişen Halhalı zeytinleri, kuşaktan kuşağa aktarılan üretim bilgisiyle harmanlanarak özgün lezzetler oluşturuyor. Sizleri, Derik'in kadim zeytin yolculuğunun bir parçası olmaya davet ediyoruz.</p>
-    </div>
-    <div class="visual">
-      <img src="https://images.unsplash.com/photo-1593001872095-7d5b3868fb1d?w=400&h=400&fit=crop&q=80" alt="Derik zeytinleri ve zeytinyağı" loading="eager" data-fallback width="400" height="400">
-    </div>
+<!-- LEGAL PAGE HEAD -->
+<div class="container legal-hero">
+  <h1>Mesafeli Satış Sözleşmesi</h1>
+  <p>6502 sayılı Tüketicinin Korunması Hakkında Kanun çerçevesinde sipariş öncesi onayınıza sunulan sözleşme metnidir.</p>
+</div>
+
+<div class="container">
+  <div class="legal-notice"><i class="fa-solid fa-circle-info"></i><span><b>Bilgilendirme:</b> Bu metin örnek/taslak içeriktir. Yasal danışmanlık sonrası güncellenecektir.</span></div>
+</div>
+
+<div class="container legal-layout">
+  <aside class="legal-toc" aria-label="İçindekiler">
+    <h3>İçindekiler</h3>
+    <ul>
+      <li><a href="#taraflar" data-anchor="taraflar"><span class="num">01</span> <span>Taraflar</span></a></li>
+      <li><a href="#sozlesme-konusu" data-anchor="sozlesme-konusu"><span class="num">02</span> <span>Sözleşme Konusu</span></a></li>
+      <li><a href="#urun-bilgileri" data-anchor="urun-bilgileri"><span class="num">03</span> <span>Ürün Bilgileri</span></a></li>
+      <li><a href="#odeme" data-anchor="odeme"><span class="num">04</span> <span>Ödeme</span></a></li>
+      <li><a href="#teslimat" data-anchor="teslimat"><span class="num">05</span> <span>Teslimat</span></a></li>
+      <li><a href="#cayma" data-anchor="cayma"><span class="num">06</span> <span>Cayma Hakkı</span></a></li>
+      <li><a href="#iade" data-anchor="iade"><span class="num">07</span> <span>İade</span></a></li>
+      <li><a href="#uyusmazlik" data-anchor="uyusmazlik"><span class="num">08</span> <span>Uyuşmazlık</span></a></li>
+    </ul>
+  </aside>
+
+  <details class="legal-toc-mobile">
+    <summary>İçindekiler <i class="fa-solid fa-chevron-down"></i></summary>
+    <ul>
+      <li><a href="#taraflar" data-anchor="taraflar">Taraflar</a></li>
+      <li><a href="#sozlesme-konusu" data-anchor="sozlesme-konusu">Sözleşme Konusu</a></li>
+      <li><a href="#urun-bilgileri" data-anchor="urun-bilgileri">Ürün Bilgileri</a></li>
+      <li><a href="#odeme" data-anchor="odeme">Ödeme</a></li>
+      <li><a href="#teslimat" data-anchor="teslimat">Teslimat</a></li>
+      <li><a href="#cayma" data-anchor="cayma">Cayma Hakkı</a></li>
+      <li><a href="#iade" data-anchor="iade">İade</a></li>
+      <li><a href="#uyusmazlik" data-anchor="uyusmazlik">Uyuşmazlık</a></li>
+    </ul>
+  </details>
+
+  <div class="legal-content">
+    <div class="last-updated"><i class="fa-regular fa-calendar"></i> Son güncelleme: 1 Mayıs 2026</div>
+    <section id="taraflar">
+      <h2>Taraflar</h2>
+      <p>İşbu Mesafeli Satış Sözleşmesi ("Sözleşme"); bir tarafta Mardin/Derik adresinde mukim Derik Zeytinyağı ("Satıcı") ile diğer tarafta sipariş formunda bilgileri yer alan müşteri ("Alıcı") arasında akdedilmiştir.</p>
+      <p>Sözleşme; Alıcının elektronik ortamda siparişini onaylayıp ödeme talimatı vermesi ile birlikte yürürlüğe girer. Satıcı, sipariş onayını e-posta yoluyla teyit eder.</p>
+    </section>
+    <section id="sozlesme-konusu">
+      <h2>Sözleşme Konusu</h2>
+      <p>Bu Sözleşmenin konusu; Alıcının Satıcıya ait <a href="index.html">derikzeytin.com</a> internet sitesi üzerinden elektronik ortamda sipariş verdiği, niteliği ve satış fiyatı belirtilen ürünlerin satışı ve teslimatına ilişkin tarafların hak ve yükümlülüklerinin saptanmasıdır.</p>
+      <p>Sözleşme, 6502 sayılı Tüketicinin Korunması Hakkında Kanun ile Mesafeli Sözleşmeler Yönetmeliği hükümlerine tabidir.</p>
+    </section>
+    <section id="urun-bilgileri">
+      <h2>Ürün Bilgileri</h2>
+      <p>Ürünlerin temel nitelikleri (içerik, ağırlık, üretim ve son kullanma tarihi), satış fiyatı, ödeme şekli, teslimat koşulları ve kargo ücretleri sipariş öncesi sayfasında Alıcıya açıkça bildirilir.</p>
+      <p>Sitemizde belirtilen fiyatlar KDV dahildir. Promosyonlar ve indirimler kampanya süresi ile sınırlıdır; stoklarla sınırlıdır.</p>
+      <p>Görseller temsilî olabilir; yeni hasat ve sezonluk ürünlerde küçük renk farklılıkları doğal kabul edilir.</p>
+    </section>
+    <section id="odeme">
+      <h2>Ödeme</h2>
+      <p>Ödemeler; kredi kartı, banka kartı, havale/EFT veya kapıda ödeme (yalnızca uygun bölgelerde) seçenekleri ile yapılabilir. Kredi kartı ile yapılan ödemelerde taksit imkânı bankaların kampanyaları dahilinde sunulabilir.</p>
+      <p>Kart bilgileri Satıcı tarafından saklanmaz; doğrudan ödeme aracısı/banka altyapısı üzerinden işlenir. Yetkisiz kart kullanımı şüphesinde sipariş Satıcı tarafından iptal edilebilir.</p>
+    </section>
+    <section id="teslimat">
+      <h2>Teslimat</h2>
+      <p>Ürünler, sipariş onayını takiben en geç 3 iş günü içinde anlaşmalı kargo şirketine teslim edilir. Kargo süresi alıcının bulunduğu bölgeye göre 1-4 iş günü arasında değişebilir.</p>
+      <p>Teslimat sırasında kargonun dış ambalajını kontrol etmenizi, hasarlı paketleri tutanak ile teslim almanızı veya iade etmenizi öneririz.</p>
+      <p>Adres yetersizliği, alıcıya ulaşılamaması veya kargonun teslim alınmaması nedeniyle iade gelen siparişlerde yeniden gönderim ücreti Alıcıya yansıtılabilir.</p>
+    </section>
+    <section id="cayma">
+      <h2>Cayma Hakkı</h2>
+      <p>Alıcı, ürünü teslim aldığı tarihten itibaren 14 gün içerisinde herhangi bir gerekçe göstermeksizin ve cezai şart ödemeksizin sözleşmeden cayma hakkına sahiptir.</p>
+      <p>Cayma bildirimi <a href="mailto:info@derikzeytin.com">info@derikzeytin.com</a> adresine veya iletişim formu üzerinden iletilebilir. Bildirimi takiben 10 gün içinde ürünün Satıcıya gönderilmesi gerekir.</p>
+      <p>Cayma hakkı; açılmış/tüketilmiş gıda ürünleri ve özel olarak hazırlatılmış (kişiye özel etiket, set vb.) ürünler için kullanılamaz.</p>
+    </section>
+    <section id="iade">
+      <h2>İade</h2>
+      <p>İade kabul edilen siparişlerde ödenen tutar, ürünün Satıcıya ulaşmasını takiben en geç 14 gün içerisinde Alıcının ödeme yöntemine geri yapılır.</p>
+      <p>Detaylı süreç için <a href="iade-degisim.html">İade ve Değişim</a> sayfamızı inceleyebilirsiniz.</p>
+    </section>
+    <section id="uyusmazlik">
+      <h2>Uyuşmazlık</h2>
+      <p>Bu Sözleşmeden doğan uyuşmazlıklarda, Ticaret Bakanlığı tarafından her yıl ilan edilen değer sınırları dahilinde Tüketici Hakem Heyetleri ve Tüketici Mahkemeleri yetkilidir.</p>
+      <p>Sözleşme, Türkiye Cumhuriyeti hukukuna tabidir.</p>
+    </section>
   </div>
-</section>
-
-<!-- SECTION 1 — Marka tanıtımı -->
-<section class="story-intro">
-  <div class="container">
-    <div class="lead">
-      <h2>Derik, Mardin'in Köklü Zeytin Mirasının Bir Parçasıdır.</h2>
-      <p>Yüzyıllardır zeytinin anavatanı olan Mardin'in Derik ilçesi, eşsiz iklimi ve verimli topraklarıyla Türkiye'nin en kaliteli zeytinlerinin yetiştiği bölgelerden biridir. Derik markası, bu kadim mirası modern üretim anlayışıyla buluşturarak, yöre halkının emeğini ve toprağın bereketini bir damla saf zeytinyağında bir araya getiriyor.</p>
-    </div>
-
-    <div class="pillars">
-      <div class="pillar reveal">
-        <span class="num">01</span>
-        <div>
-          <h3>Halhalı Zeytin Mirası</h3>
-          <p>Derik'in karakteristik Halhalı zeytinleri, kendine has aroması ve karakteriyle dünya çapında ün yapan bir zeytin türüdür. Soğuk sıkım yöntemiyle, tüm doğal değerini koruyarak sofralara ulaşıyor.</p>
-        </div>
-      </div>
-      <div class="pillar reveal">
-        <span class="num">02</span>
-        <div>
-          <h3>Geleneksel Üretim</h3>
-          <p>Yöresel ustalarla bütünleşmiş üretim bant sistemi, Mardin'in kadim zeytin işleme bilgisini modern hijyen standartlarıyla buluşturuyor. Her bir damla, geçmişin bilgisi ve günümüzün teknolojisinin birleşimidir.</p>
-        </div>
-      </div>
-      <div class="pillar reveal">
-        <span class="num">03</span>
-        <div>
-          <h3>Sofradan Sofraya</h3>
-          <p>Türkiye'nin dört bir yanına ulaşan zeytin ve zeytinyağı çeşitleriyle, Derik'in özgün lezzetini gurmelerden ev sofralarına kadar her tüketiciye sunuyoruz. Amacımız bu kadim lezzeti yeni nesillerle buluşturmak.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SECTION 2 — Mağazalarımız ayraç -->
-<section class="divider-section">
-  <div class="container wrap">
-    <div>
-      <h2><em>Mardin Derik'ten</em> <em>12 ile</em>, <em>50'den fazla</em> satış noktasında müşterilerimizle buluşmaya devam ediyoruz.</h2>
-      <p>Yolculuğumuz, Mardin Derik'in bereketli topraklarında başladı. 2018 yılında ilk üretim tesisimizi açtığımız günden bu yana, Halhalı zeytininin eşsiz aroması ve geleneksel üretim yöntemlerimizle Türk sofralarına özgün lezzetler sunmayı amaçladık. Bugün, Türkiye genelinde gurme marketler, restoranlar ve özel satış noktalarımızla doğal lezzetleri tüketicilerle buluşturuyoruz.</p>
-      <a href="#" class="btn-light">Tüm Satış Noktaları <i class="fa-solid fa-arrow-right"></i></a>
-    </div>
-    <div class="visual">
-      <img src="https://images.unsplash.com/photo-1601001435957-74f0958a93c5?w=400&h=400&fit=crop&q=80" alt="Derik üretim tesisi" loading="lazy" data-fallback width="400" height="400">
-    </div>
-  </div>
-</section>
-
-<!-- SECTION 3 — Global Başarılarımız (3 stat-card, harita yok) -->
-<section class="stats-section">
-  <div class="container">
-    <div class="lead">
-      <span class="eyebrow">Global Başarılarımız</span>
-      <h2>Derik Lezzetinin Türkiye ve Dünya Yolculuğu</h2>
-      <p>2018 yılında Mardin Derik'te kurulan üretim tesisimizden, bugün Türkiye'nin gurme marketlerine ve uluslararası tedarikçilere ulaşıyoruz. Her bir damla zeytinyağımızda Halhalı zeytininin köklü mirası ve özenli üretim anlayışımız var.</p>
-    </div>
-    <div class="stats-grid">
-      <div class="stat-card reveal">
-        <div class="big">12+</div>
-        <h3>Şehirde Gurme Marketler</h3>
-        <p>İstanbul, Ankara, İzmir başta olmak üzere Türkiye'nin önde gelen gurme marketlerinde Derik ürünleri.</p>
-      </div>
-      <div class="stat-card reveal">
-        <div class="big">50+</div>
-        <h3>Satış Noktası</h3>
-        <p>Restoran, otel, kurumsal kanal ve özel ambalajlı ürünlerimizin yer aldığı satış kanalları.</p>
-      </div>
-      <div class="stat-card reveal">
-        <div class="big">5</div>
-        <h3>Ülkeye İhracat</h3>
-        <p>Almanya, Hollanda, BAE, Suudi Arabistan ve Katar'a yapılan ihracat ortaklıklarımız.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
+</div>
 <footer class="footer">
   <div class="container">
     <div class="footer-cols">
@@ -942,7 +998,6 @@ body.mobile-panel-open{overflow:hidden}
     </div>
   </div>
 </footer>
-
 <script>
 // Reveal on scroll
 const io = new IntersectionObserver(es => es.forEach(e => {
@@ -979,8 +1034,6 @@ document.querySelectorAll('.add-cart, [data-add-cart]').forEach(b => {
   b.addEventListener('click', e => { e.preventDefault(); window.bumpCart(1); });
 });
 </script>
-
-
 
 <script>
 // === AUTH STATE (v3.7.1) ===
@@ -1073,8 +1126,6 @@ document.querySelectorAll('.add-cart, [data-add-cart]').forEach(b => {
 })();
 </script>
 
-
-
 <!-- MOBILE PANEL (v3.8) -->
 <div class="mobile-overlay" data-close-mpanel></div>
 <aside class="mobile-panel" id="mobilePanel" aria-hidden="true">
@@ -1143,6 +1194,39 @@ document.querySelectorAll('.add-cart, [data-add-cart]').forEach(b => {
         <a href="kayit.html" class="outline">Üye Ol</a>
       </div>`;
   }
+})();
+</script>
+
+<script>
+// Legal TOC active section highlight
+(function(){
+  const tocLinks = document.querySelectorAll('.legal-toc a, .legal-toc-mobile a');
+  const sections = document.querySelectorAll('.legal-content section[id]');
+  if (!sections.length) return;
+  const map = new Map();
+  tocLinks.forEach(a => {
+    const id = a.getAttribute('data-anchor');
+    if (!map.has(id)) map.set(id, []);
+    map.get(id).push(a);
+  });
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        tocLinks.forEach(a => a.classList.remove('active'));
+        const links = map.get(e.target.id) || [];
+        links.forEach(a => a.classList.add('active'));
+      }
+    });
+  }, { rootMargin: '-130px 0px -65% 0px', threshold: 0 });
+  sections.forEach(s => io.observe(s));
+
+  // Smooth scroll on click (also closes mobile details)
+  tocLinks.forEach(a => {
+    a.addEventListener('click', e => {
+      const det = a.closest('details');
+      if (det) det.open = false;
+    });
+  });
 })();
 </script>
 

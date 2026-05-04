@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hikayemiz — Derik</title>
+<title>Sepetim — Derik</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
 <style>
 :root {
@@ -734,6 +734,7 @@ body.mobile-panel-open{overflow:hidden}
       <span class="dd-menu">
         <a href="hikayemiz.html">Hikayemiz</a>
         <a href="uretim.html">Üretim</a>
+        <a href="#magazalar">Mağazalar</a>
         <a href="iletisim.html">İletişim</a>
       </span>
     </span>
@@ -746,13 +747,13 @@ body.mobile-panel-open{overflow:hidden}
     <a href="index.html" class="brand-logo">Derik</a>
     <nav class="nav">
       <a href="magaza.html">Zeytinyağları</a>
-      <a href="magaza.html?kategori=zeytinler">Zeytinler</a>
-      <a href="magaza.html?kategori=sabunlar">Sabunlar</a>
-      <a href="magaza.html?kategori=dogal-urunler">Doğal Ürünler</a>
-      <a href="magaza.html?kategori=hediye-setleri">Hediye Setleri</a>
+      <a href="#zeytinler">Zeytinler</a>
+      <a href="#sabunlar">Sabunlar</a>
+      <a href="#dogal">Doğal Ürünler</a>
+      <a href="#hediye">Hediye Setleri</a>
     </nav>
     <div class="header-actions">
-      <a href="#ara" class="icon-btn" data-search-trigger aria-label="Ara"><i class="fa-solid fa-magnifying-glass"></i></a>
+      <a href="#ara" class="icon-btn" aria-label="Ara"><i class="fa-solid fa-magnifying-glass"></i></a>
       <span class="user-dd-wrap">
         <a href="uyelik-bilgilerim.html" class="icon-btn" aria-label="Hesabım"><i class="fa-regular fa-user"></i></a>
         <span class="user-dd-menu">
@@ -761,115 +762,342 @@ body.mobile-panel-open{overflow:hidden}
           <a href="adreslerim.html"><i class="fa-solid fa-location-dot"></i> Adreslerim</a>
           <a href="promosyonlarim.html"><i class="fa-solid fa-ticket"></i> Promosyonlarım</a>
           <span class="divider"></span>
-          <a href="giris.html" data-logout><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</a>
+          <a href="#"><i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap</a>
         </span>
       </span>
-      <a href="favoriler.html" class="icon-btn" aria-label="Favoriler"><i class="fa-regular fa-heart"></i></a>
-      <a href="sepet.html" class="icon-btn cart-badge" data-mini-cart-trigger aria-label="Sepetim"><i class="fa-solid fa-bag-shopping"></i><span class="cart-num">0</span></a>
+      <a href="#favoriler" class="icon-btn" aria-label="Favoriler"><i class="fa-regular fa-heart"></i></a>
+      <a href="#sepet" class="icon-btn cart-badge" aria-label="Sepetim"><i class="fa-solid fa-bag-shopping"></i><span class="cart-num">0</span></a>
       <button class="mobile-burger" aria-label="Menü" data-open-mpanel><i class="fa-solid fa-bars"></i></button>
     </div>
   </div>
 </header>
 
+<style>
+/* PAGE: sepet */
+.cart-wrap{padding:var(--s-4) 0 96px}
+.cart-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:var(--s-6);gap:var(--s-4);flex-wrap:wrap}
+.cart-head h1{font-size:32px;font-weight:700;letter-spacing:-0.02em}
+.cart-head .meta{color:var(--muted);font-size:var(--fs-sm)}
+.cart-grid{display:grid;grid-template-columns:1fr 380px;gap:var(--s-8);align-items:start}
+.cart-items{display:flex;flex-direction:column;gap:var(--s-3)}
+.cart-row{display:grid;grid-template-columns:96px 1fr auto;gap:var(--s-5);background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s-4);align-items:center}
+.cart-row .thumb{width:80px;height:80px;border-radius:var(--r-md);overflow:hidden;background:var(--bg-product);justify-self:center}
+.cart-row .thumb img{width:100%;height:100%;object-fit:cover}
+.cart-row .info{display:flex;flex-direction:column;gap:6px;min-width:0}
+.cart-row .info .name{font-size:var(--fs-sm);font-weight:700;color:var(--text);line-height:1.4}
+.cart-row .info .name:hover{color:var(--primary-700)}
+.cart-row .info .vol{font-size:var(--fs-xs);color:var(--muted)}
+.cart-row .info .ctrls{display:flex;align-items:center;gap:var(--s-3);margin-top:6px;flex-wrap:wrap}
+.qty-stepper{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:var(--r-sm);background:#fff;overflow:hidden}
+.qty-stepper button{width:32px;height:32px;font-size:var(--fs-md);color:var(--text)}
+.qty-stepper button:hover{background:var(--primary-100);color:var(--primary-700)}
+.qty-stepper .num{width:36px;text-align:center;font-weight:700;font-size:var(--fs-sm)}
+.unit-price{font-size:var(--fs-xs);color:var(--muted)}
+.row-actions{display:inline-flex;align-items:center;gap:var(--s-3)}
+.tiny-link{font-size:11px;color:var(--text-2);text-transform:uppercase;letter-spacing:.06em;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.tiny-link i{font-size:11px}
+.tiny-link:hover{color:var(--primary-700)}
+.icon-trash{width:32px;height:32px;border-radius:var(--r-sm);color:var(--muted);display:inline-flex;align-items:center;justify-content:center}
+.icon-trash:hover{background:#fbebe8;color:var(--accent-red)}
+.cart-row .right{display:flex;flex-direction:column;align-items:flex-end;gap:var(--s-3);min-width:140px}
+.cart-row .line-total{font-size:var(--fs-md);font-weight:800;color:var(--primary-900)}
+
+.coupon-card{background:#fff;border:1px dashed var(--border);border-radius:var(--r-md);padding:var(--s-4);margin-top:var(--s-4);display:flex;gap:var(--s-3);align-items:center;flex-wrap:wrap}
+.coupon-card .lbl{display:flex;align-items:center;gap:var(--s-2);font-size:var(--fs-sm);font-weight:600;color:var(--text)}
+.coupon-card .lbl i{color:var(--accent-gold)}
+.coupon-card input{flex:1;min-width:160px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--r-sm);font-family:inherit;font-size:var(--fs-sm);background:var(--bg-product)}
+.coupon-card input:focus{outline:none;border-color:var(--primary-700);box-shadow:0 0 0 3px rgba(59,74,42,.08);background:#fff}
+.coupon-card button{padding:10px 18px;background:var(--primary-700);color:#fff;border-radius:var(--r-sm);font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.coupon-card button:hover{background:var(--primary-900)}
+.coupon-msg{font-size:var(--fs-xs);font-weight:600;width:100%;margin-top:6px}
+.coupon-msg.ok{color:var(--accent-success)}
+.coupon-msg.err{color:var(--accent-red)}
+
+.summary-card{position:sticky;top:120px;background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:var(--s-6)}
+.summary-card h3{font-size:var(--fs-md);font-weight:700;color:var(--primary-900);margin-bottom:var(--s-4);padding-bottom:var(--s-3);border-bottom:1px solid var(--border)}
+.sum-line{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:var(--fs-sm);color:var(--text-2)}
+.sum-line .v{font-weight:600;color:var(--text)}
+.sum-line.disc .v{color:var(--accent-gold);font-weight:700}
+.sum-line.free .v{color:var(--accent-success);font-weight:700}
+.sum-line.free s{color:var(--muted);font-weight:400;margin-right:6px;font-size:var(--fs-xs)}
+.sum-total{display:flex;justify-content:space-between;align-items:baseline;padding:var(--s-4) 0;border-top:1px solid var(--border);margin-top:var(--s-2)}
+.sum-total .lbl{font-size:var(--fs-sm);font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text)}
+.sum-total .v{font-size:24px;font-weight:800;color:var(--primary-700);letter-spacing:-0.01em}
+.ship-progress{margin:var(--s-3) 0 var(--s-4)}
+.ship-progress .pbar{height:6px;background:var(--bg-card);border-radius:var(--r-pill);overflow:hidden;margin-bottom:8px}
+.ship-progress .pfill{height:100%;background:linear-gradient(90deg,var(--primary-700),var(--accent-gold));border-radius:var(--r-pill);transition:width .4s ease}
+.ship-progress .ptxt{font-size:var(--fs-xs);color:var(--accent-success);font-weight:600;display:flex;align-items:center;gap:6px}
+.ship-progress .ptxt i{color:var(--accent-gold)}
+.summary-card .btn-block{margin-top:var(--s-4)}
+.trust-row{margin-top:var(--s-4);padding-top:var(--s-4);border-top:1px solid var(--border);font-size:var(--fs-xs);color:var(--muted);text-align:center;display:flex;align-items:center;justify-content:center;gap:6px}
+.trust-row i{color:var(--primary-700)}
+
+.empty-cart{display:none;text-align:center;padding:var(--s-12) var(--s-6);background:#fff;border:1px solid var(--border);border-radius:var(--r-md)}
+.empty-cart.show{display:block}
+.empty-cart .ec-icon{font-size:64px;color:var(--muted-2);margin-bottom:var(--s-4)}
+.empty-cart h2{font-size:var(--fs-xl);font-weight:700;margin-bottom:var(--s-3);color:var(--text)}
+.empty-cart p{color:var(--text-2);margin-bottom:var(--s-6)}
+
+.recent-section{margin-top:var(--s-12)}
+.recent-section h3{font-size:var(--fs-xl);font-weight:700;margin-bottom:var(--s-5);color:var(--primary-900)}
+.recent-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-4)}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--primary-900);color:#fff;padding:12px 20px;border-radius:var(--r-sm);font-size:var(--fs-sm);font-weight:600;box-shadow:var(--shadow-2);opacity:0;visibility:hidden;transition:all .3s ease;z-index:1000}
+.toast.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:1024px){
+  .cart-grid{grid-template-columns:1fr;gap:var(--s-4)}
+  .summary-card{position:fixed;left:0;right:0;bottom:0;top:auto;border-radius:var(--r-md) var(--r-md) 0 0;border-bottom:0;z-index:90;max-height:60vh;overflow-y:auto;box-shadow:0 -8px 24px rgba(0,0,0,.10)}
+  .summary-card.collapsed > *:not(.summary-mobile-bar){display:none}
+  .summary-mobile-bar{display:flex;justify-content:space-between;align-items:center;padding-bottom:var(--s-3);cursor:pointer}
+  .summary-mobile-bar .arr{transition:transform .2s}
+  .summary-card:not(.collapsed) .summary-mobile-bar .arr{transform:rotate(180deg)}
+  .cart-wrap{padding-bottom:240px}
+  .recent-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(min-width:1025px){.summary-mobile-bar{display:none}}
+@media(max-width:640px){
+  .cart-row{grid-template-columns:64px 1fr;gap:var(--s-3)}
+  .cart-row .thumb{width:64px;height:64px}
+  .cart-row .right{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center;min-width:0;padding-top:var(--s-2);border-top:1px dashed var(--border)}
+  .recent-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+
 <div class="container">
   <nav class="crumb">
     <a href="index.html">Anasayfa</a>
     <i class="fa-solid fa-chevron-right sep"></i>
-    <a href="hakkimizda.html">Hakkımızda</a>
-    <i class="fa-solid fa-chevron-right sep"></i>
-    <span class="active">Hikayemiz</span>
+    <span class="active">Sepetim</span>
   </nav>
 </div>
 
-<!-- HERO -->
-<section class="story-hero">
-  <div class="container wrap">
+<div class="container cart-wrap">
+  <div class="cart-head">
+    <h1 id="cartTitle">Sepetim (3 ürün)</h1>
+    <span class="meta"><a href="magaza.html"><i class="fa-solid fa-arrow-left"></i> Alışverişe devam et</a></span>
+  </div>
+
+  <div class="cart-grid" id="cartGrid">
     <div>
-      <span class="eyebrow">Ana Sayfa / Hikayemiz</span>
-      <h1>Hepimizin Ortak Mirası: <em>Derik Zeytini</em></h1>
-      <p>Mardin Derik'in bereketli topraklarında yetişen Halhalı zeytinleri, kuşaktan kuşağa aktarılan üretim bilgisiyle harmanlanarak özgün lezzetler oluşturuyor. Sizleri, Derik'in kadim zeytin yolculuğunun bir parçası olmaya davet ediyoruz.</p>
-    </div>
-    <div class="visual">
-      <img src="https://images.unsplash.com/photo-1593001872095-7d5b3868fb1d?w=400&h=400&fit=crop&q=80" alt="Derik zeytinleri ve zeytinyağı" loading="eager" data-fallback width="400" height="400">
-    </div>
-  </div>
-</section>
+      <div class="cart-items" id="cartItems">
+        <article class="cart-row" data-unit="320" data-qty="2">
+          <a href="urun-detay.html" class="thumb"><img src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=200&q=70" alt="Erken Hasat 500ml" data-fallback></a>
+          <div class="info">
+            <a href="urun-detay.html" class="name">Erken Hasat Natürel Sızma Zeytinyağı 500ml</a>
+            <span class="vol">Hacim: 500 ml</span>
+            <div class="ctrls">
+              <div class="qty-stepper">
+                <button type="button" data-step="-1" aria-label="Azalt">−</button>
+                <span class="num">2</span>
+                <button type="button" data-step="1" aria-label="Arttır">+</button>
+              </div>
+              <span class="unit-price">320,00 TL / adet</span>
+            </div>
+          </div>
+          <div class="right">
+            <span class="line-total">640,00 TL</span>
+            <div class="row-actions">
+              <a href="#" class="tiny-link"><i class="fa-regular fa-heart"></i> Favoriye taşı</a>
+              <button class="icon-trash" data-remove aria-label="Kaldır"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+          </div>
+        </article>
 
-<!-- SECTION 1 — Marka tanıtımı -->
-<section class="story-intro">
-  <div class="container">
-    <div class="lead">
-      <h2>Derik, Mardin'in Köklü Zeytin Mirasının Bir Parçasıdır.</h2>
-      <p>Yüzyıllardır zeytinin anavatanı olan Mardin'in Derik ilçesi, eşsiz iklimi ve verimli topraklarıyla Türkiye'nin en kaliteli zeytinlerinin yetiştiği bölgelerden biridir. Derik markası, bu kadim mirası modern üretim anlayışıyla buluşturarak, yöre halkının emeğini ve toprağın bereketini bir damla saf zeytinyağında bir araya getiriyor.</p>
-    </div>
+        <article class="cart-row" data-unit="450" data-qty="1">
+          <a href="urun-detay.html" class="thumb"><img src="https://images.unsplash.com/photo-1620706857370-e1b9770e8bb1?auto=format&fit=crop&w=200&q=70" alt="Soğuk Sıkım 1L" data-fallback></a>
+          <div class="info">
+            <a href="urun-detay.html" class="name">Soğuk Sıkım Zeytinyağı 1 Litre</a>
+            <span class="vol">Hacim: 1 L</span>
+            <div class="ctrls">
+              <div class="qty-stepper">
+                <button type="button" data-step="-1" aria-label="Azalt">−</button>
+                <span class="num">1</span>
+                <button type="button" data-step="1" aria-label="Arttır">+</button>
+              </div>
+              <span class="unit-price">450,00 TL / adet</span>
+            </div>
+          </div>
+          <div class="right">
+            <span class="line-total">450,00 TL</span>
+            <div class="row-actions">
+              <a href="#" class="tiny-link"><i class="fa-regular fa-heart"></i> Favoriye taşı</a>
+              <button class="icon-trash" data-remove aria-label="Kaldır"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+          </div>
+        </article>
 
-    <div class="pillars">
-      <div class="pillar reveal">
-        <span class="num">01</span>
-        <div>
-          <h3>Halhalı Zeytin Mirası</h3>
-          <p>Derik'in karakteristik Halhalı zeytinleri, kendine has aroması ve karakteriyle dünya çapında ün yapan bir zeytin türüdür. Soğuk sıkım yöntemiyle, tüm doğal değerini koruyarak sofralara ulaşıyor.</p>
+        <article class="cart-row" data-unit="850" data-qty="1">
+          <a href="urun-detay.html" class="thumb"><img src="https://images.unsplash.com/photo-1549049950-48d5887197a0?auto=format&fit=crop&w=200&q=70" alt="Hediye Seti Premium" data-fallback></a>
+          <div class="info">
+            <a href="urun-detay.html" class="name">Hediye Seti Premium</a>
+            <span class="vol">Set: 3 ürün</span>
+            <div class="ctrls">
+              <div class="qty-stepper">
+                <button type="button" data-step="-1" aria-label="Azalt">−</button>
+                <span class="num">1</span>
+                <button type="button" data-step="1" aria-label="Arttır">+</button>
+              </div>
+              <span class="unit-price">850,00 TL / adet</span>
+            </div>
+          </div>
+          <div class="right">
+            <span class="line-total">850,00 TL</span>
+            <div class="row-actions">
+              <a href="#" class="tiny-link"><i class="fa-regular fa-heart"></i> Favoriye taşı</a>
+              <button class="icon-trash" data-remove aria-label="Kaldır"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="coupon-card">
+        <span class="lbl"><i class="fa-solid fa-ticket"></i> İndirim Kuponu</span>
+        <input type="text" id="couponInput" placeholder="Kupon kodu girin (örn. DERIK10)">
+        <button type="button" id="couponBtn">Uygula</button>
+        <span class="coupon-msg" id="couponMsg"></span>
+      </div>
+
+      <div class="empty-cart" id="emptyCart">
+        <div class="ec-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+        <h2>Sepetiniz boş</h2>
+        <p>Henüz sepetinize ürün eklemediniz. Mağazamızdan favori ürünlerinizi keşfedin.</p>
+        <a href="magaza.html" class="btn btn-primary">ALIŞVERİŞE BAŞLA</a>
+
+        <div class="recent-section" style="text-align:left">
+          <h3>Son baktıkların</h3>
+          <div class="recent-grid">
+            <a href="urun-detay.html" class="product"><div class="img-wrap"><img class="product-img" src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=400&q=70" alt="" data-fallback></div><div class="product-body"><span class="product-title">Erken Hasat 500ml</span><span class="price">320 TL</span></div></a>
+            <a href="urun-detay.html" class="product"><div class="img-wrap"><img class="product-img" src="https://images.unsplash.com/photo-1620706857370-e1b9770e8bb1?auto=format&fit=crop&w=400&q=70" alt="" data-fallback></div><div class="product-body"><span class="product-title">Soğuk Sıkım 1L</span><span class="price">450 TL</span></div></a>
+            <a href="urun-detay.html" class="product"><div class="img-wrap"><img class="product-img" src="https://images.unsplash.com/photo-1549049950-48d5887197a0?auto=format&fit=crop&w=400&q=70" alt="" data-fallback></div><div class="product-body"><span class="product-title">Hediye Seti Premium</span><span class="price">850 TL</span></div></a>
+            <a href="urun-detay.html" class="product"><div class="img-wrap"><img class="product-img" src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=400&q=70" alt="" data-fallback></div><div class="product-body"><span class="product-title">Halhalı Zeytin 500g</span><span class="price">180 TL</span></div></a>
+          </div>
         </div>
       </div>
-      <div class="pillar reveal">
-        <span class="num">02</span>
-        <div>
-          <h3>Geleneksel Üretim</h3>
-          <p>Yöresel ustalarla bütünleşmiş üretim bant sistemi, Mardin'in kadim zeytin işleme bilgisini modern hijyen standartlarıyla buluşturuyor. Her bir damla, geçmişin bilgisi ve günümüzün teknolojisinin birleşimidir.</p>
-        </div>
-      </div>
-      <div class="pillar reveal">
-        <span class="num">03</span>
-        <div>
-          <h3>Sofradan Sofraya</h3>
-          <p>Türkiye'nin dört bir yanına ulaşan zeytin ve zeytinyağı çeşitleriyle, Derik'in özgün lezzetini gurmelerden ev sofralarına kadar her tüketiciye sunuyoruz. Amacımız bu kadim lezzeti yeni nesillerle buluşturmak.</p>
-        </div>
-      </div>
     </div>
-  </div>
-</section>
 
-<!-- SECTION 2 — Mağazalarımız ayraç -->
-<section class="divider-section">
-  <div class="container wrap">
-    <div>
-      <h2><em>Mardin Derik'ten</em> <em>12 ile</em>, <em>50'den fazla</em> satış noktasında müşterilerimizle buluşmaya devam ediyoruz.</h2>
-      <p>Yolculuğumuz, Mardin Derik'in bereketli topraklarında başladı. 2018 yılında ilk üretim tesisimizi açtığımız günden bu yana, Halhalı zeytininin eşsiz aroması ve geleneksel üretim yöntemlerimizle Türk sofralarına özgün lezzetler sunmayı amaçladık. Bugün, Türkiye genelinde gurme marketler, restoranlar ve özel satış noktalarımızla doğal lezzetleri tüketicilerle buluşturuyoruz.</p>
-      <a href="#" class="btn-light">Tüm Satış Noktaları <i class="fa-solid fa-arrow-right"></i></a>
-    </div>
-    <div class="visual">
-      <img src="https://images.unsplash.com/photo-1601001435957-74f0958a93c5?w=400&h=400&fit=crop&q=80" alt="Derik üretim tesisi" loading="lazy" data-fallback width="400" height="400">
-    </div>
-  </div>
-</section>
+    <aside class="summary-card" id="summaryCard">
+      <div class="summary-mobile-bar" id="sumBar">
+        <span><b>Toplam:</b> <span id="mobTotal">2.289,20 TL</span></span>
+        <span class="arr"><i class="fa-solid fa-chevron-up"></i> Detay</span>
+      </div>
+      <h3>Sipariş Özeti</h3>
+      <div class="sum-line"><span>Ara Toplam</span><span class="v" id="sSubtotal">1.940,00 TL</span></div>
+      <div class="sum-line"><span>KDV (%18)</span><span class="v" id="sKdv">349,20 TL</span></div>
+      <div class="sum-line free"><span>Kargo</span><span class="v"><s>39,90 TL</s>ÜCRETSİZ</span></div>
+      <div class="sum-line disc" id="sDiscRow" style="display:none"><span>İndirim (DERIK10)</span><span class="v" id="sDisc">-194,00 TL</span></div>
 
-<!-- SECTION 3 — Global Başarılarımız (3 stat-card, harita yok) -->
-<section class="stats-section">
-  <div class="container">
-    <div class="lead">
-      <span class="eyebrow">Global Başarılarımız</span>
-      <h2>Derik Lezzetinin Türkiye ve Dünya Yolculuğu</h2>
-      <p>2018 yılında Mardin Derik'te kurulan üretim tesisimizden, bugün Türkiye'nin gurme marketlerine ve uluslararası tedarikçilere ulaşıyoruz. Her bir damla zeytinyağımızda Halhalı zeytininin köklü mirası ve özenli üretim anlayışımız var.</p>
-    </div>
-    <div class="stats-grid">
-      <div class="stat-card reveal">
-        <div class="big">12+</div>
-        <h3>Şehirde Gurme Marketler</h3>
-        <p>İstanbul, Ankara, İzmir başta olmak üzere Türkiye'nin önde gelen gurme marketlerinde Derik ürünleri.</p>
+      <div class="ship-progress">
+        <div class="pbar"><div class="pfill" id="shipFill" style="width:100%"></div></div>
+        <div class="ptxt" id="shipTxt"><i class="fa-solid fa-gift"></i> Ücretsiz kargo kazandınız!</div>
       </div>
-      <div class="stat-card reveal">
-        <div class="big">50+</div>
-        <h3>Satış Noktası</h3>
-        <p>Restoran, otel, kurumsal kanal ve özel ambalajlı ürünlerimizin yer aldığı satış kanalları.</p>
-      </div>
-      <div class="stat-card reveal">
-        <div class="big">5</div>
-        <h3>Ülkeye İhracat</h3>
-        <p>Almanya, Hollanda, BAE, Suudi Arabistan ve Katar'a yapılan ihracat ortaklıklarımız.</p>
-      </div>
-    </div>
+
+      <div class="sum-total"><span class="lbl">Toplam</span><span class="v" id="sTotal">2.289,20 TL</span></div>
+
+      <a href="odeme.html" class="btn btn-primary btn-block">ÖDEMEYE GEÇ <i class="fa-solid fa-arrow-right"></i></a>
+      <div class="trust-row"><i class="fa-solid fa-lock"></i> SSL Güvenli · 3D Secure</div>
+    </aside>
   </div>
-</section>
+</div>
+
+<div class="toast" id="cartToast">Ürün sepetten kaldırıldı.</div>
+
+<script>
+(function(){
+  const fmt = n => n.toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' TL';
+  let coupon = 0; // discount rate
+  function recalc(){
+    const rows = document.querySelectorAll('#cartItems .cart-row');
+    let subtotal = 0;
+    rows.forEach(r => {
+      const unit = parseFloat(r.dataset.unit);
+      const qty = parseInt(r.dataset.qty);
+      const lt = unit * qty;
+      r.querySelector('.line-total').textContent = fmt(lt);
+      r.querySelector('.num').textContent = qty;
+      subtotal += lt;
+    });
+    const itemCount = rows.length;
+    document.getElementById('cartTitle').textContent = 'Sepetim (' + itemCount + ' ürün)';
+    if (itemCount === 0) {
+      document.getElementById('cartItems').style.display = 'none';
+      document.querySelector('.coupon-card').style.display = 'none';
+      document.getElementById('emptyCart').classList.add('show');
+      document.getElementById('summaryCard').style.display = 'none';
+      return;
+    }
+    const kdv = subtotal * 0.18 / 1.18; // KDV included view
+    const disc = subtotal * coupon;
+    const total = subtotal - disc;
+    document.getElementById('sSubtotal').textContent = fmt(subtotal);
+    document.getElementById('sKdv').textContent = fmt(kdv);
+    document.getElementById('sTotal').textContent = fmt(total);
+    document.getElementById('mobTotal').textContent = fmt(total);
+    const discRow = document.getElementById('sDiscRow');
+    if (coupon > 0) {
+      discRow.style.display = 'flex';
+      document.getElementById('sDisc').textContent = '-' + fmt(disc);
+    } else { discRow.style.display = 'none'; }
+    // shipping progress
+    const goal = 500;
+    const pct = Math.min(100, (subtotal/goal)*100);
+    document.getElementById('shipFill').style.width = pct + '%';
+    document.getElementById('shipTxt').innerHTML = subtotal >= goal
+      ? '<i class="fa-solid fa-gift"></i> Ücretsiz kargo kazandınız!'
+      : '<i class="fa-solid fa-truck"></i> ' + fmt(goal - subtotal) + ' daha ekle, kargo ücretsiz olsun.';
+  }
+
+  document.getElementById('cartItems').addEventListener('click', e => {
+    const stepBtn = e.target.closest('button[data-step]');
+    if (stepBtn) {
+      const row = stepBtn.closest('.cart-row');
+      let q = parseInt(row.dataset.qty) + parseInt(stepBtn.dataset.step);
+      if (q < 1) q = 1;
+      if (q > 99) q = 99;
+      row.dataset.qty = q;
+      recalc();
+      return;
+    }
+    const rm = e.target.closest('[data-remove]');
+    if (rm) {
+      const row = rm.closest('.cart-row');
+      row.style.transition = 'opacity .2s, transform .2s';
+      row.style.opacity = '0';
+      row.style.transform = 'translateX(-20px)';
+      setTimeout(() => {
+        row.remove();
+        recalc();
+        const t = document.getElementById('cartToast');
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2200);
+      }, 220);
+    }
+  });
+
+  document.getElementById('couponBtn').addEventListener('click', () => {
+    const code = document.getElementById('couponInput').value.trim().toUpperCase();
+    const msg = document.getElementById('couponMsg');
+    if (code === 'DERIK10') {
+      coupon = 0.10;
+      msg.textContent = '✓ Kupon uygulandı: %10 indirim kazandınız!';
+      msg.className = 'coupon-msg ok';
+    } else {
+      coupon = 0;
+      msg.textContent = '✗ Geçersiz kupon kodu. Demo kod: DERIK10';
+      msg.className = 'coupon-msg err';
+    }
+    recalc();
+  });
+
+  // Mobile collapse
+  const sumBar = document.getElementById('sumBar');
+  const summaryCard = document.getElementById('summaryCard');
+  if (window.matchMedia('(max-width:1024px)').matches) summaryCard.classList.add('collapsed');
+  sumBar.addEventListener('click', () => summaryCard.classList.toggle('collapsed'));
+
+  recalc();
+})();
+</script>
 
 <footer class="footer">
   <div class="container">
@@ -891,18 +1119,18 @@ body.mobile-panel-open{overflow:hidden}
         <h4>Kategoriler</h4>
         <ul>
           <li><a href="magaza.html">Zeytinyağları</a></li>
-          <li><a href="magaza.html?kategori=zeytinler">Zeytinler</a></li>
-          <li><a href="magaza.html?kategori=sabunlar">Sabunlar</a></li>
-          <li><a href="magaza.html?kategori=dogal-urunler">Doğal Ürünler</a></li>
-          <li><a href="magaza.html?kategori=hediye-setleri">Hediye Setleri</a></li>
+          <li><a href="#zeytinler">Zeytinler</a></li>
+          <li><a href="#sabunlar">Sabunlar</a></li>
+          <li><a href="#dogal">Doğal Ürünler</a></li>
+          <li><a href="#hediye">Hediye Setleri</a></li>
         </ul>
       </div>
       <div>
         <h4>Kurumsal</h4>
         <ul>
-          <li><a href="hakkimizda.html">Hakkımızda</a></li>
-          <li><a href="hikayemiz.html">Derik'in Hikâyesi</a></li>
-          <li><a href="uretim.html">Üretim Sürecimiz</a></li>
+          <li><a href="#hakkimizda">Hakkımızda</a></li>
+          <li><a href="#hikaye">Derik'in Hikâyesi</a></li>
+          <li><a href="#uretim">Üretim Sürecimiz</a></li>
           <li><a href="kurumsal-satis.html">Kurumsal Satış</a></li>
           <li><a href="iletisim.html">İletişim</a></li>
         </ul>
@@ -911,7 +1139,7 @@ body.mobile-panel-open{overflow:hidden}
         <h4>Yardım</h4>
         <ul>
           <li><a href="sss.html">Sıkça Sorulan Sorular</a></li>
-          <li><a href="iade-degisim.html">İade ve Değişim</a></li>
+          <li><a href="#iade">İade ve Değişim</a></li>
           <li><a href="iletisim.html">İletişim</a></li>
         </ul>
       </div>
@@ -934,10 +1162,10 @@ body.mobile-panel-open{overflow:hidden}
     <div class="footer-bottom">
       <span>©2026 Derik. Tüm hakları saklıdır.</span>
       <div class="policies">
-        <a href="kvkk.html">KVKK</a>
-        <a href="gizlilik.html">Gizlilik</a>
-        <a href="mesafeli-satis.html">Mesafeli Satış</a>
-        <a href="cerez-politikasi.html">Çerez Politikası</a>
+        <a href="#">KVKK</a>
+        <a href="#">Gizlilik</a>
+        <a href="#">Mesafeli Satış</a>
+        <a href="#">Çerez Politikası</a>
       </div>
     </div>
   </div>
