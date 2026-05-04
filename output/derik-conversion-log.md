@@ -458,3 +458,27 @@ CSS injected into 8 pages: `index.html`, `magaza.html`, `urun-detay.html`, `hika
 - "Asistanım" floating module
 - Heavy marketing banners between order cards
 - "Sana Özel" carousel
+
+---
+
+## v3.4 — Button Action Implementations
+
+**Date:** 2026-05-04
+
+### Decisions
+
+| Button | Decision | Reason |
+|---|---|---|
+| **Detaylar** (siparis-gecmisim) | Separate page `siparis-detay.html` | Long content (ürün listesi + adres + fatura + ödeme + özet). Modal would feel cramped, inline expand makes the list page noisy. Trendyol pattern: full page detail. |
+| **Değerlendir** (siparis-gecmisim) | Modal | Short, focused interaction (5 stars + textarea + photo upload). Modal keeps user on the order list, avoids navigation cost. |
+| **Kargo Takip** (siparis-gecmisim) | Modal with timeline | Quick lookup, vertical timeline (5 steps: Sipariş Alındı → Hazırlanıyor → Kargoya Verildi → Yolda → Şubede → Teslim Edildi). Modal is right size for compact stepper. |
+| **Kullan** (promosyonlarim) | Clipboard copy + toast | Simplest UX. Code already shown on card; clicking copies to clipboard with `navigator.clipboard.writeText()`. Toast bottom-center, 2.7s auto-fade with bg `--primary-900` + gold accent icon. |
+
+### Implementation
+- `siparis-detay.html` — new page; built from `uyelik-bilgilerim.html` template (account layout reuse) with new `.detail-card`, `.dc-grid`, `.prod-row`, `.detail-grid`, `.summary` CSS
+- `siparis-gecmisim.html` — added review modal + cargo modal + body scroll lock + ESC + backdrop close. Star rating uses CSS-only RTL flex trick.
+- `promosyonlarim.html` — codes added to each card (DERIK15, KARGOFREE, DOGUM100). Toast helper appends `.toast` to `#toastStack`, fade-out animation at 2.7s.
+
+### Demo Data
+- Sipariş detayı: 2 ürün (Erken Hasat 500ml ×2 + Halhalı Yeşil 500g ×1) = 1.145 TL ara toplam − 100 TL indirim = 1.045 TL toplam, kredi kartı **** 4575
+- Kargo: Yurtiçi Kargo, takip YK4827193264, 4 done + 1 current + 2 pending step

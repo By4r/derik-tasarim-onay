@@ -190,6 +190,69 @@ ul{list-style:none}
 .btn-review{padding:10px 18px;border-radius:var(--r-sm);background:var(--accent-gold);color:var(--primary-900);font-weight:700;font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:.04em;transition:all var(--t-fast);white-space:nowrap;border:0;cursor:pointer}
 .btn-review:hover{background:#d8b46c;transform:translateY(-1px)}
 
+/* ============ MODAL ============ */
+body.modal-open{overflow:hidden}
+.modal-backdrop{position:fixed;inset:0;background:rgba(42,31,20,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:var(--s-6) var(--s-4);overflow-y:auto}
+.modal-backdrop.open{display:flex;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{background:#fff;width:100%;max-width:560px;max-height:calc(100vh - 48px);border-radius:var(--r-lg);box-shadow:0 20px 60px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:hidden;margin:auto;animation:slideUp .25s ease}
+@keyframes slideUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:var(--s-5) var(--s-6);border-bottom:1px solid var(--border);flex-shrink:0}
+.modal-header h2{font-size:var(--fs-lg);font-weight:700;color:var(--text);letter-spacing:-0.01em}
+.modal-close{width:36px;height:36px;border-radius:var(--r-sm);background:var(--bg-soft);color:var(--text-2);display:inline-flex;align-items:center;justify-content:center;font-size:16px;transition:all var(--t-fast)}
+.modal-close:hover{background:var(--accent-red);color:#fff}
+.modal-body{padding:var(--s-6);overflow-y:auto;flex:1}
+.modal-footer{padding:var(--s-5) var(--s-6);border-top:1px solid var(--border);flex-shrink:0}
+.modal-footer .btn-save{width:100%;padding:14px;border-radius:var(--r-sm);background:var(--primary-700);color:#fff;font-weight:700;font-size:var(--fs-sm);letter-spacing:.04em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);cursor:pointer;border:0;transition:all var(--t-fast)}
+.modal-footer .btn-save:hover{background:var(--primary-900)}
+
+/* REVIEW: product context */
+.review-product{display:flex;gap:var(--s-4);padding:var(--s-4);background:var(--bg-product);border:1px solid var(--border);border-radius:var(--r-md);margin-bottom:var(--s-5)}
+.review-product .thumb{width:64px;height:64px;border-radius:var(--r-md);overflow:hidden;flex-shrink:0;background:var(--bg-soft)}
+.review-product .thumb img{width:100%;height:100%;object-fit:cover}
+.review-product .info b{display:block;font-size:var(--fs-sm);font-weight:700;line-height:1.3;margin-bottom:4px}
+.review-product .info span{font-size:var(--fs-xs);color:var(--muted)}
+
+/* STAR RATING */
+.star-row{display:flex;flex-direction:column;align-items:center;gap:var(--s-3);margin-bottom:var(--s-5);padding:var(--s-5);background:var(--bg-soft);border-radius:var(--r-md)}
+.star-row label{font-size:var(--fs-sm);font-weight:600;color:var(--text-2)}
+.stars-input{display:flex;gap:6px;direction:rtl;justify-content:center}
+.stars-input input{display:none}
+.stars-input label{font-size:32px;color:var(--muted-2);cursor:pointer;transition:color var(--t-fast);line-height:1}
+.stars-input label:hover,.stars-input label:hover ~ label,
+.stars-input input:checked ~ label{color:var(--accent-gold)}
+.stars-input label::before{content:"\f005";font-family:"Font Awesome 6 Free";font-weight:900}
+
+.modal .field{display:flex;flex-direction:column;margin-bottom:var(--s-4)}
+.modal .field label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.modal .field textarea{padding:12px 14px;border:1px solid var(--border);border-radius:var(--r-sm);font-family:inherit;font-size:var(--fs-sm);background:#fff;color:var(--text);width:100%;resize:vertical;min-height:110px;line-height:1.5}
+.modal .field textarea:focus{outline:none;border-color:var(--primary-700);box-shadow:0 0 0 2px rgba(59,74,42,.08)}
+.photo-upload{border:2px dashed var(--border);border-radius:var(--r-md);padding:var(--s-5);text-align:center;color:var(--muted);font-size:var(--fs-sm);cursor:pointer;transition:all var(--t-fast)}
+.photo-upload:hover{border-color:var(--primary-700);color:var(--primary-700);background:var(--bg-product)}
+.photo-upload i{display:block;font-size:24px;margin-bottom:var(--s-2)}
+
+/* CARGO TIMELINE */
+.cargo-meta{display:flex;justify-content:space-between;gap:var(--s-4);padding:var(--s-4);background:var(--bg-product);border:1px solid var(--border);border-radius:var(--r-md);margin-bottom:var(--s-5);flex-wrap:wrap}
+.cargo-meta .col span{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;margin-bottom:4px}
+.cargo-meta .col b{font-size:var(--fs-sm);color:var(--text)}
+.timeline{position:relative;padding-left:var(--s-8)}
+.timeline::before{content:"";position:absolute;left:14px;top:14px;bottom:14px;width:2px;background:var(--border)}
+.timeline-step{position:relative;padding-bottom:var(--s-6)}
+.timeline-step:last-child{padding-bottom:0}
+.timeline-step .dot{position:absolute;left:calc(-1 * var(--s-8) + 6px);top:2px;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;z-index:1}
+.timeline-step.done .dot{background:var(--accent-success);border-color:var(--accent-success);color:#fff}
+.timeline-step.done .dot::after{content:"\f00c";font-family:"Font Awesome 6 Free";font-weight:900;font-size:9px}
+.timeline-step.current .dot{background:var(--primary-700);border-color:var(--primary-700);box-shadow:0 0 0 4px rgba(59,74,42,.15)}
+.timeline-step b{display:block;font-size:var(--fs-sm);font-weight:700;color:var(--text);margin-bottom:2px}
+.timeline-step.done b,.timeline-step.current b{color:var(--text)}
+.timeline-step:not(.done):not(.current) b{color:var(--muted)}
+.timeline-step span{font-size:var(--fs-xs);color:var(--muted);line-height:1.5}
+
+@media(max-width:600px){
+  .modal-header h2{font-size:var(--fs-md)}
+  .cargo-meta{flex-direction:column;gap:var(--s-2)}
+}
+
 /* ADDRESS */
 .addr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s-4)}
 .addr-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-6);position:relative;transition:border-color var(--t-fast)}
@@ -359,7 +422,7 @@ ul{list-style:none}
           <div class="col"><span>Sipariş No</span><b>DRK-104872</b></div>
           <div class="col"><span>Alıcı</span><b>Beyar Güneş</b></div>
           <div class="col"><span>Toplam</span><b>1.245,00 TL</b></div>
-          <a href="#" class="btn-detail">Detaylar</a>
+          <a href="siparis-detay.html?id=DRK-104872" class="btn-detail">Detaylar</a>
         </div>
         <div class="order-body">
           <div class="thumb"><img src="https://images.unsplash.com/photo-1620577573039-a96c2c0e4e84?w=200&h=200&fit=crop" alt="Erken Hasat 500ml" data-fallback></div>
@@ -367,7 +430,7 @@ ul{list-style:none}
             <span class="badge-status"><i class="fa-solid fa-circle-check"></i> Teslim Edildi</span>
             <p>Erken Hasat Naturel Sızma Zeytinyağı 500ml · 2 ürün teslim edildi</p>
           </div>
-          <button class="btn-review">Değerlendir</button>
+          <button class="btn-review" data-review="Erken Hasat Naturel Sızma Zeytinyağı 500ml" data-review-img="https://images.unsplash.com/photo-1620577573039-a96c2c0e4e84?w=200&h=200&fit=crop">Değerlendir</button>
         </div>
       </div>
 
@@ -377,7 +440,7 @@ ul{list-style:none}
           <div class="col"><span>Sipariş No</span><b>DRK-103219</b></div>
           <div class="col"><span>Alıcı</span><b>Beyar Güneş</b></div>
           <div class="col"><span>Toplam</span><b>680,00 TL</b></div>
-          <a href="#" class="btn-detail">Detaylar</a>
+          <a href="siparis-detay.html?id=DRK-103219" class="btn-detail">Detaylar</a>
         </div>
         <div class="order-body">
           <div class="thumb"><img src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=200&h=200&fit=crop" alt="Halhalı Yeşil Zeytin" data-fallback></div>
@@ -385,7 +448,7 @@ ul{list-style:none}
             <span class="badge-status pending"><i class="fa-solid fa-truck"></i> Kargoda</span>
             <p>Halhalı Yeşil Zeytin 1kg · Tahmini teslim 15 Nisan</p>
           </div>
-          <a href="#" class="btn-detail">Kargo Takip</a>
+          <button class="btn-detail" data-cargo="DRK-103219" data-cargo-no="YK4827193264" data-cargo-firma="Yurtiçi Kargo">Kargo Takip</button>
         </div>
       </div>
 
@@ -395,7 +458,7 @@ ul{list-style:none}
           <div class="col"><span>Sipariş No</span><b>DRK-102540</b></div>
           <div class="col"><span>Alıcı</span><b>Beyar Güneş</b></div>
           <div class="col"><span>Toplam</span><b>2.150,00 TL</b></div>
-          <a href="#" class="btn-detail">Detaylar</a>
+          <a href="siparis-detay.html?id=DRK-102540" class="btn-detail">Detaylar</a>
         </div>
         <div class="order-body">
           <div class="thumb"><img src="https://images.unsplash.com/photo-1611171711912-e3e9d31bbe7c?w=200&h=200&fit=crop" alt="Hediye Seti" data-fallback></div>
@@ -403,7 +466,7 @@ ul{list-style:none}
             <span class="badge-status"><i class="fa-solid fa-circle-check"></i> Teslim Edildi</span>
             <p>Derik Hediye Seti — 3 ürün · 1 ürün teslim edildi</p>
           </div>
-          <button class="btn-review">Değerlendir</button>
+          <button class="btn-review" data-review="Derik Hediye Seti — 3'lü" data-review-img="https://images.unsplash.com/photo-1611171711912-e3e9d31bbe7c?w=200&h=200&fit=crop">Değerlendir</button>
         </div>
       </div>
     </div>
@@ -469,6 +532,102 @@ ul{list-style:none}
 </footer>
 
 
+<!-- REVIEW MODAL -->
+<div class="modal-backdrop" id="reviewModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Ürünü Değerlendir</h2>
+      <button class="modal-close" aria-label="Kapat" data-close-modal><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form class="modal-body" id="reviewForm" novalidate>
+      <div class="review-product">
+        <div class="thumb"><img id="reviewImg" src="" alt=""></div>
+        <div class="info">
+          <b id="reviewProductName">Ürün adı</b>
+          <span>Bu ürünü nasıl buldunuz?</span>
+        </div>
+      </div>
+
+      <div class="star-row">
+        <label>Genel Puanınız</label>
+        <div class="stars-input">
+          <input type="radio" id="r5" name="rating" value="5"><label for="r5"></label>
+          <input type="radio" id="r4" name="rating" value="4"><label for="r4"></label>
+          <input type="radio" id="r3" name="rating" value="3"><label for="r3"></label>
+          <input type="radio" id="r2" name="rating" value="2"><label for="r2"></label>
+          <input type="radio" id="r1" name="rating" value="1"><label for="r1"></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="r-comment">Yorumunuz</label>
+        <textarea id="r-comment" name="comment" placeholder="Ürün hakkında deneyiminizi paylaşın..." required></textarea>
+      </div>
+
+      <div class="field">
+        <label>Fotoğraf Ekle (Opsiyonel)</label>
+        <label class="photo-upload">
+          <i class="fa-regular fa-image"></i>
+          Fotoğraf yüklemek için tıklayın
+          <input type="file" accept="image/*" multiple style="display:none">
+        </label>
+      </div>
+    </form>
+    <div class="modal-footer">
+      <button type="submit" form="reviewForm" class="btn-save"><i class="fa-solid fa-paper-plane"></i> Gönder</button>
+    </div>
+  </div>
+</div>
+
+<!-- CARGO TRACKING MODAL -->
+<div class="modal-backdrop" id="cargoModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Kargo Takibi</h2>
+      <button class="modal-close" aria-label="Kapat" data-close-modal><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="cargo-meta">
+        <div class="col"><span>Sipariş No</span><b id="cargoOrderId">DRK-103219</b></div>
+        <div class="col"><span>Kargo Firması</span><b id="cargoFirma">Yurtiçi Kargo</b></div>
+        <div class="col"><span>Takip No</span><b id="cargoNo">YK4827193264</b></div>
+      </div>
+      <div class="timeline">
+        <div class="timeline-step done">
+          <span class="dot"></span>
+          <b>Sipariş Alındı</b>
+          <span>3 Nisan 2026, 14:32</span>
+        </div>
+        <div class="timeline-step done">
+          <span class="dot"></span>
+          <b>Hazırlanıyor</b>
+          <span>3 Nisan 2026, 16:08 · Derik üretim tesisinde paketlendi</span>
+        </div>
+        <div class="timeline-step done">
+          <span class="dot"></span>
+          <b>Kargoya Verildi</b>
+          <span>4 Nisan 2026, 09:15 · Yurtiçi Kargo Mardin Şubesi</span>
+        </div>
+        <div class="timeline-step current">
+          <span class="dot"></span>
+          <b>Yolda</b>
+          <span>5 Nisan 2026, 11:42 · İstanbul Anadolu aktarma merkezinden çıktı</span>
+        </div>
+        <div class="timeline-step">
+          <span class="dot"></span>
+          <b>Şubede</b>
+          <span>Tahmini: 6 Nisan 2026</span>
+        </div>
+        <div class="timeline-step">
+          <span class="dot"></span>
+          <b>Teslim Edildi</b>
+          <span>Tahmini teslim: 15 Nisan 2026</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 // Chips toggle
 document.querySelectorAll('.chips').forEach(g => {
@@ -479,15 +638,51 @@ document.querySelectorAll('.chips').forEach(g => {
     }
   });
 });
-// Tabs
-document.querySelectorAll('.acc-tabs').forEach(g => {
-  g.addEventListener('click', e => {
-    if (e.target.matches('button')) {
-      const id = e.target.dataset.tab;
-      g.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-      document.querySelectorAll('.acc-tab-panel').forEach(p => p.classList.toggle('active', p.id === id));
-    }
+
+// ============ MODALS ============
+function openModal(modal){
+  modal.classList.add('open');
+  document.body.classList.add('modal-open');
+}
+function closeModal(modal){
+  modal.classList.remove('open');
+  if (!document.querySelector('.modal-backdrop.open')) document.body.classList.remove('modal-open');
+}
+document.querySelectorAll('.modal-backdrop').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) closeModal(m); });
+  m.querySelectorAll('[data-close-modal]').forEach(btn => btn.addEventListener('click', () => closeModal(m)));
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-backdrop.open').forEach(closeModal);
+});
+
+// REVIEW: open modal with product context
+const reviewModal = document.getElementById('reviewModal');
+document.querySelectorAll('[data-review]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('reviewProductName').textContent = btn.dataset.review;
+    document.getElementById('reviewImg').src = btn.dataset.reviewImg || '';
+    document.getElementById('reviewForm').reset();
+    openModal(reviewModal);
+  });
+});
+document.getElementById('reviewForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const rating = document.querySelector('input[name="rating"]:checked');
+  if (!rating) { alert('Lütfen bir puan verin.'); return; }
+  closeModal(reviewModal);
+  alert('Değerlendirmeniz için teşekkürler!');
+});
+
+// CARGO TRACKING: open modal with order data
+const cargoModal = document.getElementById('cargoModal');
+document.querySelectorAll('[data-cargo]').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    document.getElementById('cargoOrderId').textContent = btn.dataset.cargo;
+    document.getElementById('cargoNo').textContent = btn.dataset.cargoNo;
+    document.getElementById('cargoFirma').textContent = btn.dataset.cargoFirma;
+    openModal(cargoModal);
   });
 });
 </script>
