@@ -878,6 +878,8 @@ body.mobile-panel-open{overflow:hidden}
 }
 .cc-back{transform:rotateY(180deg);padding:0}
 .cc-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2}
+.cc-chip-row{display:flex;align-items:center;gap:10px}
+.cc-contactless{width:22px;height:22px;opacity:.92;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
 .cc-chip{width:46px;height:34px;border-radius:6px;background:linear-gradient(135deg,#E8C77A 0%,#C9A55B 45%,#8C6D2F 100%);position:relative;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 1px 2px rgba(0,0,0,.25)}
 .cc-chip::before,.cc-chip::after{content:"";position:absolute;inset:7px;border-radius:3px;border:1px solid rgba(0,0,0,.22)}
 .cc-chip::after{inset:15px 7px;border:0;background:linear-gradient(90deg,transparent 0,rgba(0,0,0,.22) 0,rgba(0,0,0,.22) 1px,transparent 1px,transparent 12px,rgba(0,0,0,.22) 12px,rgba(0,0,0,.22) 13px,transparent 13px,transparent 24px,rgba(0,0,0,.22) 24px,rgba(0,0,0,.22) 25px,transparent 25px)}
@@ -1055,7 +1057,16 @@ body.mobile-panel-open{overflow:hidden}
                   <div class="credit-card-display" id="creditCard" aria-label="Kart önizlemesi">
                     <div class="cc-face cc-front">
                       <div class="cc-top">
-                        <div class="cc-chip" aria-hidden="true"></div>
+                        <div class="cc-chip-row">
+                          <div class="cc-chip" aria-hidden="true"></div>
+                          <svg class="cc-contactless" viewBox="0 0 24 24" aria-hidden="true">
+                            <g fill="none" stroke="#C9A55B" stroke-width="2" stroke-linecap="round">
+                              <path d="M7 8c2 1.6 2 6.4 0 8"/>
+                              <path d="M11 6c3 2.4 3 9.6 0 12"/>
+                              <path d="M15 4c4 3.2 4 12.8 0 16"/>
+                            </g>
+                          </svg>
+                        </div>
                       </div>
                       <div class="cc-num" id="cardVisNum"><span>••••</span><span>••••</span><span>••••</span><span>••••</span></div>
                       <div class="cc-bottom">
@@ -1201,9 +1212,12 @@ body.mobile-panel-open{overflow:hidden}
   const cardSchemeBack = document.getElementById('cardSchemeBack');
   const cardVisLast4 = document.getElementById('cardVisLast4');
   const SCHEMES = {
-    visa: '<svg viewBox="0 0 80 28" xmlns="http://www.w3.org/2000/svg"><text x="0" y="22" font-family="Inter,Arial" font-weight="900" font-size="26" font-style="italic" fill="#fff" letter-spacing="1.5">VISA</text></svg>',
+    // Visa — white italic wordmark + signature gold notch on the V (Visa brand pattern for dark backgrounds)
+    visa: '<svg viewBox="0 0 100 32" xmlns="http://www.w3.org/2000/svg"><g transform="skewX(-12)" font-family="Helvetica,Arial,sans-serif" font-weight="900" font-size="26" letter-spacing=".5"><text x="14" y="24" fill="#fff">VISA</text><polygon points="22,4 30,4 26,11" fill="#F7B600"/></g></svg>',
+    // Mastercard (kept as-is, patron approved)
     mc:   '<svg viewBox="0 0 64 40" xmlns="http://www.w3.org/2000/svg"><circle cx="24" cy="20" r="16" fill="#EB001B"/><circle cx="40" cy="20" r="16" fill="#F79E1B" opacity=".9"/><path d="M32 8a16 16 0 0 1 0 24 16 16 0 0 1 0-24z" fill="#FF5F00"/></svg>',
-    troy: '<svg viewBox="0 0 80 28" xmlns="http://www.w3.org/2000/svg"><circle cx="62" cy="14" r="6" fill="#E30613"/><circle cx="70" cy="14" r="6" fill="#fff" opacity=".85"/><text x="0" y="22" font-family="Inter,Arial" font-weight="800" font-size="20" fill="#fff" letter-spacing=".5">troy</text></svg>',
+    // Troy — overlapping red + teal blobs + lowercase white wordmark (TR payment scheme palette)
+    troy: '<svg viewBox="0 0 100 32" xmlns="http://www.w3.org/2000/svg"><g><path d="M60 6 q-9 0 -12 8 q3 8 12 8 q9 0 12 -8 q-3 -8 -12 -8z" fill="#ED1B2E"/><path d="M76 6 q-9 0 -12 8 q3 8 12 8 q9 0 12 -8 q-3 -8 -12 -8z" fill="#00ADBC" opacity=".88"/></g><text x="0" y="24" font-family="Helvetica,Arial,sans-serif" font-weight="800" font-size="20" fill="#fff" letter-spacing=".5">troy</text></svg>',
     amex: '<svg viewBox="0 0 80 28" xmlns="http://www.w3.org/2000/svg"><rect width="80" height="28" rx="3" fill="#2671B9"/><text x="40" y="19" text-anchor="middle" font-family="Inter,Arial" font-weight="800" font-size="11" fill="#fff" letter-spacing=".8">AMEX</text></svg>'
   };
   function detectScheme(d){
