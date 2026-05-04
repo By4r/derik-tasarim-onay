@@ -1,0 +1,1891 @@
+#!/usr/bin/env python3
+"""Derik v2 build — produces index.html, magaza.html, urun-detay.html with shared header/footer/CSS."""
+from pathlib import Path
+
+OUT_ROOT = Path("/Users/dadaistanbul/Design/Derik Design")
+
+# ============================================================
+# Unsplash assets (signed URLs as provided in brief)
+# ============================================================
+# Doğrulanmış (curl 200) Unsplash photo ID'leri
+UNSPLASH = {
+    "hero":         "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=1400&q=80&auto=format&fit=crop",
+    "cat_yag":      "https://images.unsplash.com/photo-1474440692490-2e83ae13ba29?w=600&q=80&auto=format&fit=crop",
+    "cat_zeyt":     "https://images.unsplash.com/photo-1593001872095-7d5b3868fb1d?w=600&q=80&auto=format&fit=crop",
+    "cat_sabun":    "https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=600&q=80&auto=format&fit=crop",
+    "cat_dogal":    "https://images.unsplash.com/photo-1563636619-e9143da7973b?w=600&q=80&auto=format&fit=crop",
+    "cat_hediye":   "https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?w=600&q=80&auto=format&fit=crop",
+    "cat_kurum":    "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&q=80&auto=format&fit=crop",
+    "banner_yeni":  "https://images.unsplash.com/photo-1593001872095-7d5b3868fb1d?w=1000&q=80&auto=format&fit=crop",
+    "banner_kurum": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=1000&q=80&auto=format&fit=crop",
+    "p1": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=500&q=80&auto=format&fit=crop",
+    "p2": "https://images.unsplash.com/photo-1474440692490-2e83ae13ba29?w=500&q=80&auto=format&fit=crop",
+    "p3": "https://images.unsplash.com/photo-1593001872095-7d5b3868fb1d?w=500&q=80&auto=format&fit=crop",
+    "p4": "https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=500&q=80&auto=format&fit=crop",
+    "p5": "https://images.unsplash.com/photo-1563636619-e9143da7973b?w=500&q=80&auto=format&fit=crop",
+    "p6": "https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?w=500&q=80&auto=format&fit=crop",
+    "p7": "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=500&q=80&auto=format&fit=crop",
+    "p8": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=500&q=80&auto=format&fit=crop",
+    # Hikayemiz görselleri
+    "story_hero":   "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=1200&q=80&auto=format&fit=crop",
+    "story_grove":  "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=1400&q=80&auto=format&fit=crop",
+    "story_press":  "https://images.unsplash.com/photo-1542838132-92c53300491e?w=900&q=80&auto=format&fit=crop",
+}
+
+# ============================================================
+# Shared CSS
+# ============================================================
+CSS = r"""
+:root {
+  --primary-700: #3B4A2A;
+  --primary-800: #6B7A3F;
+  --primary-900: #2A3520;
+  --primary-100: #F2EBDC;
+  --primary-200: #E8DFC9;
+
+  --bg: #FAF6EE;
+  --bg-soft: #F2EBDC;
+  --bg-section: #F2EBDC;
+  --bg-card: #E8DFC9;
+  --bg-product: #FAF9F5;
+  --text: #2A1F14;
+  --text-2: #4A3A2A;
+  --muted: #8C7A6A;
+  --muted-2: #B5A693;
+  --border: #E8DFC9;
+
+  --accent-gold: #C9A55B;
+  --accent-gold-soft: #E8D4A1;
+  --accent-earth: #8C6A4A;
+  --accent-red: #B04A3E;
+  --accent-success: #5A7A3A;
+
+  --font: "Inter", "Helvetica Neue", system-ui, Arial, sans-serif;
+  --fs-xs: 12px; --fs-sm: 14px; --fs-base: 16px; --fs-md: 18px;
+  --fs-lg: 20px; --fs-xl: 24px; --fs-2xl: 32px; --fs-3xl: 36px; --fs-hero: 60px;
+
+  --icon-sm: 14px; --icon-md: 18px; --icon-lg: 22px;
+
+  --s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:20px;--s-6:24px;
+  --s-8:32px;--s-10:40px;--s-12:48px;--s-16:64px;
+
+  /* Radius scale — base = price input (6px), tighter site-wide */
+  --r-sm:6px;     /* input, button, count chip, small badge */
+  --r-md:10px;    /* product/blog card, image wrap */
+  --r-lg:12px;    /* hero, banner, gift feature, filter panel */
+  --r-xl:14px;    /* (alias for lg, en büyük yumuşak köşe) */
+  --r-pill:100px; /* badge, CTA pill, chip, dot — yalnızca tam yuvarlak */
+  --shadow-1:0 2px 8px rgba(0,0,0,.06);
+  --shadow-2:0 6px 20px rgba(42,31,20,.10);
+  --shadow-header:0 1px 4px rgba(0,0,0,.04);
+
+  --maxw:1320px;
+  --t-fast:.2s ease;--t-mid:.3s ease;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);font-size:var(--fs-base);color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{letter-spacing:-0.015em;line-height:1.2}
+a{color:inherit;text-decoration:none;transition:color var(--t-fast)}
+a:hover{color:var(--primary-700)}
+button{font-family:inherit;cursor:pointer;border:0;background:transparent;color:inherit}
+img,svg{display:block;max-width:100%}
+ul{list-style:none}
+.container{max-width:var(--maxw);margin:0 auto;padding:0 var(--s-8)}
+@media(max-width:768px){.container{padding:0 var(--s-6)}}
+@media(max-width:480px){.container{padding:0 var(--s-4)}}
+
+/* TOP RIBBON 3-col */
+.topbar{background:var(--primary-700);color:var(--bg);font-size:13px;font-weight:500;padding:0;}
+.topbar.hidden{display:none}
+.topbar .container{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:var(--s-4);min-height:36px}
+.topbar a{color:var(--bg)}
+.topbar a:hover{color:var(--accent-gold)}
+.topbar .tb-left{justify-self:start}
+.topbar .tb-mid{justify-self:center;text-align:center}
+.topbar .tb-mid b{color:var(--accent-gold);font-weight:700;letter-spacing:.04em}
+.topbar .tb-right{justify-self:end;display:flex;align-items:center;gap:var(--s-3)}
+.topbar .tb-close{color:var(--bg);opacity:.8;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center}
+.topbar .tb-close:hover{background:rgba(255,255,255,.12);opacity:1}
+@media(max-width:768px){.topbar .container{grid-template-columns:1fr auto}.topbar .tb-left{display:none}}
+
+/* TEL BAR */
+.telbar{background:var(--bg);border-bottom:1px solid var(--border);font-size:var(--fs-xs);color:var(--text-2)}
+.telbar .container{display:flex;justify-content:flex-end;align-items:center;gap:var(--s-6);height:34px}
+.telbar a{display:inline-flex;align-items:center;gap:var(--s-2);color:var(--text-2);font-weight:500}
+.telbar a:hover{color:var(--primary-700)}
+.telbar i{font-size:var(--icon-sm);color:var(--primary-700)}
+
+/* HEADER */
+.header{position:sticky;top:0;z-index:50;background:var(--bg);box-shadow:var(--shadow-header);border-bottom:1px solid var(--border)}
+.header-row1{display:flex;align-items:center;gap:var(--s-6);height:88px}
+.brand-logo{font-size:30px;font-weight:800;letter-spacing:-0.025em;color:var(--primary-700);font-style:italic}
+.brand-logo:hover{color:var(--primary-700)}
+.header-actions{display:flex;align-items:center;gap:var(--s-2)}
+.icon-btn{position:relative;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:var(--text);transition:background var(--t-fast),color var(--t-fast)}
+.icon-btn i{font-size:var(--icon-md)}
+.icon-btn:hover{background:var(--primary-100);color:var(--primary-700)}
+.cart-badge .cart-num{position:absolute;top:-2px;right:-2px;background:var(--accent-gold);color:var(--primary-900);font-size:11px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg)}
+
+/* Header secondary bar (Kurumsal + Hakkımızda links) */
+.header-top{background:var(--bg);border-bottom:1px solid var(--border);font-size:var(--fs-xs)}
+.header-top .container{display:flex;justify-content:flex-end;align-items:center;gap:var(--s-5);min-height:38px}
+.header-top .top-link{font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text-2);padding:6px 4px;display:inline-flex;align-items:center;gap:6px;position:relative}
+.header-top .top-link i{font-size:10px;color:var(--muted)}
+.header-top .top-link:hover{color:var(--primary-700)}
+.header-top .has-dd{cursor:pointer}
+.header-top .dd-menu{position:absolute;top:calc(100% + 2px);right:0;background:#fff;border:1px solid var(--border);border-radius:var(--r-sm);box-shadow:var(--shadow-2);padding:4px 0;min-width:160px;display:none;z-index:60}
+.header-top .has-dd:hover .dd-menu,.header-top .dd-menu:hover{display:block}
+.header-top .dd-menu a{display:block;padding:7px 14px;font-size:var(--fs-xs);font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text-2);text-align:right;line-height:1.3}
+.header-top .dd-menu a:hover{background:var(--primary-100);color:var(--primary-700)}
+
+/* Main nav (in header row 1, center) */
+.nav{display:flex;justify-content:center;gap:var(--s-8);flex:1}
+.nav a{font-size:var(--fs-sm);font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:8px 0;position:relative;color:var(--text);white-space:nowrap}
+.nav a::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--primary-700);transition:width var(--t-fast)}
+.nav a:hover::after,.nav a.active::after{width:100%}
+.nav a.active{color:var(--primary-700)}
+
+@media(max-width:1024px){
+  .nav{display:none}
+  .header-row1{height:auto;padding:var(--s-4) 0;gap:var(--s-4)}
+  .header-top{display:none}
+}
+
+/* BTN — tight radius matching input scale */
+.btn{display:inline-flex;align-items:center;gap:var(--s-2);padding:14px 28px;border-radius:var(--r-sm);font-size:var(--fs-sm);font-weight:700;letter-spacing:.04em;text-transform:uppercase;transition:transform var(--t-fast),background var(--t-fast),color var(--t-fast)}
+.btn-primary{background:var(--primary-700);color:#fff}
+.btn-primary:hover{background:var(--primary-900);color:#fff;transform:translateY(-2px)}
+.btn-outline{background:transparent;color:var(--primary-700);border:2px solid var(--primary-700)}
+.btn-outline:hover{background:var(--primary-700);color:#fff}
+.btn-block{width:100%;justify-content:center}
+
+/* HERO */
+.hero{padding:var(--s-8) 0 0}
+.hero-slider{position:relative;border-radius:var(--r-xl);overflow:hidden;min-height:70vh;background:radial-gradient(ellipse at 90% 100%,rgba(59,74,42,.18) 0%,transparent 55%),linear-gradient(120deg,#FAF6EE 0%,#EDE0C8 55%,#D6C29A 100%);color:var(--text)}
+.hero-slide{display:grid;grid-template-columns:1fr 1fr;align-items:center;min-height:70vh;gap:var(--s-10);padding:var(--s-12)}
+.hero-text{max-width:540px}
+.hero-text .eyebrow{display:inline-block;background:var(--primary-700);color:#fff;padding:6px 14px;border-radius:var(--r-pill);font-size:var(--fs-xs);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:var(--s-5)}
+.hero-text h1{font-size:var(--fs-hero);font-weight:800;line-height:1.05;margin-bottom:var(--s-5);letter-spacing:-0.025em}
+.hero-text p{font-size:var(--fs-md);margin-bottom:var(--s-8);opacity:.85;max-width:460px;line-height:1.55}
+.hero-visual{align-self:stretch;border-radius:var(--r-lg);overflow:hidden;background-color:rgba(255,255,255,.4);background-image:radial-gradient(ellipse at 30% 30%,rgba(59,74,42,.12) 0%,transparent 60%),repeating-linear-gradient(45deg,rgba(59,74,42,.08) 0 14px,rgba(59,74,42,0) 14px 28px);border:1px solid rgba(0,0,0,.06);min-height:380px;position:relative}
+.hero-visual img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-dots{position:absolute;bottom:var(--s-6);left:50%;transform:translateX(-50%);display:flex;gap:var(--s-2)}
+.hero-dots span{width:10px;height:10px;border-radius:50%;background:rgba(0,0,0,.2);cursor:pointer;transition:all var(--t-fast)}
+.hero-dots span.active{background:var(--primary-700);width:28px;border-radius:var(--r-pill)}
+
+/* SECTION */
+.section{padding:96px 0}
+@media(max-width:768px){.section{padding:56px 0}}
+.section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:var(--s-10);gap:var(--s-4);flex-wrap:wrap}
+.section-head h2{font-size:var(--fs-3xl);font-weight:700;letter-spacing:-0.02em;position:relative;padding-bottom:var(--s-3)}
+.section-head h2::after{content:"";position:absolute;left:0;bottom:0;width:40px;height:3px;background:var(--primary-700);border-radius:var(--r-pill)}
+.section-head .more{font-size:var(--fs-sm);font-weight:600;color:var(--primary-700);display:inline-flex;align-items:center;gap:6px}
+.section-head .more i{transition:transform var(--t-fast)}
+.section-head .more:hover i{transform:translateX(4px)}
+
+/* KATEGORI */
+.cat-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--s-5)}
+.cat{border-radius:var(--r-lg);overflow:hidden;background:var(--bg-card);height:240px;position:relative;cursor:pointer;transition:transform var(--t-mid),box-shadow var(--t-mid);display:block}
+.cat:hover{transform:translateY(-6px);box-shadow:var(--shadow-2)}
+.cat img{width:100%;height:100%;object-fit:cover;transition:transform var(--t-mid),filter var(--t-mid);filter:brightness(.92)}
+.cat:hover img{transform:scale(1.06);filter:brightness(1)}
+.cat::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,.22) 100%);pointer-events:none;transition:opacity var(--t-mid)}
+.cat:hover::before{opacity:.5}
+.cat .label{position:absolute;left:50%;bottom:var(--s-4);transform:translateX(-50%);background:rgba(255,255,255,.95);color:var(--primary-900);padding:8px 18px;border-radius:var(--r-pill);font-weight:700;font-size:var(--fs-sm);letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.08);transition:background var(--t-fast),color var(--t-fast)}
+.cat:hover .label{background:var(--primary-700);color:#fff}
+
+/* BANNER */
+.banner-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-6)}
+.banner{border-radius:var(--r-xl);overflow:hidden;position:relative;aspect-ratio:16/9;cursor:pointer;transition:transform var(--t-mid),box-shadow var(--t-mid);background:linear-gradient(135deg,var(--primary-700),var(--primary-900))}
+.banner:hover{transform:translateY(-4px);box-shadow:var(--shadow-2)}
+.banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55;transition:transform var(--t-mid),opacity var(--t-mid)}
+.banner:hover img{transform:scale(1.04);opacity:.65}
+.banner::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(42,53,32,.55) 0%,rgba(42,53,32,.15) 100%)}
+.banner-text{position:absolute;left:var(--s-10);bottom:var(--s-10);right:var(--s-10);color:#fff;z-index:2}
+.banner-text small{display:inline-block;background:rgba(255,255,255,.18);padding:4px 10px;border-radius:var(--r-pill);font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:.1em;font-weight:600;margin-bottom:var(--s-3)}
+.banner-text h3{font-size:var(--fs-xl);font-weight:700;margin-top:var(--s-2);line-height:1.2}
+.banner-text .banner-cta{display:inline-flex;align-items:center;gap:var(--s-2);margin-top:var(--s-4);font-size:var(--fs-sm);font-weight:700;padding:10px 20px;border-radius:var(--r-sm);background:#fff;color:var(--primary-900)}
+.banner-text .banner-cta i{transition:transform var(--t-fast)}
+.banner:hover .banner-cta i{transform:translateX(4px)}
+
+/* PRODUCT CARD */
+.product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-5)}
+.product{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;display:flex;flex-direction:column;transition:box-shadow var(--t-mid),transform var(--t-mid);position:relative}
+.product:hover{box-shadow:var(--shadow-2);transform:translateY(-4px)}
+.product .img-wrap{aspect-ratio:1/1;background:var(--bg-product);overflow:hidden;position:relative;border-bottom:1px solid var(--border)}
+.product .img-wrap a{display:block;height:100%}
+.product img.product-img{width:100%;height:100%;object-fit:cover;transition:transform var(--t-mid)}
+.product:hover img.product-img{transform:scale(1.04)}
+.product .img-fallback{background-image:linear-gradient(135deg,rgba(0,0,0,.04) 0%,rgba(0,0,0,0) 60%),repeating-linear-gradient(45deg,rgba(59,74,42,.06) 0 12px,rgba(59,74,42,0) 12px 24px)}
+.badge{position:absolute;top:var(--s-3);left:var(--s-3);background:var(--primary-900);color:var(--bg);font-size:10px;font-weight:700;padding:5px 10px;border-radius:var(--r-pill);text-transform:uppercase;letter-spacing:.08em;z-index:1}
+.badge.sale{background:var(--accent-red)}
+.badge.gold{background:var(--accent-gold);color:var(--primary-900)}
+.fav-btn{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:transparent;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);z-index:2;transition:color var(--t-fast),transform var(--t-fast)}
+.fav-btn i{font-size:16px;text-shadow:0 1px 2px rgba(255,255,255,.8)}
+.fav-btn:hover{color:var(--accent-red);transform:scale(1.1)}
+.product-body{padding:var(--s-4);display:flex;flex-direction:column;gap:var(--s-3);flex:1}
+.product-title{font-size:var(--fs-sm);font-weight:600;min-height:42px;line-height:1.4;color:var(--text)}
+.product-title:hover{color:var(--primary-700)}
+.rating{display:flex;align-items:center;gap:6px;font-size:var(--fs-xs);color:var(--muted)}
+.rating .stars{color:var(--accent-gold);letter-spacing:1px;font-size:12px}
+.product-meta{display:flex;align-items:center;justify-content:space-between}
+.price{font-size:var(--fs-md);font-weight:800;color:var(--primary-900)}
+.price s{color:var(--muted);font-weight:400;font-size:var(--fs-xs);margin-left:6px}
+.add-cart{background:var(--primary-700);color:#fff;padding:12px 16px;border-radius:var(--r-sm);font-size:var(--fs-xs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;width:100%;transition:background var(--t-fast),transform var(--t-fast);display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2)}
+.add-cart:hover{background:var(--primary-900);transform:translateY(-1px);color:#fff}
+
+/* FOOTER */
+.footer{background:var(--bg-section);padding:var(--s-12) 0 var(--s-6);margin-top:96px}
+.footer-cols{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:var(--s-8);padding-bottom:var(--s-10);border-bottom:1px solid var(--border)}
+.footer h4{font-size:var(--fs-sm);font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-bottom:var(--s-4)}
+.footer ul li{padding:6px 0}
+.footer ul li a{color:var(--text-2);font-size:var(--fs-sm)}
+.footer-brand p{color:var(--muted);font-size:var(--fs-sm);margin-top:var(--s-3);max-width:300px}
+.footer-bottom{padding-top:var(--s-5);display:flex;justify-content:space-between;align-items:center;font-size:var(--fs-xs);color:var(--muted);flex-wrap:wrap;gap:var(--s-4)}
+.socials{display:flex;gap:var(--s-3);margin-top:var(--s-4)}
+.socials a{width:38px;height:38px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:all var(--t-fast)}
+.socials a i{font-size:var(--icon-md)}
+.socials a:hover{background:var(--primary-700);color:#fff}
+.policies{display:flex;gap:var(--s-4);flex-wrap:wrap}
+.contact-line{display:flex;align-items:center;gap:var(--s-2);color:var(--text-2);font-size:var(--fs-sm);padding:6px 0}
+.contact-line i{color:var(--primary-700);width:16px}
+
+/* SHOP PAGE — magaza */
+.crumb{font-size:var(--fs-sm);color:var(--muted);padding:var(--s-6) 0;display:flex;align-items:center;gap:var(--s-2);flex-wrap:wrap}
+.crumb a{color:var(--muted)}
+.crumb a:hover{color:var(--primary-700)}
+.crumb .sep{font-size:10px;color:var(--muted-2)}
+.crumb .active{color:var(--text);font-weight:600}
+
+.page-head{display:grid;grid-template-columns:1fr auto;align-items:end;gap:var(--s-6);padding-bottom:var(--s-10);border-bottom:1px solid var(--border)}
+.page-head h1{font-size:40px;font-weight:700;letter-spacing:-0.02em;margin-bottom:var(--s-3)}
+.page-head .lead{color:var(--text-2);max-width:520px}
+.page-head .meta{display:flex;align-items:center;gap:var(--s-5);font-size:var(--fs-sm);color:var(--muted)}
+.page-head .sort{display:inline-flex;align-items:center;gap:var(--s-2);background:#fff;border:1px solid var(--border);padding:10px 16px;border-radius:var(--r-sm);font-weight:600;color:var(--text);cursor:pointer}
+.page-head .sort i{color:var(--muted);font-size:11px}
+
+.shop-layout{display:grid;grid-template-columns:280px 1fr;gap:var(--s-10);padding:var(--s-10) 0 96px;align-items:start}
+.filter-panel{position:sticky;top:120px;align-self:start;background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-6);max-height:calc(100vh - 140px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.filter-panel::-webkit-scrollbar{width:6px}
+.filter-panel::-webkit-scrollbar-track{background:transparent}
+.filter-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:var(--r-pill)}
+.filter-panel .fp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--s-4)}
+.filter-panel .fp-head h3{font-size:var(--fs-md);font-weight:700}
+.filter-panel .clear-link{font-size:var(--fs-xs);color:var(--accent-gold);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.filter-panel .clear-link:hover{color:var(--accent-earth)}
+.acc{border-top:1px solid var(--border)}
+.acc-head{display:flex;justify-content:space-between;align-items:center;width:100%;padding:var(--s-4) 0;font-size:var(--fs-sm);font-weight:700;color:var(--text);text-align:left;text-transform:uppercase;letter-spacing:.04em}
+.acc-head i{transition:transform var(--t-fast);color:var(--muted);font-size:11px}
+.acc.open .acc-head i{transform:rotate(180deg)}
+.acc-body{display:none;padding:0 0 var(--s-4) var(--s-4);border-left:2px solid var(--primary-700);margin-bottom:var(--s-3)}
+.acc.open .acc-body{display:block}
+.acc-body label{display:flex;align-items:center;gap:10px;padding:7px 0;font-size:var(--fs-sm);color:var(--text-2);cursor:pointer;line-height:1.4}
+.acc-body label:hover{color:var(--primary-700)}
+.acc-body label input[type="checkbox"]{flex:0 0 16px;width:16px;height:16px;margin:0;accent-color:var(--primary-700);cursor:pointer}
+.acc-body label .text{flex:1 1 auto;min-width:0}
+.acc-body .count{flex:0 0 auto;color:var(--muted);font-size:11px;font-weight:600;background:var(--bg-product);padding:2px 8px;border-radius:var(--r-sm);margin-left:auto}
+/* Price range — slider above, inputs below; no overlap */
+.slider-track{margin:var(--s-2) 6px var(--s-4);height:4px;background:var(--bg-card);border-radius:var(--r-pill);position:relative}
+.slider-track::after{content:"";position:absolute;left:8%;right:25%;top:0;bottom:0;background:var(--primary-700);border-radius:var(--r-pill)}
+.slider-track .knob{position:absolute;width:14px;height:14px;background:var(--primary-700);border-radius:50%;top:50%;transform:translateY(-50%);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.slider-track .knob.k1{left:8%}
+.slider-track .knob.k2{right:25%}
+.range-row{display:flex;gap:var(--s-2);margin-top:0}
+.range-row input{flex:1 1 0;min-width:0;width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--r-sm);font-size:var(--fs-xs);font-family:inherit;background:#fff;color:var(--text);text-align:center}
+.range-row input:focus{outline:none;border-color:var(--primary-700);box-shadow:0 0 0 2px rgba(59,74,42,.08)}
+
+.shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-5)}
+
+.pagination{display:flex;justify-content:center;align-items:center;gap:var(--s-2);margin-top:var(--s-12)}
+.pagination a,.pagination span{width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;font-size:var(--fs-sm);font-weight:600;color:var(--text);background:#fff;border:1px solid var(--border);transition:all var(--t-fast)}
+.pagination a:hover{border-color:var(--primary-700);color:var(--primary-700)}
+.pagination .active{background:var(--primary-700);color:#fff;border-color:var(--primary-700)}
+.pagination .gap{border:0;background:transparent}
+
+@media(max-width:1024px){
+  .shop-layout{grid-template-columns:1fr}
+  .filter-panel{position:static}
+  .shop-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:480px){
+  .shop-grid{grid-template-columns:1fr}
+}
+
+/* PRODUCT DETAIL */
+.pd{display:grid;grid-template-columns:1.5fr 1fr;gap:var(--s-12);padding:var(--s-6) 0 96px}
+.pd-gallery .main-img{aspect-ratio:1/1;background:var(--bg-product);border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--border)}
+.pd-gallery .main-img img{width:100%;height:100%;object-fit:cover}
+.pd-thumbs{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--s-3);margin-top:var(--s-4)}
+.pd-thumbs .thumb{aspect-ratio:1/1;background:var(--bg-product);border:2px solid transparent;border-radius:var(--r-md);overflow:hidden;cursor:pointer;transition:border-color var(--t-fast)}
+.pd-thumbs .thumb img{width:100%;height:100%;object-fit:cover}
+.pd-thumbs .thumb.active,.pd-thumbs .thumb:hover{border-color:var(--primary-700)}
+
+.pd-info{position:sticky;top:120px;align-self:start}
+.pd-info .producer{font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:var(--s-2)}
+.pd-info h1{font-size:var(--fs-2xl);font-weight:700;line-height:1.2;margin-bottom:var(--s-3)}
+.pd-rating{display:flex;align-items:center;gap:var(--s-3);margin-bottom:var(--s-5);font-size:var(--fs-sm);color:var(--muted)}
+.pd-rating .stars{color:var(--accent-gold);letter-spacing:2px}
+.pd-rating a{color:var(--primary-700);text-decoration:underline}
+.pd-price{display:flex;align-items:baseline;gap:var(--s-3);margin-bottom:var(--s-2)}
+.pd-price .now{font-size:36px;font-weight:800;color:var(--primary-900);letter-spacing:-0.02em}
+.pd-price .old{font-size:var(--fs-md);color:var(--muted);text-decoration:line-through}
+.pd-price .pct{background:var(--accent-red);color:#fff;font-size:var(--fs-xs);font-weight:700;padding:4px 8px;border-radius:var(--r-sm)}
+.pd-installment{font-size:var(--fs-xs);color:var(--muted);margin-bottom:var(--s-5)}
+.pd-stock{display:inline-flex;align-items:center;gap:var(--s-2);font-size:var(--fs-sm);color:var(--accent-success);font-weight:600;margin-bottom:var(--s-6)}
+.pd-stock i{font-size:8px}
+.pd-row{margin-bottom:var(--s-6)}
+.pd-row .label{font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;margin-bottom:var(--s-3)}
+.pd-variants{display:flex;gap:var(--s-2);flex-wrap:wrap}
+.pd-variants button{padding:10px 16px;border:2px solid var(--border);border-radius:var(--r-md);background:#fff;font-size:var(--fs-sm);font-weight:600;color:var(--text);transition:all var(--t-fast);min-width:80px}
+.pd-variants button:hover{border-color:var(--primary-700)}
+.pd-variants button.active{border-color:var(--primary-700);background:var(--primary-100);color:var(--primary-900)}
+.pd-variants button .vp{display:block;font-size:11px;color:var(--muted);font-weight:500;margin-top:2px}
+.pd-variants button.active .vp{color:var(--primary-700)}
+.pd-qty{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:var(--r-pill);overflow:hidden;background:#fff}
+.pd-qty button{width:42px;height:42px;font-size:var(--fs-md);color:var(--text)}
+.pd-qty button:hover{background:var(--primary-100);color:var(--primary-700)}
+.pd-qty .num{width:48px;text-align:center;font-weight:700;font-size:var(--fs-md)}
+.pd-actions{display:flex;flex-direction:column;gap:var(--s-3);margin-bottom:var(--s-6)}
+.pd-fav{display:inline-flex;align-items:center;gap:var(--s-2);font-size:var(--fs-sm);color:var(--text-2);font-weight:600;padding:var(--s-3) 0}
+.pd-fav i{color:var(--accent-red)}
+.pd-fav:hover{color:var(--accent-red)}
+.pd-perks{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3);padding-top:var(--s-5);border-top:1px solid var(--border)}
+.pd-perk{display:flex;gap:var(--s-3);align-items:flex-start;font-size:var(--fs-xs);color:var(--text-2)}
+.pd-perk i{color:var(--primary-700);font-size:var(--icon-md);margin-top:2px;width:24px;text-align:center}
+.pd-perk b{display:block;font-weight:700;color:var(--text);margin-bottom:2px;font-size:var(--fs-sm)}
+
+/* TABS */
+.tabs{margin-top:var(--s-12);border-top:1px solid var(--border)}
+.tabs-head{display:flex;gap:0;border-bottom:1px solid var(--border);overflow-x:auto}
+.tabs-head button{padding:var(--s-5) var(--s-6);font-size:var(--fs-sm);font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;border-bottom:3px solid transparent;white-space:nowrap;transition:all var(--t-fast)}
+.tabs-head button.active{color:var(--primary-700);border-bottom-color:var(--primary-700)}
+.tabs-head button:hover{color:var(--text)}
+.tab-panel{display:none;padding:var(--s-8) 0;line-height:1.7}
+.tab-panel.active{display:block}
+.tab-panel p{margin-bottom:var(--s-4);max-width:780px;color:var(--text-2)}
+.spec-table{width:100%;max-width:680px;border-collapse:collapse}
+.spec-table tr{border-bottom:1px solid var(--border)}
+.spec-table th,.spec-table td{text-align:left;padding:var(--s-3) var(--s-4);font-size:var(--fs-sm)}
+.spec-table th{color:var(--muted);font-weight:600;width:200px}
+.spec-table td{color:var(--text);font-weight:500}
+.review{padding:var(--s-5) 0;border-bottom:1px solid var(--border);max-width:780px}
+.review:last-child{border-bottom:0}
+.review .rh{display:flex;justify-content:space-between;font-size:var(--fs-xs);color:var(--muted);margin-bottom:var(--s-2)}
+.review .rh b{color:var(--text);font-size:var(--fs-sm);font-weight:700}
+.review .stars{color:var(--accent-gold);letter-spacing:2px;margin-bottom:var(--s-2)}
+
+@media(max-width:1024px){
+  .pd{grid-template-columns:1fr;gap:var(--s-8)}
+  .pd-info{position:static}
+}
+
+/* HIKAYEMIZ — story page */
+.story-hero{background:var(--primary-700);color:#fff;padding:96px 0;border-radius:0}
+.story-hero .wrap{display:grid;grid-template-columns:1.1fr 1fr;gap:var(--s-12);align-items:center}
+.story-hero .eyebrow{display:inline-block;font-size:var(--fs-xs);font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-gold);margin-bottom:var(--s-5)}
+.story-hero h1{font-size:48px;font-weight:800;line-height:1.1;letter-spacing:-0.025em;margin-bottom:var(--s-6);color:#fff}
+.story-hero h1 em{font-style:normal;color:var(--accent-gold)}
+.story-hero p{font-size:var(--fs-md);line-height:1.6;opacity:.85;max-width:520px}
+.story-hero .visual{aspect-ratio:4/3;border-radius:var(--r-lg);overflow:hidden;background:rgba(255,255,255,.06)}
+.story-hero .visual img{width:100%;height:100%;object-fit:cover}
+
+.story-intro{padding:96px 0}
+.story-intro .lead{max-width:780px;margin:0 auto var(--s-12);text-align:center}
+.story-intro .lead h2{font-size:var(--fs-3xl);font-weight:700;letter-spacing:-0.02em;margin-bottom:var(--s-5);line-height:1.2}
+.story-intro .lead p{color:var(--text-2);font-size:var(--fs-md);line-height:1.7}
+.story-intro .pillars{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:var(--s-8)}
+.pillar{display:grid;grid-template-columns:auto 1fr;gap:var(--s-5);align-items:start;padding:var(--s-6) 0;border-bottom:1px solid var(--border)}
+.pillar:last-child{border-bottom:0}
+.pillar .num{font-size:var(--fs-2xl);font-weight:800;color:var(--accent-gold);line-height:1;letter-spacing:-0.02em;min-width:54px}
+.pillar h3{font-size:var(--fs-lg);font-weight:700;color:var(--text);margin-bottom:var(--s-3)}
+.pillar p{color:var(--text-2);line-height:1.7;max-width:640px}
+
+.divider-section{background:var(--primary-700);color:#fff;padding:96px 0}
+.divider-section .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:var(--s-12);align-items:center}
+.divider-section h2{font-size:42px;font-weight:800;line-height:1.15;letter-spacing:-0.02em;margin-bottom:var(--s-6);color:#fff}
+.divider-section h2 em{font-style:normal;color:var(--accent-gold)}
+.divider-section p{font-size:var(--fs-md);line-height:1.7;opacity:.88;max-width:580px;margin-bottom:var(--s-8)}
+.divider-section .btn-light{background:var(--accent-gold);color:var(--primary-900);padding:14px 28px;border-radius:var(--r-sm);font-size:var(--fs-sm);font-weight:700;letter-spacing:.04em;text-transform:uppercase;display:inline-flex;align-items:center;gap:var(--s-2);transition:transform var(--t-fast),background var(--t-fast)}
+.divider-section .btn-light:hover{background:#d8b46c;color:var(--primary-900);transform:translateY(-2px)}
+.divider-section .visual{aspect-ratio:4/5;border-radius:var(--r-lg);overflow:hidden}
+.divider-section .visual img{width:100%;height:100%;object-fit:cover}
+
+.stats-section{padding:96px 0}
+.stats-section .lead{max-width:780px;margin:0 auto var(--s-12)}
+.stats-section .eyebrow{display:inline-block;font-size:var(--fs-xs);font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--primary-700);margin-bottom:var(--s-4)}
+.stats-section h2{font-size:var(--fs-3xl);font-weight:700;letter-spacing:-0.02em;margin-bottom:var(--s-5);line-height:1.2}
+.stats-section .lead p{color:var(--text-2);font-size:var(--fs-md);line-height:1.7}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-5)}
+.stat-card{background:var(--bg-product);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-10) var(--s-8);transition:transform var(--t-mid),box-shadow var(--t-mid),border-color var(--t-fast)}
+.stat-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-2);border-color:var(--accent-gold)}
+.stat-card .big{font-size:72px;font-weight:800;color:var(--accent-gold);line-height:1;letter-spacing:-0.04em;margin-bottom:var(--s-4)}
+.stat-card h3{font-size:var(--fs-lg);font-weight:700;color:var(--primary-900);margin-bottom:var(--s-3)}
+.stat-card p{color:var(--text-2);font-size:var(--fs-sm);line-height:1.6}
+
+@media(max-width:1024px){
+  .story-hero .wrap,.divider-section .wrap{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr;gap:var(--s-4)}
+  .story-hero h1{font-size:36px}
+  .divider-section h2{font-size:32px}
+  .stat-card .big{font-size:56px}
+  .pillar{grid-template-columns:1fr;gap:var(--s-2)}
+  .story-hero,.story-intro,.divider-section,.stats-section{padding:56px 0}
+}
+
+/* KURUMSAL SATIS — v2.7.1 KD-style 2-col content+form */
+.ks-layout{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-12);padding:var(--s-8) 0 96px;align-items:start}
+
+.ks-content h1{font-size:44px;font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:var(--s-5);color:var(--text)}
+.ks-content .lead{font-size:var(--fs-lg);font-weight:700;color:var(--primary-900);line-height:1.4;margin-bottom:var(--s-6)}
+.ks-content p{color:var(--text-2);font-size:var(--fs-md);line-height:1.75;margin-bottom:var(--s-5);max-width:560px}
+.ks-content .links{display:flex;flex-direction:column;gap:var(--s-3);margin:var(--s-6) 0;padding:var(--s-5) 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.ks-content .link-cat{display:inline-flex;align-items:center;gap:var(--s-3);color:var(--primary-700);font-size:var(--fs-md);font-weight:700;text-decoration:none;padding:6px 0;transition:color var(--t-fast),transform var(--t-fast)}
+.ks-content .link-cat:hover{color:var(--primary-900);transform:translateX(3px)}
+.ks-content .link-cat i.tag{width:32px;height:32px;border-radius:50%;background:var(--primary-100);color:var(--primary-700);display:inline-flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 32px}
+.ks-content .link-cat span small{display:block;font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:1px}
+.ks-content .link-cat .arrow{margin-left:auto;font-size:13px;color:var(--muted);transition:transform var(--t-fast),color var(--t-fast)}
+.ks-content .link-cat:hover .arrow{color:var(--primary-700);transform:translateX(3px)}
+.ks-content .quick-contact{display:flex;flex-wrap:wrap;gap:var(--s-5) var(--s-8);margin-top:var(--s-6);padding-top:var(--s-5);border-top:1px solid var(--border);font-size:var(--fs-sm)}
+.ks-content .quick-contact a{display:inline-flex;align-items:center;gap:8px;color:var(--text-2);font-weight:600}
+.ks-content .quick-contact a:hover{color:var(--primary-700)}
+.ks-content .quick-contact i{color:var(--primary-700);font-size:14px}
+
+.ks-form-panel{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-10);position:relative;overflow:hidden;box-shadow:var(--shadow-1)}
+.ks-form-panel::before{content:"";position:absolute;right:-60px;top:-60px;width:280px;height:280px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' fill='none' stroke='%233B4A2A' stroke-width='1' opacity='0.08'><ellipse cx='100' cy='100' rx='80' ry='30' transform='rotate(35 100 100)'/><ellipse cx='100' cy='100' rx='10' ry='6' transform='rotate(35 100 100) translate(-50 0)'/><ellipse cx='100' cy='100' rx='10' ry='6' transform='rotate(35 100 100) translate(-25 0)'/><ellipse cx='100' cy='100' rx='10' ry='6' transform='rotate(35 100 100) translate(0 0)'/><ellipse cx='100' cy='100' rx='10' ry='6' transform='rotate(35 100 100) translate(25 0)'/><ellipse cx='100' cy='100' rx='10' ry='6' transform='rotate(35 100 100) translate(50 0)'/><path d='M30 100 Q100 100 170 100' stroke-width='1.5'/></svg>") no-repeat center/contain;opacity:.7;pointer-events:none}
+.ks-form-panel > *{position:relative;z-index:1}
+.ks-form-panel h2{font-size:var(--fs-xl);font-weight:700;color:var(--primary-900);margin-bottom:var(--s-2)}
+.ks-form-panel .form-lead{color:var(--text-2);font-size:var(--fs-sm);margin-bottom:var(--s-6)}
+
+.ks-form-panel .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4)}
+.ks-form-panel .field{display:flex;flex-direction:column;gap:6px}
+.ks-form-panel .field.full{grid-column:1/-1}
+.ks-form-panel .field label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.ks-form-panel .field input,.ks-form-panel .field select,.ks-form-panel .field textarea{
+  font-family:inherit;font-size:var(--fs-sm);color:var(--text);
+  padding:12px 14px;border:1px solid var(--border);
+  border-radius:var(--r-sm);
+  background:#fff;transition:border-color var(--t-fast),box-shadow var(--t-fast);width:100%
+}
+.ks-form-panel .field textarea{resize:vertical;min-height:120px;line-height:1.5}
+.ks-form-panel .field input:focus,.ks-form-panel .field select:focus,.ks-form-panel .field textarea:focus{outline:none;border-color:var(--primary-700);box-shadow:0 0 0 3px rgba(59,74,42,.08)}
+.ks-form-panel .field label{padding-left:0}
+
+/* Telephone input group: single outer border, prefix span borderless */
+.tel-group{display:flex;align-items:stretch;border:1px solid var(--border);border-radius:var(--r-sm);background:#fff;overflow:hidden;transition:border-color var(--t-fast),box-shadow var(--t-fast)}
+.tel-group:focus-within{border-color:var(--primary-700);box-shadow:0 0 0 3px rgba(59,74,42,.08)}
+.tel-group .ccode{display:inline-flex;align-items:center;padding:0 14px;font-size:var(--fs-sm);font-weight:700;color:var(--text-2);background:var(--bg-soft);border-right:1px solid var(--border)}
+.ks-form-panel .field .tel-group input{border:0;border-radius:0;flex:1;padding:12px 14px;font-size:var(--fs-sm);background:transparent;outline:none;color:var(--text);font-family:inherit;width:auto;box-shadow:none}
+.ks-form-panel .field .tel-group input:focus{box-shadow:none;border:0}
+
+.check-row{display:flex;align-items:flex-start;gap:10px;padding:var(--s-4) 0;font-size:var(--fs-sm);color:var(--text-2);line-height:1.5;cursor:pointer}
+.check-row input{flex:0 0 18px;width:18px;height:18px;margin-top:2px;accent-color:var(--primary-700);cursor:pointer}
+.check-row a{color:var(--primary-700);text-decoration:underline}
+.check-row.kvkk{padding:var(--s-3) 0 var(--s-4);border-top:1px solid var(--border);margin-top:var(--s-3)}
+
+.ks-form-panel .actions{margin-top:var(--s-5);display:flex;justify-content:flex-end}
+.form-success{display:none;padding:var(--s-4) var(--s-5);background:var(--primary-100);color:var(--primary-900);border-radius:var(--r-sm);font-size:var(--fs-sm);margin-bottom:var(--s-4);font-weight:600}
+.form-success.show{display:block}
+
+@media(max-width:1024px){
+  .ks-layout{grid-template-columns:1fr;gap:var(--s-8);padding:var(--s-6) 0 56px}
+  .ks-content h1{font-size:32px}
+  .ks-form-panel{padding:var(--s-6)}
+  .ks-form-panel .form-grid{grid-template-columns:1fr}
+}
+
+/* SSS */
+.sss-title{padding:var(--s-6) 0 var(--s-8);max-width:780px}
+.sss-title .eyebrow{display:inline-block;font-size:var(--fs-xs);font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--primary-700);margin-bottom:var(--s-3)}
+.sss-title h1{font-size:42px;font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:var(--s-4);color:var(--text);position:relative;padding-bottom:var(--s-3)}
+.sss-title h1::after{content:"";position:absolute;left:0;bottom:0;width:40px;height:3px;background:var(--primary-700);border-radius:var(--r-pill)}
+.sss-title p{color:var(--text-2);font-size:var(--fs-md);line-height:1.6}
+
+.sss-layout{display:grid;grid-template-columns:260px 1fr;gap:var(--s-10);padding:var(--s-6) 0 96px;align-items:start}
+.sss-nav{position:sticky;top:120px;background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-5);align-self:start}
+.sss-nav h3{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:var(--s-3);padding:0 var(--s-3)}
+.sss-nav ul li a{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;font-size:var(--fs-sm);color:var(--text-2);border-radius:var(--r-sm);font-weight:500;transition:background var(--t-fast),color var(--t-fast)}
+.sss-nav ul li a:hover,.sss-nav ul li a.active{background:var(--primary-100);color:var(--primary-700);font-weight:700}
+.sss-nav ul li a .num{font-size:11px;color:var(--muted);font-weight:600}
+.sss-nav ul li a:hover .num,.sss-nav ul li a.active .num{color:var(--primary-700)}
+
+.sss-cats{display:flex;flex-direction:column;gap:var(--s-12)}
+.sss-cat h2{font-size:var(--fs-2xl);font-weight:700;color:var(--primary-900);margin-bottom:var(--s-2);scroll-margin-top:120px}
+.sss-cat .cat-lead{color:var(--muted);font-size:var(--fs-sm);margin-bottom:var(--s-5)}
+.sss-list{display:flex;flex-direction:column;gap:var(--s-2)}
+.qa{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;transition:border-color var(--t-fast),box-shadow var(--t-fast)}
+.qa:hover{border-color:var(--primary-200)}
+.qa.open{border-color:var(--primary-700);box-shadow:var(--shadow-1)}
+.qa-q{display:flex;justify-content:space-between;align-items:center;width:100%;padding:18px 22px;font-size:var(--fs-md);font-weight:600;color:var(--text);text-align:left;line-height:1.4;gap:var(--s-4)}
+.qa-q .qa-icon{flex:0 0 32px;width:32px;height:32px;border-radius:50%;background:var(--bg-product);color:var(--text-2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;transition:background var(--t-fast),color var(--t-fast),transform var(--t-fast)}
+.qa.open .qa-q{color:var(--primary-700)}
+.qa.open .qa-icon{background:var(--primary-700);color:#fff;transform:rotate(180deg)}
+.qa-a{display:none;padding:0 22px 22px;color:var(--text-2);font-size:var(--fs-sm);line-height:1.7;max-width:780px}
+.qa.open .qa-a{display:block}
+.qa-a a{color:var(--primary-700);text-decoration:underline}
+
+@media(max-width:1024px){
+  .sss-layout{grid-template-columns:1fr;gap:var(--s-6);padding:var(--s-4) 0 56px}
+  .sss-nav{position:static}
+  .sss-title h1{font-size:32px}
+}
+
+/* CONTACT */
+.contact-title{padding:var(--s-6) 0 var(--s-8);max-width:780px}
+.contact-title h1{font-size:40px;font-weight:700;letter-spacing:-0.025em;line-height:1.1;margin-bottom:var(--s-4);color:var(--text);position:relative;padding-bottom:var(--s-3)}
+.contact-title h1::after{content:"";position:absolute;left:0;bottom:0;width:40px;height:3px;background:var(--primary-700);border-radius:var(--r-pill)}
+.contact-title p{color:var(--text-2);font-size:var(--fs-md);line-height:1.6}
+
+.contact-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:var(--s-10);padding:0 0 80px}
+.contact-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-10);align-self:start}
+.contact-card h2{font-size:var(--fs-xl);font-weight:700;margin-bottom:var(--s-6);color:var(--primary-900)}
+.contact-row{display:flex;gap:var(--s-4);padding:var(--s-4) 0;border-top:1px solid var(--border)}
+.contact-row:first-of-type{border-top:0;padding-top:0}
+.contact-row .ico{flex:0 0 40px;width:40px;height:40px;border-radius:50%;background:var(--primary-100);color:var(--primary-700);display:inline-flex;align-items:center;justify-content:center;font-size:var(--icon-md)}
+.contact-row .ic-body b{display:block;font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;margin-bottom:4px}
+.contact-row .ic-body span,.contact-row .ic-body a{font-size:var(--fs-sm);color:var(--text);font-weight:500;line-height:1.5}
+.contact-row .ic-body a:hover{color:var(--primary-700)}
+.contact-card .socials{margin-top:var(--s-6);padding-top:var(--s-5);border-top:1px solid var(--border);display:flex;gap:var(--s-2)}
+.contact-card .socials a{width:40px;height:40px;border-radius:50%;background:var(--bg-product);color:var(--text-2)}
+.contact-card .socials a:hover{background:var(--primary-700);color:#fff}
+
+.contact-form{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--s-10)}
+.contact-form h2{font-size:var(--fs-xl);font-weight:700;margin-bottom:var(--s-2);color:var(--primary-900)}
+.contact-form .lead{color:var(--text-2);margin-bottom:var(--s-6);font-size:var(--fs-sm)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4)}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.full{grid-column:1/-1}
+.field label{font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-2)}
+.field input,.field select,.field textarea{font-family:inherit;font-size:var(--fs-sm);color:var(--text);padding:12px 14px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--bg-product);transition:border-color var(--t-fast),box-shadow var(--t-fast);width:100%}
+.field textarea{resize:vertical;min-height:120px;line-height:1.5}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--primary-700);box-shadow:0 0 0 3px rgba(59,74,42,.08);background:#fff}
+.contact-form .actions{margin-top:var(--s-6);display:flex;justify-content:flex-end}
+.contact-form .actions button{cursor:pointer}
+.form-success{display:none;padding:var(--s-5);background:var(--primary-100);color:var(--primary-900);border-radius:var(--r-sm);font-size:var(--fs-sm);margin-bottom:var(--s-4);font-weight:600}
+.form-success.show{display:block}
+
+.contact-map{height:480px;background:var(--bg-card);position:relative}
+.contact-map iframe{width:100%;height:100%;border:0;display:block;filter:saturate(.85) contrast(.95)}
+
+@media(max-width:1024px){
+  .contact-grid{grid-template-columns:1fr;padding:56px 0}
+  .form-grid{grid-template-columns:1fr}
+  .contact-title h1{font-size:30px}
+  .contact-grid{padding:0 0 56px}
+  .contact-map{height:360px}
+}
+
+/* URETIM — production page (v2.5.1: 3 distinct visual rhythms) */
+.uretim-hero{background:var(--primary-700);color:#fff;padding:96px 0;position:relative;overflow:hidden}
+.uretim-hero::before{content:"";position:absolute;right:-80px;top:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(201,165,91,.18) 0%,transparent 70%);pointer-events:none}
+.uretim-hero::after{content:"";position:absolute;left:-60px;bottom:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(201,165,91,.10) 0%,transparent 70%);pointer-events:none}
+.uretim-hero .wrap{max-width:880px;margin:0 auto;text-align:center;position:relative;z-index:1}
+.uretim-hero .eyebrow{display:inline-block;font-size:var(--fs-xs);font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-gold);margin-bottom:var(--s-5)}
+.uretim-hero h1{font-size:52px;font-weight:800;letter-spacing:-0.025em;line-height:1.1;margin-bottom:var(--s-5);color:#fff}
+.uretim-hero p{font-size:var(--fs-md);line-height:1.7;opacity:.88;max-width:680px;margin:0 auto}
+
+.uretim-section{padding:120px 0;background:#fff}
+.uretim-section.alt-cream{background:var(--bg-soft)}
+.uretim-section.alt-dark{background:var(--primary-700);color:#fff}
+.uretim-section.alt-dark h2{color:#fff}
+.uretim-section.alt-dark .eyebrow{color:var(--accent-gold)}
+.uretim-section.alt-dark .desc p{color:rgba(255,255,255,.88)}
+.uretim-section.alt-dark .uretim-quote{color:var(--accent-gold);border-color:rgba(255,255,255,.2)}
+
+.uretim-split{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-12);align-items:center}
+.uretim-split.flip .visual{order:2}
+.uretim-split.flip .text{order:1}
+.uretim-section .eyebrow{display:inline-block;font-size:var(--fs-xs);font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--primary-700);margin-bottom:var(--s-4);position:relative;padding-left:36px}
+.uretim-section .eyebrow::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:24px;height:2px;background:currentColor}
+.uretim-section h2{font-size:44px;font-weight:700;letter-spacing:-0.025em;line-height:1.15;margin-bottom:var(--s-6);color:var(--text)}
+.uretim-section .desc p{color:var(--text-2);font-size:var(--fs-md);line-height:1.8;margin-bottom:var(--s-5);max-width:560px}
+.uretim-section .desc p:last-child{margin-bottom:0}
+
+.uretim-visual{aspect-ratio:4/5;border-radius:var(--r-lg);overflow:hidden;background:var(--bg-card)}
+.uretim-visual.curved{border-top-right-radius:120px;border-bottom-left-radius:120px}
+.uretim-visual img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s ease}
+.uretim-section:hover .uretim-visual img{transform:scale(1.03)}
+
+.uretim-collage{position:relative;aspect-ratio:1/1.1}
+.uretim-collage .ca{position:absolute;left:0;top:0;width:78%;height:78%;border-radius:var(--r-lg);overflow:hidden;background:var(--bg-card)}
+.uretim-collage .cb{position:absolute;right:0;bottom:0;width:58%;height:55%;border-radius:var(--r-lg);overflow:hidden;background:var(--bg-card);box-shadow:0 16px 40px rgba(42,31,20,.18);border:6px solid var(--bg-soft)}
+.uretim-collage img{width:100%;height:100%;object-fit:cover}
+
+.uretim-quote{font-family:Georgia,"Times New Roman",serif;font-size:22px;font-style:italic;line-height:1.5;color:var(--accent-gold);padding:var(--s-5) 0 var(--s-5) var(--s-6);border-left:3px solid var(--accent-gold);margin:var(--s-6) 0;max-width:540px}
+
+.section-divider{height:64px;background:#fff;display:flex;align-items:center;justify-content:center;position:relative}
+.section-divider.on-cream{background:var(--bg-soft)}
+.section-divider svg{width:40px;height:auto;opacity:.6}
+
+@media(max-width:1024px){
+  .uretim-split{grid-template-columns:1fr;gap:var(--s-8)}
+  .uretim-split.flip .visual{order:0}
+  .uretim-split.flip .text{order:1}
+  .uretim-section h2{font-size:32px}
+  .uretim-hero h1{font-size:38px}
+  .uretim-hero,.uretim-section{padding:64px 0}
+  .uretim-visual.curved{border-top-right-radius:80px;border-bottom-left-radius:80px}
+}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease-out,transform .6s ease-out}
+.reveal.in{opacity:1;transform:none}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .cat-grid{grid-template-columns:repeat(4,1fr)}
+  .product-grid{grid-template-columns:repeat(3,1fr)}
+  :root{--fs-hero:44px;--fs-3xl:30px}
+  .hero-slide{grid-template-columns:1fr;padding:var(--s-8)}
+  .hero-visual{min-height:220px}
+  .hero-slider,.hero-slide{min-height:auto}
+}
+@media(max-width:640px){
+  :root{--fs-hero:36px;--fs-3xl:26px;--fs-2xl:22px}
+  .cat-grid{grid-template-columns:repeat(2,1fr)}
+  .cat{height:180px}
+  .product-grid{grid-template-columns:repeat(2,1fr)}
+  .banner-grid,.footer-cols{grid-template-columns:1fr}
+  .footer-bottom{flex-direction:column;align-items:flex-start}
+  .page-head{grid-template-columns:1fr}
+  .pd-perks{grid-template-columns:1fr}
+}
+"""
+
+# ============================================================
+# Shared HEAD (top of <head>)
+# ============================================================
+def head_block(title, active_nav=None):
+    return f'''<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{title}</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<style>{CSS}</style>
+</head>
+<body>
+'''
+
+# ============================================================
+# Shared header (topbar + telbar + header + main nav)
+# ============================================================
+def header_block(active=None):
+    is_active = lambda key: ' active' if active == key else ''
+    cls = lambda key: ' class="active"' if active == key else ''
+    return f'''
+<!-- TOP RIBBON 3-col -->
+<div class="topbar" id="topRibbon">
+  <div class="container">
+    <a class="tb-left" href="kurumsal-satis.html">Kurumsal Hediyeler · kurumlara özel fiyatlarla <i class="fa-solid fa-arrow-right" style="font-size:11px;margin-left:4px;"></i></a>
+    <span class="tb-mid">750 TL ÜZERİ <b>KARGO ÜCRETSİZ</b> · YENİ HASAT ÜRÜNLERİ STOKTA</span>
+    <span class="tb-right">
+      <button class="tb-close" aria-label="Kapat" onclick="document.getElementById('topRibbon').classList.add('hidden')"><i class="fa-solid fa-xmark"></i></button>
+    </span>
+  </div>
+</div>
+
+<!-- HEADER TOP (Kurumsal + Hakkımızda) -->
+<div class="header-top">
+  <div class="container">
+    <a href="kurumsal-satis.html" class="top-link">Kurumsal Satış</a>
+    <span class="top-link has-dd">Hakkımızda <i class="fa-solid fa-chevron-down"></i>
+      <span class="dd-menu">
+        <a href="hikayemiz.html">Hikayemiz</a>
+        <a href="uretim.html">Üretim</a>
+        <a href="#magazalar">Mağazalar</a>
+        <a href="iletisim.html">İletişim</a>
+      </span>
+    </span>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container header-row1">
+    <a href="index.html" class="brand-logo">Derik</a>
+    <nav class="nav">
+      <a href="magaza.html"{cls('zeytinyaglari')}>Zeytinyağları</a>
+      <a href="#zeytinler"{cls('zeytinler')}>Zeytinler</a>
+      <a href="#sabunlar"{cls('sabunlar')}>Sabunlar</a>
+      <a href="#dogal"{cls('dogal')}>Doğal Ürünler</a>
+      <a href="#hediye"{cls('hediye')}>Hediye Setleri</a>
+    </nav>
+    <div class="header-actions">
+      <a href="#ara" class="icon-btn" aria-label="Ara"><i class="fa-solid fa-magnifying-glass"></i></a>
+      <a href="#hesap" class="icon-btn" aria-label="Hesabım"><i class="fa-regular fa-user"></i></a>
+      <a href="#favoriler" class="icon-btn" aria-label="Favoriler"><i class="fa-regular fa-heart"></i></a>
+      <a href="#sepet" class="icon-btn cart-badge" aria-label="Sepetim"><i class="fa-solid fa-bag-shopping"></i><span class="cart-num">0</span></a>
+    </div>
+  </div>
+</header>
+'''
+
+# ============================================================
+# Shared footer
+# ============================================================
+FOOTER = '''
+<footer class="footer">
+  <div class="container">
+    <div class="footer-cols">
+      <div class="footer-brand">
+        <span class="brand-logo">Derik</span>
+        <p>Mardin Derik'ten sofranıza.</p>
+        <div class="contact-line"><i class="fa-solid fa-location-dot"></i> Mardin Derik, Türkiye</div>
+        <div class="contact-line"><i class="fa-solid fa-envelope"></i> info@derikzeytin.com</div>
+        <div class="contact-line"><i class="fa-brands fa-whatsapp"></i> 0 (850) 393 7070</div>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div>
+        <h4>Kategoriler</h4>
+        <ul>
+          <li><a href="magaza.html">Zeytinyağları</a></li>
+          <li><a href="#zeytinler">Zeytinler</a></li>
+          <li><a href="#sabunlar">Sabunlar</a></li>
+          <li><a href="#dogal">Doğal Ürünler</a></li>
+          <li><a href="#hediye">Hediye Setleri</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Kurumsal</h4>
+        <ul>
+          <li><a href="#hakkimizda">Hakkımızda</a></li>
+          <li><a href="#hikaye">Derik'in Hikâyesi</a></li>
+          <li><a href="#uretim">Üretim Sürecimiz</a></li>
+          <li><a href="kurumsal-satis.html">Kurumsal Satış</a></li>
+          <li><a href="iletisim.html">İletişim</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Yardım</h4>
+        <ul>
+          <li><a href="sss.html">Sıkça Sorulan Sorular</a></li>
+          <li><a href="#iade">İade ve Değişim</a></li>
+          <li><a href="iletisim.html">İletişim</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>©2026 Derik. Tüm hakları saklıdır.</span>
+      <div class="policies">
+        <a href="#">KVKK</a>
+        <a href="#">Gizlilik</a>
+        <a href="#">Mesafeli Satış</a>
+        <a href="#">Çerez Politikası</a>
+      </div>
+    </div>
+  </div>
+</footer>
+'''
+
+# ============================================================
+# Shared JS
+# ============================================================
+SHARED_JS = '''
+<script>
+// Reveal on scroll
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+}), { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// Hero dots auto-rotate (visual only)
+const dots = document.querySelectorAll('.hero-dots span');
+if (dots.length) {
+  let idx = 0;
+  setInterval(() => {
+    dots.forEach(d => d.classList.remove('active'));
+    idx = (idx + 1) % dots.length;
+    dots[idx].classList.add('active');
+  }, 4500);
+}
+
+// Image fallback: if Unsplash fails, mark wrapper for desenli fallback
+document.querySelectorAll('img[data-fallback]').forEach(img => {
+  img.addEventListener('error', () => {
+    img.style.display = 'none';
+    if (img.parentElement) img.parentElement.classList.add('img-fallback');
+  });
+});
+
+// Cart badge increment helper (used by add-to-cart buttons)
+window.bumpCart = function(n=1){
+  document.querySelectorAll('.cart-num').forEach(e => {
+    e.textContent = (parseInt(e.textContent)||0) + n;
+  });
+};
+document.querySelectorAll('.add-cart, [data-add-cart]').forEach(b => {
+  b.addEventListener('click', e => { e.preventDefault(); window.bumpCart(1); });
+});
+</script>
+'''
+
+# ============================================================
+# Helper: product card HTML
+# ============================================================
+def product_card(href, img, title, price, old_price=None, badge=None, badge_class='', stars='★★★★★', reviews=42):
+    badge_html = f'<span class="badge {badge_class}">{badge}</span>' if badge else ''
+    old = f' <s>{old_price}</s>' if old_price else ''
+    return f'''      <article class="product reveal">
+        <div class="img-wrap">
+          {badge_html}
+          <a href="{href}" class="fav-btn" aria-label="Favorilere ekle"><i class="fa-regular fa-heart"></i></a>
+          <a href="{href}"><img class="product-img" src="{img}" alt="{title}" loading="lazy" data-fallback></a>
+        </div>
+        <div class="product-body">
+          <a href="{href}" class="product-title">{title}</a>
+          <div class="rating"><span class="stars">{stars}</span><span>({reviews})</span></div>
+          <div class="product-meta"><span class="price">{price}{old}</span></div>
+          <button class="add-cart"><i class="fa-solid fa-bag-shopping"></i> Sepete Ekle</button>
+        </div>
+      </article>
+'''
+
+# ============================================================
+# INDEX PAGE
+# ============================================================
+def build_index():
+    cats = [
+        ("magaza.html", UNSPLASH["cat_yag"],   "Zeytinyağları"),
+        ("#zeytinler",   UNSPLASH["cat_zeyt"],  "Zeytinler"),
+        ("#sabunlar",    UNSPLASH["cat_sabun"], "Sabunlar"),
+        ("#dogal",       UNSPLASH["cat_dogal"], "Doğal Ürünler"),
+        ("#hediye",      UNSPLASH["cat_hediye"],"Hediye Setleri"),
+        ("#kurumsal",    UNSPLASH["cat_kurum"], "Kurumsal"),
+    ]
+    cat_html = "\n".join(
+        f'      <a class="cat reveal" href="{h}"><img src="{i}" alt="{n}" loading="lazy" data-fallback><span class="label">{n}</span></a>'
+        for h,i,n in cats
+    )
+
+    yeni = [
+        ("urun-detay.html", UNSPLASH["p1"], "Erken Hasat Natürel Sızma 500ml", "320,00 TL", None, "Yeni", "", "★★★★★", 48),
+        ("urun-detay.html", UNSPLASH["p2"], "Soğuk Sıkım Zeytinyağı 1L", "450,00 TL", None, None, "", "★★★★★", 126),
+        ("urun-detay.html", UNSPLASH["p3"], "Halhalı Yeşil Zeytin 500g", "180,00 TL", "210,00 TL", "İndirim", "sale", "★★★★☆", 82),
+        ("urun-detay.html", UNSPLASH["p6"], "Hediye Seti Premium", "850,00 TL", None, None, "", "★★★★★", 214),
+    ]
+    yeni_html = "".join(product_card(*p) for p in yeni)
+
+    cok = [
+        ("urun-detay.html", UNSPLASH["p1"], "Klasik Natürel Sızma 750ml", "390,00 TL", None, "Çok Satan", "gold", "★★★★★", 312),
+        ("urun-detay.html", UNSPLASH["p4"], "Zeytinyağlı Sabun 3'lü Set", "220,00 TL", None, None, "", "★★★★☆", 54),
+        ("urun-detay.html", UNSPLASH["p7"], "Teneke 5L Zeytinyağı", "1.450,00 TL", None, None, "", "★★★★★", 98),
+        ("urun-detay.html", UNSPLASH["p6"], "Mini Hediye Kutusu", "285,00 TL", None, None, "", "★★★★★", 167),
+    ]
+    cok_html = "".join(product_card(*p) for p in cok)
+
+    body = f'''
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-slider">
+      <div class="hero-slide">
+        <div class="hero-text">
+          <span class="eyebrow">Yeni Hasat 2025</span>
+          <h1>Derik'in Kadim Zeytinlerinden Saf Lezzet</h1>
+          <p>Mardin Derik'in bereketli topraklarında yetişen Halhalı zeytinlerinden elde edilen özel zeytinyağları.</p>
+          <a href="magaza.html" class="btn btn-primary">Ürünleri İncele <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="hero-visual">
+          <img src="{UNSPLASH['hero']}" alt="Zeytinyağı ve zeytin dalı" loading="eager" data-fallback>
+        </div>
+      </div>
+      <div class="hero-dots">
+        <span class="active"></span><span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KATEGORİLER -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Kategoriler</h2>
+      <a href="magaza.html" class="more">Tümünü Gör <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="cat-grid">
+{cat_html}
+    </div>
+  </div>
+</section>
+
+<!-- YENİ ÇIKANLAR -->
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="section-head">
+      <h2>Yeni Çıkanlar</h2>
+      <a href="magaza.html" class="more">Tümünü Gör <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="product-grid">
+{yeni_html}
+    </div>
+  </div>
+</section>
+
+<!-- HABERLER VE FIRSATLAR -->
+<section class="section" style="background:var(--bg-soft);">
+  <div class="container">
+    <div class="section-head">
+      <h2>Haberler ve Fırsatlar</h2>
+      <a href="magaza.html" class="more">Tümünü Gör <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="banner-grid">
+      <a class="banner reveal" href="magaza.html">
+        <img src="{UNSPLASH['banner_yeni']}" alt="Yeni hasat" loading="lazy" data-fallback>
+        <div class="banner-text">
+          <small>Yeni Hasat</small>
+          <h3>Yeni Hasat Erken Sızma · %15 Sezon Avantajı</h3>
+          <span class="banner-cta">Keşfet <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="banner reveal" href="kurumsal-satis.html">
+        <img src="{UNSPLASH['banner_kurum']}" alt="Kurumsal" loading="lazy" data-fallback>
+        <div class="banner-text">
+          <small>Kurumsal</small>
+          <h3>Kurumsal Hediye Setleri için Teklif Al</h3>
+          <span class="banner-cta">Detaylar <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ÇOK SATANLAR -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <h2>Çok Satanlar</h2>
+      <a href="magaza.html" class="more">Tümünü Gör <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="product-grid">
+{cok_html}
+    </div>
+  </div>
+</section>
+'''
+
+    return head_block("Derik — Mardin Derik'ten Sofranıza") + header_block() + body + FOOTER + SHARED_JS + "</body>\n</html>\n"
+
+
+# ============================================================
+# MAGAZA PAGE
+# ============================================================
+def build_magaza():
+    products = [
+        ("Erken Hasat Natürel Sızma 500ml", "320,00 TL", None, "Yeni", "", UNSPLASH["p1"], "★★★★★", 48),
+        ("Soğuk Sıkım Zeytinyağı 1L", "450,00 TL", None, None, "", UNSPLASH["p2"], "★★★★★", 126),
+        ("Klasik Natürel Sızma 750ml", "390,00 TL", None, "Çok Satan", "gold", UNSPLASH["p3"], "★★★★★", 312),
+        ("Teneke 5L Soğuk Sıkım", "1.450,00 TL", "1.650,00 TL", "İndirim", "sale", UNSPLASH["p7"], "★★★★★", 98),
+        ("Erken Hasat Premium 250ml", "220,00 TL", None, "Yeni", "", UNSPLASH["p1"], "★★★★☆", 31),
+        ("Organik Natürel Sızma 500ml", "380,00 TL", None, None, "", UNSPLASH["p2"], "★★★★★", 76),
+        ("Halhalı Özel Üretim 750ml", "420,00 TL", None, "Çok Satan", "gold", UNSPLASH["p3"], "★★★★★", 145),
+        ("Aile Boyu 1L Klasik", "290,00 TL", "320,00 TL", "İndirim", "sale", UNSPLASH["p2"], "★★★★☆", 64),
+        ("Mini 250ml Hediyelik", "165,00 TL", None, None, "", UNSPLASH["p1"], "★★★★★", 42),
+        ("Premium 5L Teneke", "1.650,00 TL", None, None, "", UNSPLASH["p7"], "★★★★★", 28),
+        ("Erken Hasat 1L", "540,00 TL", None, "Yeni", "", UNSPLASH["p1"], "★★★★★", 19),
+        ("Soğuk Sıkım 250ml", "195,00 TL", None, None, "", UNSPLASH["p2"], "★★★★☆", 87),
+    ]
+    cards = "".join(
+        product_card("urun-detay.html", img, name, price, old, badge, bclass, stars, rev)
+        for (name, price, old, badge, bclass, img, stars, rev) in products
+    )
+
+    body = f'''
+<div class="container">
+  <nav class="crumb">
+    <a href="index.html">Anasayfa</a>
+    <i class="fa-solid fa-chevron-right sep"></i>
+    <span class="active">Zeytinyağları</span>
+  </nav>
+
+  <div class="page-head">
+    <div>
+      <h1>Zeytinyağları</h1>
+      <p class="lead">Mardin Derik'in en seçkin zeytinyağları, soğuk sıkım ve geleneksel yöntemlerle üretildi.</p>
+    </div>
+    <div class="meta">
+      <span><b style="color:var(--text);font-weight:700">12</b> ürün</span>
+      <button class="sort">Sıralama: Önerilen <i class="fa-solid fa-chevron-down"></i></button>
+    </div>
+  </div>
+
+  <div class="shop-layout">
+    <aside class="filter-panel">
+      <div class="fp-head">
+        <h3>Filtreler</h3>
+        <a href="#" class="clear-link">Temizle</a>
+      </div>
+
+      <div class="acc open">
+        <button class="acc-head">Kategori <i class="fa-solid fa-chevron-down"></i></button>
+        <div class="acc-body">
+          <label><input type="checkbox" checked><span class="text">Erken Hasat</span><span class="count">5</span></label>
+          <label><input type="checkbox"><span class="text">Soğuk Sıkım</span><span class="count">8</span></label>
+          <label><input type="checkbox"><span class="text">Klasik</span><span class="count">12</span></label>
+          <label><input type="checkbox"><span class="text">Organik</span><span class="count">3</span></label>
+        </div>
+      </div>
+
+      <div class="acc open">
+        <button class="acc-head">Hacim <i class="fa-solid fa-chevron-down"></i></button>
+        <div class="acc-body">
+          <label><input type="checkbox"><span class="text">250 ml</span><span class="count">4</span></label>
+          <label><input type="checkbox" checked><span class="text">500 ml</span><span class="count">10</span></label>
+          <label><input type="checkbox"><span class="text">750 ml</span><span class="count">8</span></label>
+          <label><input type="checkbox"><span class="text">1 L</span><span class="count">6</span></label>
+          <label><input type="checkbox"><span class="text">5 L Teneke</span><span class="count">3</span></label>
+        </div>
+      </div>
+
+      <div class="acc open">
+        <button class="acc-head">Fiyat Aralığı <i class="fa-solid fa-chevron-down"></i></button>
+        <div class="acc-body">
+          <div class="slider-track"><span class="knob k1"></span><span class="knob k2"></span></div>
+          <div class="range-row">
+            <input value="160 TL" aria-label="Min fiyat">
+            <input value="1.500 TL" aria-label="Max fiyat">
+          </div>
+        </div>
+      </div>
+
+      <div class="acc">
+        <button class="acc-head">Üretim Yöntemi <i class="fa-solid fa-chevron-down"></i></button>
+        <div class="acc-body">
+          <label><input type="checkbox"><span class="text">Soğuk Sıkım</span><span class="count">15</span></label>
+          <label><input type="checkbox"><span class="text">Doğal Hasat</span><span class="count">8</span></label>
+        </div>
+      </div>
+
+      <div class="acc">
+        <button class="acc-head">Stok Durumu <i class="fa-solid fa-chevron-down"></i></button>
+        <div class="acc-body">
+          <label><input type="checkbox" checked><span class="text">Stoktakiler</span><span class="count">20</span></label>
+          <label><input type="checkbox"><span class="text">Tümü</span><span class="count">24</span></label>
+        </div>
+      </div>
+    </aside>
+
+    <div>
+      <div class="shop-grid product-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s-5);">
+{cards}
+      </div>
+
+      <nav class="pagination" aria-label="Sayfalama">
+        <a href="#" aria-label="Önceki"><i class="fa-solid fa-chevron-left"></i></a>
+        <span class="active">1</span>
+        <a href="#">2</a>
+        <a href="#">3</a>
+        <span class="gap">…</span>
+        <a href="#" aria-label="Sonraki"><i class="fa-solid fa-chevron-right"></i></a>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<script>
+// Filter accordions
+document.querySelectorAll('.acc-head').forEach(b => {{
+  b.addEventListener('click', () => b.parentElement.classList.toggle('open'));
+}});
+</script>
+'''
+    return head_block("Zeytinyağları — Derik", "zeytinyaglari") + header_block("zeytinyaglari") + body + FOOTER + SHARED_JS + "</body>\n</html>\n"
+
+
+# ============================================================
+# URUN DETAY PAGE
+# ============================================================
+def build_detay():
+    similar = [
+        ("urun-detay.html", UNSPLASH["p2"], "Soğuk Sıkım Zeytinyağı 1L", "450,00 TL", None, None, "", "★★★★★", 126),
+        ("urun-detay.html", UNSPLASH["p3"], "Klasik Natürel Sızma 750ml", "390,00 TL", None, "Çok Satan", "gold", "★★★★★", 312),
+        ("urun-detay.html", UNSPLASH["p7"], "Teneke 5L Zeytinyağı", "1.450,00 TL", None, None, "", "★★★★★", 98),
+        ("urun-detay.html", UNSPLASH["p1"], "Aile Boyu 1L Klasik", "290,00 TL", "320,00 TL", "İndirim", "sale", "★★★★☆", 64),
+    ]
+    similar_html = "".join(product_card(*p) for p in similar)
+
+    body = f'''
+<div class="container">
+  <nav class="crumb">
+    <a href="index.html">Anasayfa</a>
+    <i class="fa-solid fa-chevron-right sep"></i>
+    <a href="magaza.html">Zeytinyağları</a>
+    <i class="fa-solid fa-chevron-right sep"></i>
+    <span class="active">Erken Hasat Natürel Sızma 500ml</span>
+  </nav>
+
+  <div class="pd">
+    <div class="pd-gallery">
+      <div class="main-img" id="mainImg"><img src="{UNSPLASH['p1']}" alt="Erken Hasat Natürel Sızma" data-fallback></div>
+      <div class="pd-thumbs">
+        <button class="thumb active" data-img="{UNSPLASH['p1']}"><img src="{UNSPLASH['p1']}" alt="" data-fallback></button>
+        <button class="thumb" data-img="{UNSPLASH['p2']}"><img src="{UNSPLASH['p2']}" alt="" data-fallback></button>
+        <button class="thumb" data-img="{UNSPLASH['p3']}"><img src="{UNSPLASH['p3']}" alt="" data-fallback></button>
+        <button class="thumb" data-img="{UNSPLASH['p6']}"><img src="{UNSPLASH['p6']}" alt="" data-fallback></button>
+        <button class="thumb" data-img="{UNSPLASH['p7']}"><img src="{UNSPLASH['p7']}" alt="" data-fallback></button>
+      </div>
+    </div>
+
+    <div class="pd-info">
+      <div class="producer">Derik · Yeni Hasat 2025</div>
+      <h1>Erken Hasat Natürel Sızma Zeytinyağı 500ml</h1>
+      <div class="pd-rating">
+        <span class="stars">★★★★★</span>
+        <a href="#yorumlar">(124 yorum)</a>
+      </div>
+      <div class="pd-price">
+        <span class="now">320,00 TL</span>
+        <span class="old">380,00 TL</span>
+        <span class="pct">-%16</span>
+      </div>
+      <div class="pd-installment">320 TL × 4 taksit · 80 TL/ay</div>
+      <div class="pd-stock"><i class="fa-solid fa-circle"></i> Stokta · Aynı gün kargo</div>
+
+      <div class="pd-row">
+        <div class="label">Hacim</div>
+        <div class="pd-variants">
+          <button>250ml<span class="vp">220,00 TL</span></button>
+          <button class="active">500ml<span class="vp">320,00 TL</span></button>
+          <button>750ml<span class="vp">420,00 TL</span></button>
+          <button>1L<span class="vp">540,00 TL</span></button>
+        </div>
+      </div>
+
+      <div class="pd-row" style="display:flex;align-items:center;gap:var(--s-5);">
+        <div>
+          <div class="label">Adet</div>
+          <div class="pd-qty">
+            <button id="qDec" aria-label="Azalt"><i class="fa-solid fa-minus"></i></button>
+            <span class="num" id="qNum">1</span>
+            <button id="qInc" aria-label="Artır"><i class="fa-solid fa-plus"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="pd-actions">
+        <button class="btn btn-primary btn-block" data-add-cart><i class="fa-solid fa-bag-shopping"></i> Sepete Ekle</button>
+        <a href="#odeme" class="btn btn-outline btn-block">Hemen Al</a>
+      </div>
+      <a href="#fav" class="pd-fav"><i class="fa-regular fa-heart"></i> Favorilere Ekle</a>
+
+      <div class="pd-perks">
+        <div class="pd-perk"><i class="fa-solid fa-truck"></i><div><b>Aynı Gün Kargo</b>16:00'a kadar</div></div>
+        <div class="pd-perk"><i class="fa-solid fa-rotate-left"></i><div><b>14 Gün İade</b>Koşulsuz iade hakkı</div></div>
+        <div class="pd-perk"><i class="fa-solid fa-shield-halved"></i><div><b>Güvenli Ödeme</b>3D Secure</div></div>
+        <div class="pd-perk"><i class="fa-solid fa-leaf"></i><div><b>%100 Doğal</b>Soğuk Sıkım</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tabs-head">
+      <button class="active" data-tab="aciklama">Açıklama</button>
+      <button data-tab="detay">Detaylı Bilgi</button>
+      <button data-tab="yorumlar" id="yorumlar">Yorumlar (124)</button>
+      <button data-tab="kargo">Kargo & İade</button>
+    </div>
+
+    <div class="tab-panel active" data-panel="aciklama">
+      <p>Mardin'in Derik ilçesinin bereketli topraklarında yetişen Halhalı zeytinlerinden, sezonun ilk hasatında soğuk sıkım yöntemiyle üretilmiştir. Yoğun yeşil rengi ve karakteristik aroması ile sofralarınızda farkındalık yaratacak.</p>
+      <p>Zeytinler hasattan sonraki 24 saat içinde işlenir, böylece taze meyvenin tüm aroması ve besin değeri korunur. Düşük asit oranı (%0,3) ile premium kalitede.</p>
+      <p>Salatalarda, kahvaltıda ekmekle, bulgur pilavında veya bir kaşık alıp doğrudan tüketebilirsiniz — yemek pişirmek için de uygundur.</p>
+    </div>
+
+    <div class="tab-panel" data-panel="detay">
+      <table class="spec-table">
+        <tr><th>Net Hacim</th><td>500 ml</td></tr>
+        <tr><th>Asit Oranı</th><td>%0,3 (Natürel Sızma)</td></tr>
+        <tr><th>Üretim Yöntemi</th><td>Soğuk Sıkım</td></tr>
+        <tr><th>Köken</th><td>Mardin Derik, Türkiye</td></tr>
+        <tr><th>Hasat Yılı</th><td>2025</td></tr>
+        <tr><th>Zeytin Türü</th><td>Halhalı</td></tr>
+        <tr><th>Saklama Koşulları</th><td>Serin ve karanlık ortamda saklayınız</td></tr>
+        <tr><th>Raf Ömrü</th><td>Üretim tarihinden itibaren 18 ay</td></tr>
+      </table>
+    </div>
+
+    <div class="tab-panel" data-panel="yorumlar">
+      <div class="review">
+        <div class="rh"><b>Ayşe K.</b><span>12 Mart 2026</span></div>
+        <div class="stars">★★★★★</div>
+        <p>Aroması ve kıvamı muhteşem. Salatalarda ve özellikle taze ekmekle harika gidiyor. Tekrar alacağım.</p>
+      </div>
+      <div class="review">
+        <div class="rh"><b>Mehmet T.</b><span>02 Mart 2026</span></div>
+        <div class="stars">★★★★★</div>
+        <p>Mardin Derik'i tanıdığım için bu yağın kalitesini biliyorum. Şişe sunumu da çok şık, hediyelik almıştım, çok beğenildi.</p>
+      </div>
+      <div class="review">
+        <div class="rh"><b>Zeynep A.</b><span>21 Şubat 2026</span></div>
+        <div class="stars">★★★★☆</div>
+        <p>Lezzeti çok iyi, sadece kargo biraz geç geldi. Ürünün kendisinden son derece memnunum.</p>
+      </div>
+    </div>
+
+    <div class="tab-panel" data-panel="kargo">
+      <p><b>Kargo:</b> 16:00'a kadar verilen siparişler aynı gün kargolanır. Türkiye geneli 1-3 iş günü içinde teslim. 750 TL üzeri siparişlerde kargo ücretsizdir.</p>
+      <p><b>İade ve Değişim:</b> Ürünü teslim aldıktan sonra 14 gün içinde koşulsuz iade hakkınız vardır. Mührü açılmamış ürünler için iade kabul edilir; açılmış ürünler için ürün hatası varsa değişim yapılır.</p>
+      <p><b>Saklama:</b> Zeytinyağını serin (15-20°C) ve karanlık ortamda saklayın. Buzdolabında saklamak gerekli değildir.</p>
+    </div>
+  </div>
+
+  <!-- BENZER ÜRÜNLER -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Bunları da beğenebilirsiniz</h2>
+      <a href="magaza.html" class="more">Tümünü Gör <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="product-grid">
+{similar_html}
+    </div>
+  </section>
+</div>
+
+<script>
+// Tabs
+document.querySelectorAll('.tabs-head button').forEach(b => {{
+  b.addEventListener('click', () => {{
+    const t = b.dataset.tab;
+    document.querySelectorAll('.tabs-head button').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    document.querySelector(`.tab-panel[data-panel="${{t}}"]`).classList.add('active');
+  }});
+}});
+// Thumbnails
+document.querySelectorAll('.pd-thumbs .thumb').forEach(t => {{
+  t.addEventListener('click', () => {{
+    document.querySelectorAll('.pd-thumbs .thumb').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelector('#mainImg img').src = t.dataset.img;
+  }});
+}});
+// Variants
+document.querySelectorAll('.pd-variants button').forEach(b => {{
+  b.addEventListener('click', () => {{
+    document.querySelectorAll('.pd-variants button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+  }});
+}});
+// Qty
+const num = document.getElementById('qNum');
+document.getElementById('qDec').addEventListener('click', () => {{
+  let n = Math.max(1, parseInt(num.textContent)-1); num.textContent = n;
+}});
+document.getElementById('qInc').addEventListener('click', () => {{
+  num.textContent = parseInt(num.textContent)+1;
+}});
+</script>
+'''
+    return head_block("Erken Hasat Natürel Sızma 500ml — Derik", "zeytinyaglari") + header_block("zeytinyaglari") + body + FOOTER + SHARED_JS + "</body>\n</html>\n"
+
+
+# ============================================================
+# HIKAYEMIZ PAGE
+# ============================================================
+def build_hikayemiz():
+    body = f'''
+<div class="container">
+  <nav class="crumb">
+    <a href="index.html">Anasayfa</a>
+    <i class="fa-solid fa-chevron-right sep"></i>
+    <a href="#hakkimizda">Hakkımızda</a>
+    <i class="fa-solid fa-chevron-right sep"></i>
+    <span class="active">Hikayemiz</span>
+  </nav>
+</div>
+
+<!-- HERO -->
+<section class="story-hero">
+  <div class="container wrap">
+    <div>
+      <span class="eyebrow">Ana Sayfa / Hikayemiz</span>
+      <h1>Hepimizin Ortak Mirası: <em>Derik Zeytini</em></h1>
+      <p>Mardin Derik'in bereketli topraklarında yetişen Halhalı zeytinleri, kuşaktan kuşağa aktarılan üretim bilgisiyle harmanlanarak özgün lezzetler oluşturuyor. Sizleri, Derik'in kadim zeytin yolculuğunun bir parçası olmaya davet ediyoruz.</p>
+    </div>
+    <div class="visual">
+      <img src="{UNSPLASH['story_hero']}" alt="Derik zeytinleri ve zeytinyağı" loading="eager" data-fallback>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 1 — Marka tanıtımı -->
+<section class="story-intro">
+  <div class="container">
+    <div class="lead">
+      <h2>Derik, Mardin'in Köklü Zeytin Mirasının Bir Parçasıdır.</h2>
+      <p>Yüzyıllardır zeytinin anavatanı olan Mardin'in Derik ilçesi, eşsiz iklimi ve verimli topraklarıyla Türkiye'nin en kaliteli zeytinlerinin yetiştiği bölgelerden biridir. Derik markası, bu kadim mirası modern üretim anlayışıyla buluşturarak, yöre halkının emeğini ve toprağın bereketini bir damla saf zeytinyağında bir araya getiriyor.</p>
+    </div>
+
+    <div class="pillars">
+      <div class="pillar reveal">
+        <span class="num">01</span>
+        <div>
+          <h3>Halhalı Zeytin Mirası</h3>
+          <p>Derik'in karakteristik Halhalı zeytinleri, kendine has aroması ve karakteriyle dünya çapında ün yapan bir zeytin türüdür. Soğuk sıkım yöntemiyle, tüm doğal değerini koruyarak sofralara ulaşıyor.</p>
+        </div>
+      </div>
+      <div class="pillar reveal">
+        <span class="num">02</span>
+        <div>
+          <h3>Geleneksel Üretim</h3>
+          <p>Yöresel ustalarla bütünleşmiş üretim bant sistemi, Mardin'in kadim zeytin işleme bilgisini modern hijyen standartlarıyla buluşturuyor. Her bir damla, geçmişin bilgisi ve günümüzün teknolojisinin birleşimidir.</p>
+        </div>
+      </div>
+      <div class="pillar reveal">
+        <span class="num">03</span>
+        <div>
+          <h3>Sofradan Sofraya</h3>
+          <p>Türkiye'nin dört bir yanına ulaşan zeytin ve zeytinyağı çeşitleriyle, Derik'in özgün lezzetini gurmelerden ev sofralarına kadar her tüketiciye sunuyoruz. Amacımız bu kadim lezzeti yeni nesillerle buluşturmak.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2 — Mağazalarımız ayraç -->
+<section class="divider-section">
+  <div class="container wrap">
+    <div>
+      <h2><em>Mardin Derik'ten</em> <em>12 ile</em>, <em>50'den fazla</em> satış noktasında müşterilerimizle buluşmaya devam ediyoruz.</h2>
+      <p>Yolculuğumuz, Mardin Derik'in bereketli topraklarında başladı. 2018 yılında ilk üretim tesisimizi açtığımız günden bu yana, Halhalı zeytininin eşsiz aroması ve geleneksel üretim yöntemlerimizle Türk sofralarına özgün lezzetler sunmayı amaçladık. Bugün, Türkiye genelinde gurme marketler, restoranlar ve özel satış noktalarımızla doğal lezzetleri tüketicilerle buluşturuyoruz.</p>
+      <a href="#" class="btn-light">Tüm Satış Noktaları <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="visual">
+      <img src="{UNSPLASH['story_press']}" alt="Derik üretim tesisi" loading="lazy" data-fallback>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3 — Global Başarılarımız (3 stat-card, harita yok) -->
+<section class="stats-section">
+  <div class="container">
+    <div class="lead">
+      <span class="eyebrow">Global Başarılarımız</span>
+      <h2>Derik Lezzetinin Türkiye ve Dünya Yolculuğu</h2>
+      <p>2018 yılında Mardin Derik'te kurulan üretim tesisimizden, bugün Türkiye'nin gurme marketlerine ve uluslararası tedarikçilere ulaşıyoruz. Her bir damla zeytinyağımızda Halhalı zeytininin köklü mirası ve özenli üretim anlayışımız var.</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card reveal">
+        <div class="big">12+</div>
+        <h3>Şehirde Gurme Marketler</h3>
+        <p>İstanbul, Ankara, İzmir başta olmak üzere Türkiye'nin önde gelen gurme marketlerinde Derik ürünleri.</p>
+      </div>
+      <div class="stat-card reveal">
+        <div class="big">50+</div>
+        <h3>Satış Noktası</h3>
+        <p>Restoran, otel, kurumsal kanal ve özel ambalajlı ürünlerimizin yer aldığı satış kanalları.</p>
+      </div>
+      <div class="stat-card reveal">
+        <div class="big">5</div>
+        <h3>Ülkeye İhracat</h3>
+        <p>Almanya, Hollanda, BAE, Suudi Arabistan ve Katar'a yapılan ihracat ortaklıklarımız.</p>
+      </div>
+    </div>
+  </div>
+</section>
+'''
+    return head_block("Hikayemiz — Derik") + header_block() + body + FOOTER + SHARED_JS + "</body>\n</html>\n"
+
+
+# ============================================================
+# WRITE FILES
+# ============================================================
+def build_uretim():
+    body = f'''
+<div class="container">
+  <nav class="crumb">
+    <a href="index.html">Anasayfa</a>
+    <i class="fa-solid fa-chevron-right sep"></i>
+    <a href="#hakkimizda">Hakkımızda</a>
+    <i class="fa-solid fa-chevron-right sep"></i>
+    <span class="active">Üretim</span>
+  </nav>
+</div>
+
+<!-- HERO -->
+<section class="uretim-hero">
+  <div class="container wrap">
+    <span class="eyebrow">Üretim</span>
+    <h1>Derik'te Üretim — Halhalı'dan Sofranıza</h1>
+    <p>Mardin Derik'in bereketli topraklarında yetişen Halhalı zeytinleri, kuşaktan kuşağa aktarılan ustalık ve modern hijyen standartlarıyla buluşarak sofralarınıza özgün lezzetler olarak ulaşıyor.</p>
+  </div>
+</section>
+
+<!-- SECTION 1 — Zeytinyağı (white, image-left + text-right + bottom panorama) -->
+<section class="uretim-section">
+  <div class="container">
+    <div class="uretim-split reveal">
+      <div class="visual">
+        <div class="uretim-visual"><img src="{UNSPLASH['story_grove']}" alt="Halhalı zeytinleri" loading="lazy" data-fallback></div>
+      </div>
+      <div class="text">
+        <span class="eyebrow">Zeytinyağı</span>
+        <h2>Soğuk Sıkım Zeytinyağının Sofradaki Saf Lezzeti</h2>
+        <div class="desc">
+          <p>Derik'in Halhalı zeytinleri, hasat dönemi başlar başlamaz tesisimize ulaşır. Mardin'in eşsiz iklimi ve karakteristik toprak yapısı, zeytinin aromasını ve sağlık değerlerini özel kılan unsurlardır. Soğuk sıkım yöntemiyle, ısı ve kimyasal işleme tabi tutulmadan, doğanın bize sunduğu zeytinyağı saflığını korumaya özen gösteriyoruz.</p>
+          <p>Üretim hattımızda her bir damla zeytinyağı, geleneksel ustalıkla modern hijyen standartlarının buluştuğu bir süreçten geçer. Asit oranı düşük, polifenol değeri yüksek bu eşsiz lezzet, sofralarınıza tanıdık bir Anadolu hatırası olarak ulaşır.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2 — Zeytin (DARK GREEN, text-left + image-right curved + pull-quote) -->
+<section class="uretim-section alt-dark">
+  <div class="container">
+    <div class="uretim-split flip reveal">
+      <div class="text">
+        <span class="eyebrow">Zeytin</span>
+        <h2>Geleneksel Yöntemlerle İşlenmiş Halhalı Zeytinleri</h2>
+        <div class="desc">
+          <p>Yeşil zeytin, siyah zeytin ve özel salamura çeşitlerimiz, yüzyıllardır Mardin'de kuşaktan kuşağa aktarılan geleneksel üretim bilgisinin günümüze taşıdığı bir ürün ailesidir. Her bir zeytin tanesini, doğal fermantasyon süreçlerinden geçirerek sofralık zeytin haline getiriyoruz.</p>
+          <blockquote class="uretim-quote">"Zeytin, sabırla olgunlaşır. Biz de o sabra eşlik ediyoruz."</blockquote>
+          <p>Salamura yapımında kimyasal hızlandırıcı kullanmıyoruz. Tuz oranı, dinlenme süresi ve baharat seçimleri yöresel ustaların binlerce yıllık deneyimine dayanan formüllerle belirlenir. Sonuç: hem damağa hem ruha hitap eden, karakterli bir zeytin lezzeti.</p>
+        </div>
+      </div>
+      <div class="visual">
+        <div class="uretim-visual curved"><img src="{UNSPLASH['cat_zeyt']}" alt="Halhalı zeytin salamura" loading="lazy" data-fallback></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3 — Sabun & Doğal (cream bg, image-right collage + text-left) -->
+<section class="uretim-section alt-cream">
+  <div class="container">
+    <div class="uretim-split reveal">
+      <div class="visual">
+        <div class="uretim-collage">
+          <div class="ca"><img src="{UNSPLASH['cat_sabun']}" alt="Zeytinyağı sabunu" loading="lazy" data-fallback></div>
+          <div class="cb"><img src="{UNSPLASH['cat_dogal']}" alt="Doğal ürün ayrıntı" loading="lazy" data-fallback></div>
+        </div>
+      </div>
+      <div class="text">
+        <span class="eyebrow">Sabun & Doğal Ürünler</span>
+        <h2>Zeytinyağının Cilde Dokunan Hâli</h2>
+        <div class="desc">
+          <p>Zeytinyağı sabunlarımız, yine Halhalı zeytininin kıymetli yağından üretiliyor. Geleneksel sabun yapımı, gelişen teknolojiye rağmen Mardin'de hâlâ ahşap kalıplarda, doğal yöntemlerle sürdürülüyor. Sentetik kimyasal, koruyucu ve parfüm içermeyen sabunlarımız, hassas ciltler için ideal bir tercih.</p>
+          <p>Bunun yanı sıra zeytin yaprağı çayı, zeytinyağlı kremler ve hediyelik özel setlerimiz, doğanın saflığını günlük hayatın bir parçası haline getirme vizyonumuzun ürünleri.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+'''
+    return head_block("Üretim — Derik") + header_block() + body + FOOTER + SHARED_JS + "</body>\n</html>\n"
+
+
+def build_sss():
+    cats = [
+        ("siparis", "Sipariş ve Ödeme", "Sipariş süreci ve ödeme yöntemleri hakkında", [
+            ("Hangi ödeme yöntemlerini kabul ediyorsunuz?",
+             "Tüm kredi/banka kartları (Visa, Mastercard, Troy), havale/EFT ve kapıda ödeme seçeneklerimiz mevcuttur. Tüm online ödemeler 3D Secure ile korunur."),
+            ("Siparişimi nasıl takip edebilirim?",
+             "Siparişiniz kargoya verildiği anda e-posta ve SMS ile takip kodu iletilir. Üyelik hesabınızdaki <a href='#hesap'>Siparişlerim</a> bölümünden de durumu canlı takip edebilirsiniz."),
+            ("Siparişimi iptal edebilir miyim?",
+             "Henüz kargoya verilmemiş siparişler ücretsiz iptal edilebilir. Lütfen mümkün olan en kısa sürede info@derikzeytin.com adresine sipariş numaranızı içeren bir e-posta gönderin."),
+            ("Faturamı nasıl alabilirim?",
+             "E-fatura siparişiniz onaylandıktan sonra otomatik olarak hesabınıza ve e-posta adresinize iletilir. Şirket faturası için form sırasında vergi bilgilerini girmeniz yeterlidir."),
+            ("Kapıda ödeme seçeneği var mı?",
+             "Evet, 1.500 TL altındaki siparişlerde kapıda nakit veya kart ile ödeme yapabilirsiniz. Kapıda ödeme komisyonu ücretsizdir."),
+        ]),
+        ("kargo", "Kargo ve Teslimat", "Kargo süresi, ücretler ve teslimat detayları", [
+            ("Kargo ücretleri ne kadar?",
+             "750 TL ve üzeri tüm siparişlerde kargo ücretsizdir. 750 TL altında 39,90 TL standart kargo ücreti uygulanır."),
+            ("Siparişim ne zaman elime ulaşır?",
+             "16:00'a kadar verilen siparişler aynı gün kargoya verilir. Türkiye geneli teslimat süresi 1-3 iş günüdür. Doğu illeri için 3-5 iş günü olabilir."),
+            ("Aynı gün kargo seçeneği nedir?",
+             "Hafta içi 16:00'a kadar onaylanan tüm siparişler aynı gün kargoya verilir. Hafta sonu siparişler pazartesi günü kargolanır."),
+            ("Hangi kargo firmalarıyla çalışıyorsunuz?",
+             "Yurtiçi Kargo, Aras Kargo ve MNG Kargo ile anlaşmalıyız. Bölgenize en hızlı ulaşan firma sistem tarafından otomatik seçilir."),
+            ("Kargo hasarlı geldi, ne yapmalıyım?",
+             "Kargo paketi hasarlıysa kargo görevlisinden tutanak tutturup ürünü iade edin. Ardından 24 saat içinde fotoğraflarla birlikte info@derikzeytin.com adresine bildirin; ücretsiz değişim sağlanır."),
+        ]),
+        ("urun", "Ürünler ve Üretim", "Halhalı zeytini, soğuk sıkım ve üretim süreçleri", [
+            ("Halhalı zeytini nedir?",
+             "Halhalı, Mardin Derik bölgesine özgü, kendine has aroması ve karakteriyle bilinen bir zeytin türüdür. Hem sofralık hem yağlık olarak değerlendirilir, antioksidan değeri yüksektir."),
+            ("Soğuk sıkım yöntemi nedir?",
+             "Zeytinin 27°C'nin altında, ısı ve kimyasal işleme tabi tutulmadan sıkılması yöntemidir. Yağın tüm aroma ve sağlık değerlerini korur, asit oranı düşük olur."),
+            ("Zeytinyağınızın asit oranı kaç?",
+             "Erken hasat ürünlerimizin asit oranı %0,3'ün altında, klasik natürel sızma ürünlerimiz %0,8'in altındadır. Detaylı değer her ürünün etiketinde belirtilmiştir."),
+            ("Ürünlerinizin son kullanma tarihi nedir?",
+             "Zeytinyağları üretim tarihinden itibaren 18 ay, sofralık zeytinler 12 ay raf ömrüne sahiptir. Açıldıktan sonra serin ve karanlık ortamda saklanması önerilir."),
+            ("Üretim tesisinizi gezebilir miyim?",
+             "Evet, hasat sezonunda (Kasım-Aralık) randevulu olarak Mardin Derik'teki üretim tesisimize ziyaret kabul ediyoruz. Talep için info@derikzeytin.com'dan iletişime geçin."),
+            ("Ürünleriniz organik sertifikalı mı?",
+             "Organik koleksiyonumuz ECOCERT sertifikalıdır. Klasik ürünlerimiz doğal yöntemlerle üretilir ancak organik sertifikası bulunmamaktadır."),
+        ]),
+        ("iade", "İade ve Değişim", "İade hakkı ve koşulları", [
+            ("İade süresi kaç gündür?",
+             "Ürünü teslim aldığınız tarihten itibaren 14 gün içinde koşulsuz iade hakkınız vardır. İade talebinizi <a href='iletisim.html'>iletişim formundan</a> iletebilirsiniz."),
+            ("İade için hangi koşullar gerekli?",
+             "Ürünün orijinal ambalajında, mührü açılmamış ve kullanılmamış olması gerekir. Faturayla birlikte iade edilmesi şarttır."),
+            ("Açılmış ürünü iade edebilir miyim?",
+             "Açılmış gıda ürünleri yasal olarak iade kabul edilmez. Ancak ürün hatası tespit ettiğinizde fotoğrafla birlikte iletmeniz halinde değişim yapılır."),
+            ("İade kargo ücretini kim öder?",
+             "Üründe kaynaklanmış bir hata varsa tüm kargo ücretleri tarafımıza aittir. Müşteri kaynaklı iadelerde kargo ücreti müşteriye aittir."),
+        ]),
+        ("uyelik", "Üyelik ve Hesap", "Hesap işlemleri ve üyelik avantajları", [
+            ("Üyelik nasıl açılır?",
+             "Sağ üstteki <i class='fa-regular fa-user'></i> ikonuna tıklayıp e-posta + şifre ile saniyeler içinde üye olabilirsiniz. Üyelik tamamen ücretsizdir."),
+            ("Şifremi unuttum, ne yapmalıyım?",
+             "Giriş ekranındaki 'Şifremi Unuttum' linkine tıklayıp e-posta adresinizi girmeniz yeterli. Sıfırlama linki anında gönderilir."),
+            ("Üye olmadan alışveriş yapabilir miyim?",
+             "Evet, ödeme adımında 'Üye olmadan devam et' seçeneğiyle hızlı satın alma yapabilirsiniz. Ancak üyelik size sipariş takibi ve özel kampanya bildirimleri sağlar."),
+            ("Üyelik bilgilerimi nasıl güncellerim?",
+             "Hesabım sayfasındaki 'Profil Ayarları' bölümünden ad, e-posta, telefon, adres bilgilerinizi istediğiniz zaman güncelleyebilirsiniz."),
+        ]),
+        ("kurumsal", "Kurumsal Satış", "Toplu sipariş, özel ambalaj ve ihracat", [
+            ("Kurumsal müşteri avantajlarım nelerdir?",
+             "Toplu sipariş bazlı özel fiyatlama, düzenli teslimat planı, şirket logolu özel etiket tasarımı ve adanmış müşteri temsilcisi avantajlarımız vardır."),
+            ("Özel etiket veya ambalaj tasarlıyor musunuz?",
+             "Evet, kurumsal müşterilerimiz için şirket logosunu içeren özel etiket ve hediye ambalajı tasarımı sunuyoruz. Detay için <a href='kurumsal-satis.html'>Kurumsal Satış</a> sayfamızdan formu doldurabilirsiniz."),
+            ("Toplu sipariş minimum adedi nedir?",
+             "Restoran/otel anlaşmalarında minimum 50 birim, kurumsal hediye setlerinde minimum 100 set ile kurumsal fiyatlandırma devreye girer."),
+            ("İhracat / distribütörlük başvurusu nasıl yapılır?",
+             "İhracat ve distribütörlük talepleri için <a href='kurumsal-satis.html'>Kurumsal Satış</a> formunu doldurun veya doğrudan info@derikzeytin.com adresine yazın."),
+        ]),
+    ]
+
+    nav_items = "\n".join(
+        f'      <li><a href="#{slug}"><span>{title}</span><span class="num">{len(qas)}</span></a></li>'
+        for slug, title, _, qas in cats
+    )
+
+    sections = []
+    for slug, title, lead, qas in cats:
+        items = "\n".join(
+            f'''        <div class="qa">
+          <button class="qa-q" type="button">
+            <span>{q}</span>
+            <span class="qa-icon"><i class="fa-solid fa-chevron-down"></i></span>
+          </button>
+          <div class="qa-a"><p>{a}</p></div>
+        </div>'''
+            for q, a in qas
+        )
+        sections.append(f'''      <section class="sss-cat" id="{slug}">
+        <h2>{title}</h2>
+        <p class="cat-lead">{lead}</p>
+        <div class="sss-list">
+{items}
+        </div>
+      </section>''')
+
+    body = f'''
+<div class="container">
+  <nav class="crumb">
+    <a href="index.html">Anasayfa</a>
+    <i class="fa-solid fa-chevron-right sep"></i>
+    <span class="active">Sıkça Sorulan Sorular</span>
+  </nav>
+</div>
+
+<div class="container sss-title">
+  <span class="eyebrow">Yardım</span>
+  <h1>Sıkça Sorulan Sorular</h1>
+  <p>Aklınızdaki soruların cevabını burada bulun. Aradığınızı bulamazsanız <a href="iletisim.html" style="color:var(--primary-700);text-decoration:underline">bize ulaşmaktan</a> çekinmeyin.</p>
+</div>
+
+<div class="container sss-layout">
+  <aside class="sss-nav">
+    <h3>Kategoriler</h3>
+    <ul>
+{nav_items}
+    </ul>
+  </aside>
+
+  <div class="sss-cats">
+{chr(10).join(sections)}
+  </div>
+</div>
+
+<script>
+// FAQ accordion — single-open behavior
+document.querySelectorAll('.qa-q').forEach(btn => {{
+  btn.addEventListener('click', () => {{
+    const qa = btn.parentElement;
+    const wasOpen = qa.classList.contains('open');
+    document.querySelectorAll('.qa.open').forEach(o => o.classList.remove('open'));
+    if (!wasOpen) qa.classList.add('open');
+  }});
+}});
+
+// Active nav highlight on scroll
+const navLinks = document.querySelectorAll('.sss-nav a');
+const cats = document.querySelectorAll('.sss-cat');
+const setActive = () => {{
+  let current = cats[0]?.id;
+  cats.forEach(c => {{
+    if (c.getBoundingClientRect().top <= 160) current = c.id;
+  }});
+  navLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+}};
+setActive();
+document.addEventListener('scroll', setActive, {{passive:true}});
+</script>
+'''
+    return head_block("Sıkça Sorulan Sorular — Derik") + header_block() + body + FOOTER + SHARED_JS + "</body>\n</html>\n"
+
+
+def build_kurumsal():
+    body = '''
+<div class="container">
+  <nav class="crumb">
+    <a href="index.html">Anasayfa</a>
+    <i class="fa-solid fa-chevron-right sep"></i>
+    <span class="active">Kurumsal Satış</span>
+  </nav>
+</div>
+
+<!-- 2-COL: CONTENT (sol) + FORM (sağ) -->
+<div class="container ks-layout">
+
+  <!-- SOL: Açıklama + 2 katalog linki + ek paragraf -->
+  <div class="ks-content">
+    <h1>Kurumsal Satış</h1>
+    <p class="lead">Mardin Derik Lezzetleri Kurumsal Müşterilerimiz İçin Harika Bir Seçenek!</p>
+
+    <p>Restoran, otel, kafe ve gurme işletmelerden yılbaşı, bayram, şirket yıldönümü gibi kurumsal hediyelere kadar; Halhalı zeytininin köklü mirasını sofranıza ve müşterilerinize taşıyoruz.</p>
+
+    <p>Özel ambalaj, şirket logolu etiket tasarımı, ölçek bazlı fiyatlama ve toplu adres listesine direkt teslimat seçeneklerimizle ihtiyacınıza özel çözümler sunuyoruz.</p>
+
+    <p>Aşağıdaki formu doldurarak ihtiyacınızı bizimle paylaşabilirsiniz; ekibimiz 24 saat içinde size özel teklifle dönüş yapsın. Daha hızlı iletişim için doğrudan telefon veya e-posta ile de ulaşabilirsiniz.</p>
+
+    <div class="quick-contact">
+      <a href="tel:08503937070"><i class="fa-solid fa-headset"></i> 0 (850) 393 7070</a>
+      <a href="mailto:info@derikzeytin.com"><i class="fa-solid fa-envelope"></i> info@derikzeytin.com</a>
+    </div>
+  </div>
+
+  <!-- SAĞ: Form panel (zeytin dalı watermark dekorasyon) -->
+  <form class="ks-form-panel" name="kurumsal-satis" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/kurumsal-satis.html?gonderildi=1">
+    <h2>Teklif Talebi Formu</h2>
+    <p class="form-lead">Tüm alanları doldurmanız değerlendirme süresini kısaltır.</p>
+
+    <div class="form-success" id="formSuccess"><i class="fa-solid fa-circle-check"></i> Teklifiniz iletildi. Ekibimiz en kısa sürede dönüş yapacaktır.</div>
+
+    <input type="hidden" name="form-name" value="kurumsal-satis">
+    <p style="display:none"><label>Bot doldurmasın: <input name="bot-field"></label></p>
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="ad">Ad</label>
+        <input id="ad" name="ad" required placeholder="Adınız">
+      </div>
+      <div class="field">
+        <label for="soyad">Soyad</label>
+        <input id="soyad" name="soyad" required placeholder="Soyadınız">
+      </div>
+
+      <div class="field full">
+        <label for="tel">Telefon</label>
+        <div class="tel-group">
+          <span class="ccode">+90</span>
+          <input id="tel" type="tel" name="telefon" required placeholder="(5xx) xxx xx xx">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="email">E-posta</label>
+        <input id="email" type="email" name="email" required placeholder="ornek@sirket.com">
+      </div>
+      <div class="field">
+        <label for="sirket">Firma / İşletme</label>
+        <input id="sirket" name="sirket" placeholder="Şirket veya işletme adı">
+      </div>
+
+      <div class="field">
+        <label for="konu">Talep Türü</label>
+        <select id="konu" name="konu" required>
+          <option value="">Seçiniz</option>
+          <option>Restoran / Otel / Gurme</option>
+          <option>Toptan Satış</option>
+          <option>İhracat / Distribütörlük</option>
+          <option>Diğer</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="adet">Tahmini Adet</label>
+        <input id="adet" name="adet" placeholder="ör. 200 set">
+      </div>
+
+      <div class="field full">
+        <label for="mesaj">Mesajınız</label>
+        <textarea id="mesaj" name="mesaj" required placeholder="İhtiyacınızı kısaca anlatın (ürün, ambalaj tercihi, teslimat tarihi vb.)"></textarea>
+      </div>
+    </div>
+
+    <label class="check-row kvkk">
+      <input type="checkbox" name="kvkk" required>
+      <span><a href="#kvkk">KVKK Aydınlatma Metni</a>'ni okudum, kişisel verilerimin form amaçlı işlenmesini onaylıyorum.</span>
+    </label>
+
+    <div class="actions">
+      <button type="submit" class="btn btn-primary">Gönder <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </form>
+
+</div>
+
+<script>
+if (location.search.includes("gonderildi=1")) {
+  document.getElementById("formSuccess")?.classList.add("show");
+  document.querySelector(".ks-form-panel")?.reset();
+}
+</script>
+'''
+    return head_block("Kurumsal Satış — Derik") + header_block() + body + FOOTER + SHARED_JS + "</body>\n</html>\n"
+
+
+def build_iletisim():
+    body = '''
+<div class="container">
+  <nav class="crumb">
+    <a href="index.html">Anasayfa</a>
+    <i class="fa-solid fa-chevron-right sep"></i>
+    <span class="active">İletişim</span>
+  </nav>
+</div>
+
+<!-- PAGE TITLE (sade, krem zemin) -->
+<div class="container contact-title">
+  <h1>İletişim</h1>
+  <p>Sorularınız, kurumsal teklifleriniz ve siparişleriniz için aşağıdaki kanallardan bize ulaşabilirsiniz. Hafta içi 24 saat içinde dönüş yapıyoruz.</p>
+</div>
+
+<!-- CONTACT GRID -->
+<section>
+  <div class="container contact-grid">
+    <aside class="contact-card">
+      <h2>İletişim Bilgileri</h2>
+
+      <div class="contact-row">
+        <span class="ico"><i class="fa-solid fa-location-dot"></i></span>
+        <div class="ic-body">
+          <b>Adres</b>
+          <span>Derik Üretim Tesisi<br>Mardin / Derik, Türkiye</span>
+        </div>
+      </div>
+
+      <div class="contact-row">
+        <span class="ico"><i class="fa-solid fa-headset"></i></span>
+        <div class="ic-body">
+          <b>Telefon</b>
+          <a href="tel:08503937070">0 (850) 393 7070</a>
+        </div>
+      </div>
+
+      <div class="contact-row">
+        <span class="ico"><i class="fa-solid fa-envelope"></i></span>
+        <div class="ic-body">
+          <b>E-posta</b>
+          <a href="mailto:info@derikzeytin.com">info@derikzeytin.com</a>
+        </div>
+      </div>
+
+      <div class="contact-row">
+        <span class="ico"><i class="fa-regular fa-clock"></i></span>
+        <div class="ic-body">
+          <b>Çalışma Saatleri</b>
+          <span>Hafta içi 09:00 – 18:00<br>Cumartesi 09:00 – 14:00</span>
+        </div>
+      </div>
+
+      <div class="socials">
+        <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        <a href="#" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+      </div>
+    </aside>
+
+    <form class="contact-form" name="iletisim" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/iletisim.html?gonderildi=1">
+      <h2>Mesaj Gönderin</h2>
+      <p class="lead">Formu doldurun, en kısa sürede size dönüş yapalım.</p>
+
+      <div class="form-success" id="formSuccess"><i class="fa-solid fa-circle-check"></i> Mesajınız iletildi. Teşekkürler.</div>
+
+      <input type="hidden" name="form-name" value="iletisim">
+      <p style="display:none"><label>Bot doldurmasın: <input name="bot-field"></label></p>
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="ad">Ad Soyad</label>
+          <input id="ad" name="ad" required placeholder="Adınız ve soyadınız">
+        </div>
+        <div class="field">
+          <label for="email">E-posta</label>
+          <input id="email" type="email" name="email" required placeholder="ornek@mail.com">
+        </div>
+        <div class="field">
+          <label for="tel">Telefon</label>
+          <input id="tel" type="tel" name="telefon" placeholder="0 (5xx) xxx xx xx">
+        </div>
+        <div class="field">
+          <label for="konu">Konu</label>
+          <select id="konu" name="konu" required>
+            <option value="">Seçiniz</option>
+            <option>Genel Bilgi</option>
+            <option>Sipariş Hakkında</option>
+            <option>Kurumsal Satış</option>
+            <option>Diğer</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label for="mesaj">Mesajınız</label>
+          <textarea id="mesaj" name="mesaj" required placeholder="Mesajınızı buraya yazın..."></textarea>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-primary">Gönder <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="contact-map" aria-label="Mardin Derik konum haritası">
+  <iframe src="https://maps.google.com/maps?q=Mardin%20Derik&t=&z=11&ie=UTF8&iwloc=&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mardin Derik haritası"></iframe>
+</section>
+
+<script>
+// Show success banner if redirected with ?gonderildi=1
+if (location.search.includes("gonderildi=1")) {
+  document.getElementById("formSuccess")?.classList.add("show");
+  document.querySelector(".contact-form")?.reset();
+}
+</script>
+'''
+    return head_block("İletişim — Derik") + header_block() + body + FOOTER + SHARED_JS + "</body>\n</html>\n"
+
+
+files = {
+    "index.html": build_index(),
+    "magaza.html": build_magaza(),
+    "urun-detay.html": build_detay(),
+    "hikayemiz.html": build_hikayemiz(),
+    "uretim.html": build_uretim(),
+    "iletisim.html": build_iletisim(),
+    "kurumsal-satis.html": build_kurumsal(),
+    "sss.html": build_sss(),
+}
+for name, content in files.items():
+    p = OUT_ROOT / name
+    p.write_text(content)
+    print(f"wrote {p} ({len(content)} bytes)")
+
+# Also update output/derik-anasayfa.html
+(OUT_ROOT / "output" / "derik-anasayfa.html").write_text(files["index.html"])
+print(f"wrote output/derik-anasayfa.html ({len(files['index.html'])} bytes)")
