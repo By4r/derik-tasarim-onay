@@ -53,6 +53,25 @@ Bant ile sonraki section/container arasında **clamp(40px, 5vw, 64px)** padding-
 - Bant'a `margin-bottom` koymak yerine sonraki section'a `padding-top` vermek daha güvenli (margin-collapse riskini önler).
 - Tüm sayfalara aynı padding (48px) ile uygulamak — checkout/cart sayfalarında gereksiz dikey alan tüketir.
 
+### Sayfa template varyantları — DOM/CSS audit zorunlu (v3.12.2 lesson)
+Bant'ı **6+ farklı sayfa template'i**'ne (legal, listing, account, checkout) uyguladığında, her template'in kendi CSS varsayımları olabilir. **Bant override'ı, içerideki nested wrapper'ları DA reset etmeli** — yoksa L02'deki "base rule sızması" tekrar yaşanır:
+
+1. **Legal sayfalar:** `.legal-hero{max-width:780px}` — `margin:0 auto` YOK. Bant `text-align:center` block-level child'a etki etmez (sadece inline). Block element max-width ile sıkışır + sola yaslanır. **Fix:** bant override'a `.page-band .legal-hero{max-width:none;margin:0 auto;width:100%}` ekle. Bonus: `.legal-hero h1::after` underline süslemesi varsa bant içinde devre dışı bırak.
+
+2. **Listing sayfalar (arama, favoriler, magaza):** Bant'tan sonra "12 ürün + Sıralama" meta-row'u var. Bu row'a inline `margin-top:24px` + `padding:24px 0` verilmişse, bant'ın `clamp(40px,5vw,64px)` padding-top'u ile **çift boşluk** oluşur (64+24+24=112px). **Fix:** meta-row'un margin-top'unu kaldır; sadece `padding-bottom` bırak (ayraç işlevi için).
+
+3. **Account sayfalar:** Bant'tan sonra `.account-layout` grid var, kendi padding'i yok → spacing temiz çalışır. **Bu canonical referans** — diğer template'leri buna eşitle.
+
+4. **Checkout sayfalar:** `.page-band--compact` varyantı + content kendi card padding'ine sahip. Çakışma yok.
+
+### Spacing audit checklist (her yeni template için)
+```
+1. Bant + sonraki container/section: ne kadar boşluk gerekiyor (≈64px)?
+2. Sonraki container'ın çocuklarında margin-top var mı? Varsa kaldır.
+3. Sonraki container'ın kendi padding-top'u var mı? Varsa clamp ile çakışmıyor mu?
+4. İçerideki nested wrapper (legal-hero gibi) bant text-align:center'ı override eden bir max-width veya margin yapıyor mu?
+```
+
 ### Test kriteri
 1. KVKK/iletisim/magaza/hakkimizda gibi 5 farklı A sayfasında: bant'ın H1'i ve breadcrumb'ı viewport horizontal center'da mı (DevTools'la `getBoundingClientRect().left` ile sol/sağ marj eşit olmalı).
 2. Bant + sonraki section arasında ≥40px boşluk var mı.
