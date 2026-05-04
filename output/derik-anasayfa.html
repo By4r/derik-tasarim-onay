@@ -86,35 +86,35 @@ ul{list-style:none}
 .header-row1{display:flex;align-items:center;gap:var(--s-6);height:88px}
 .brand-logo{font-size:30px;font-weight:800;letter-spacing:-0.025em;color:var(--primary-700);font-style:italic}
 .brand-logo:hover{color:var(--primary-700)}
-.header .search{flex:1;max-width:480px;margin:0 auto;display:flex;align-items:center;gap:var(--s-3);background:var(--bg-product);border:1px solid var(--border);border-radius:var(--r-pill);padding:11px 22px;transition:border-color var(--t-fast),box-shadow var(--t-fast)}
-.header .search:focus-within{border-color:var(--primary-700);box-shadow:0 0 0 3px rgba(59,74,42,.08)}
-.header .search i{color:var(--muted);font-size:var(--icon-md)}
-.header .search input{border:0;background:transparent;outline:0;flex:1;font-size:var(--fs-sm);color:var(--text)}
-.header-actions{display:flex;align-items:center;gap:var(--s-3)}
-.header-actions .top-link{font-size:var(--fs-xs);font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text);padding:8px 10px;display:inline-flex;align-items:center;gap:6px}
-.header-actions .top-link:hover{color:var(--primary-700)}
-.header-actions .top-link i{font-size:11px;color:var(--muted)}
+.header-actions{display:flex;align-items:center;gap:var(--s-2)}
 .icon-btn{position:relative;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:var(--text);transition:background var(--t-fast),color var(--t-fast)}
 .icon-btn i{font-size:var(--icon-md)}
 .icon-btn:hover{background:var(--primary-100);color:var(--primary-700)}
 .cart-badge .cart-num{position:absolute;top:-2px;right:-2px;background:var(--accent-gold);color:var(--primary-900);font-size:11px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg)}
 
-.header-row2{border-top:1px solid var(--border)}
-.nav{display:flex;justify-content:center;gap:var(--s-8);padding:14px 0}
-.nav a{font-size:var(--fs-sm);font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:6px 0;position:relative;color:var(--text)}
+/* Header secondary bar (Kurumsal + Hakkımızda links) */
+.header-top{background:var(--bg);border-bottom:1px solid var(--border);font-size:var(--fs-xs)}
+.header-top .container{display:flex;justify-content:flex-end;align-items:center;gap:var(--s-5);min-height:38px}
+.header-top .top-link{font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text-2);padding:6px 4px;display:inline-flex;align-items:center;gap:6px;position:relative}
+.header-top .top-link i{font-size:10px;color:var(--muted)}
+.header-top .top-link:hover{color:var(--primary-700)}
+.header-top .has-dd{cursor:pointer}
+.header-top .dd-menu{position:absolute;top:calc(100% + 4px);right:0;background:#fff;border:1px solid var(--border);border-radius:var(--r-md);box-shadow:var(--shadow-2);padding:var(--s-2) 0;min-width:180px;display:none;z-index:60}
+.header-top .has-dd:hover .dd-menu,.header-top .dd-menu:hover{display:block}
+.header-top .dd-menu a{display:block;padding:8px 16px;font-size:var(--fs-xs);font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--text-2);text-align:right}
+.header-top .dd-menu a:hover{background:var(--primary-100);color:var(--primary-700)}
+
+/* Main nav (in header row 1, center) */
+.nav{display:flex;justify-content:center;gap:var(--s-8);flex:1}
+.nav a{font-size:var(--fs-sm);font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:8px 0;position:relative;color:var(--text);white-space:nowrap}
 .nav a::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--primary-700);transition:width var(--t-fast)}
 .nav a:hover::after,.nav a.active::after{width:100%}
 .nav a.active{color:var(--primary-700)}
 
 @media(max-width:1024px){
   .nav{display:none}
-  .header .search{max-width:none;order:3;flex-basis:100%;margin:0;}
-  .header-row1{flex-wrap:wrap;height:auto;padding:var(--s-4) 0;gap:var(--s-4)}
-  .header-row2{display:none}
-  .header-actions .top-link{display:none}
-}
-@media(max-width:480px){
-  .telbar .container{justify-content:center}
+  .header-row1{height:auto;padding:var(--s-4) 0;gap:var(--s-4)}
+  .header-top{display:none}
 }
 
 /* BTN */
@@ -377,10 +377,17 @@ ul{list-style:none}
   </div>
 </div>
 
-<!-- TEL BAR -->
-<div class="telbar">
+<!-- HEADER TOP (Kurumsal + Hakkımızda) -->
+<div class="header-top">
   <div class="container">
-    <a href="tel:08503937070"><i class="fa-solid fa-headset"></i> 0 (850) 393 7070</a>
+    <a href="#kurumsal" class="top-link">Kurumsal Satış</a>
+    <span class="top-link has-dd">Hakkımızda <i class="fa-solid fa-chevron-down"></i>
+      <span class="dd-menu">
+        <a href="#hikayemiz">Hikayemiz</a>
+        <a href="#uretim">Üretim</a>
+        <a href="#magazalar">Mağazalar</a>
+      </span>
+    </span>
   </div>
 </div>
 
@@ -388,26 +395,19 @@ ul{list-style:none}
 <header class="header">
   <div class="container header-row1">
     <a href="index.html" class="brand-logo">Derik</a>
-    <div class="search">
-      <i class="fa-solid fa-magnifying-glass"></i>
-      <input placeholder="Ürün ara..." aria-label="Ürün ara">
-    </div>
-    <div class="header-actions">
-      <a href="#kurumsal" class="top-link">Kurumsal Satış <i class="fa-solid fa-chevron-down"></i></a>
-      <a href="#hakkimizda" class="top-link">Hakkımızda <i class="fa-solid fa-chevron-down"></i></a>
-      <a href="#hesap" class="icon-btn" aria-label="Hesabım"><i class="fa-regular fa-user"></i></a>
-      <a href="#favoriler" class="icon-btn" aria-label="Favoriler"><i class="fa-regular fa-heart"></i></a>
-      <a href="#sepet" class="icon-btn cart-badge" aria-label="Sepetim"><i class="fa-solid fa-bag-shopping"></i><span class="cart-num">0</span></a>
-    </div>
-  </div>
-  <div class="header-row2">
-    <nav class="nav container">
+    <nav class="nav">
       <a href="magaza.html">Zeytinyağları</a>
       <a href="#zeytinler">Zeytinler</a>
       <a href="#sabunlar">Sabunlar</a>
       <a href="#dogal">Doğal Ürünler</a>
       <a href="#hediye">Hediye Setleri</a>
     </nav>
+    <div class="header-actions">
+      <a href="#ara" class="icon-btn" aria-label="Ara"><i class="fa-solid fa-magnifying-glass"></i></a>
+      <a href="#hesap" class="icon-btn" aria-label="Hesabım"><i class="fa-regular fa-user"></i></a>
+      <a href="#favoriler" class="icon-btn" aria-label="Favoriler"><i class="fa-regular fa-heart"></i></a>
+      <a href="#sepet" class="icon-btn cart-badge" aria-label="Sepetim"><i class="fa-solid fa-bag-shopping"></i><span class="cart-num">0</span></a>
+    </div>
   </div>
 </header>
 
@@ -451,36 +451,8 @@ ul{list-style:none}
   </div>
 </section>
 
-<!-- HABERLER VE FIRSATLAR -->
-<section class="section" style="padding-top:0;">
-  <div class="container">
-    <div class="section-head">
-      <h2>Haberler ve Fırsatlar</h2>
-      <a href="magaza.html" class="more">Tümünü Gör <i class="fa-solid fa-arrow-right"></i></a>
-    </div>
-    <div class="banner-grid">
-      <a class="banner reveal" href="magaza.html">
-        <img src="https://images.unsplash.com/photo-1593001872095-7d5b3868fb1d?w=1000&q=80&auto=format&fit=crop" alt="Yeni hasat" loading="lazy" data-fallback>
-        <div class="banner-text">
-          <small>Yeni Hasat</small>
-          <h3>Yeni Hasat Erken Sızma · %15 Sezon Avantajı</h3>
-          <span class="banner-cta">Keşfet <i class="fa-solid fa-arrow-right"></i></span>
-        </div>
-      </a>
-      <a class="banner reveal" href="#kurumsal">
-        <img src="https://images.unsplash.com/photo-1606471838963-d5ff6e2e2bb1?w=1000&q=80&auto=format&fit=crop" alt="Kurumsal" loading="lazy" data-fallback>
-        <div class="banner-text">
-          <small>Kurumsal</small>
-          <h3>Kurumsal Hediye Setleri için Teklif Al</h3>
-          <span class="banner-cta">Detaylar <i class="fa-solid fa-arrow-right"></i></span>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-
 <!-- YENİ ÇIKANLAR -->
-<section class="section" style="background:var(--bg-soft);">
+<section class="section" style="padding-top:0;">
   <div class="container">
     <div class="section-head">
       <h2>Yeni Çıkanlar</h2>
@@ -540,6 +512,34 @@ ul{list-style:none}
         </div>
       </article>
 
+    </div>
+  </div>
+</section>
+
+<!-- HABERLER VE FIRSATLAR -->
+<section class="section" style="background:var(--bg-soft);">
+  <div class="container">
+    <div class="section-head">
+      <h2>Haberler ve Fırsatlar</h2>
+      <a href="magaza.html" class="more">Tümünü Gör <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+    <div class="banner-grid">
+      <a class="banner reveal" href="magaza.html">
+        <img src="https://images.unsplash.com/photo-1593001872095-7d5b3868fb1d?w=1000&q=80&auto=format&fit=crop" alt="Yeni hasat" loading="lazy" data-fallback>
+        <div class="banner-text">
+          <small>Yeni Hasat</small>
+          <h3>Yeni Hasat Erken Sızma · %15 Sezon Avantajı</h3>
+          <span class="banner-cta">Keşfet <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </a>
+      <a class="banner reveal" href="#kurumsal">
+        <img src="https://images.unsplash.com/photo-1606471838963-d5ff6e2e2bb1?w=1000&q=80&auto=format&fit=crop" alt="Kurumsal" loading="lazy" data-fallback>
+        <div class="banner-text">
+          <small>Kurumsal</small>
+          <h3>Kurumsal Hediye Setleri için Teklif Al</h3>
+          <span class="banner-cta">Detaylar <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </a>
     </div>
   </div>
 </section>
