@@ -7,25 +7,25 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
 <style>
 :root {
-  --primary-700: #3B4A2A;
-  --primary-800: #6B7A3F;
-  --primary-900: #2A3520;
-  --primary-100: #F2EBDC;
-  --primary-200: #E8DFC9;
+  --primary-700: #3D4F3C;
+  --primary-800: #5A6F58;
+  --primary-900: #2A3829;
+  --primary-100: #FAF7F0;
+  --primary-200: #E8DFC5;
 
-  --bg: #FAF6EE;
-  --bg-soft: #F2EBDC;
-  --bg-section: #F2EBDC;
-  --bg-card: #E8DFC9;
+  --bg: #FAF7F0;
+  --bg-soft: #E8DFC5;
+  --bg-section: #FAF7F0;
+  --bg-card: #E8DFC5;
   --bg-product: #FAF9F5;
   --text: #2A1F14;
   --text-2: #4A3A2A;
   --muted: #8C7A6A;
   --muted-2: #B5A693;
-  --border: #E8DFC9;
+  --border: #D4C9A8;
 
   --accent-gold: #C9A55B;
-  --accent-gold-soft: #E8D4A1;
+  --accent-gold-soft: #D4C9A8;
   --accent-earth: #8C6A4A;
   --accent-red: #B04A3E;
   --accent-success: #5A7A3A;
@@ -89,8 +89,7 @@ ul{list-style:none}
 /* HEADER */
 .header{position:sticky;top:0;z-index:50;background:var(--bg);box-shadow:var(--shadow-header);border-bottom:1px solid var(--border)}
 .header-row1{display:flex;align-items:center;gap:var(--s-6);height:88px}
-.brand-logo{font-size:30px;font-weight:800;letter-spacing:-0.025em;color:var(--primary-700);font-style:italic}
-.brand-logo:hover{color:var(--primary-700)}
+.brand-logo{display:inline-flex;align-items:center;line-height:0}.brand-logo img{height:64px;width:auto;border-radius:8px;display:block;transition:transform var(--t-fast)}.brand-logo:hover img{transform:scale(1.02)}@media(max-width:768px){.brand-logo img{height:52px}}
 .header-actions{display:flex;align-items:center;gap:var(--s-2)}
 .icon-btn{position:relative;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:var(--text);transition:background var(--t-fast),color var(--t-fast)}
 .icon-btn i{font-size:var(--icon-md)}
@@ -132,7 +131,7 @@ ul{list-style:none}
 
 /* HERO */
 .hero{padding:var(--s-8) 0 0}
-.hero-slider{position:relative;border-radius:var(--r-xl);overflow:hidden;min-height:70vh;background:radial-gradient(ellipse at 90% 100%,rgba(59,74,42,.18) 0%,transparent 55%),linear-gradient(120deg,#FAF6EE 0%,#EDE0C8 55%,#D6C29A 100%);color:var(--text)}
+.hero-slider{position:relative;border-radius:var(--r-xl);overflow:hidden;min-height:70vh;background:radial-gradient(ellipse at 90% 100%,rgba(59,74,42,.18) 0%,transparent 55%),linear-gradient(120deg,#FAF7F0 0%,#E8DFC5 55%,#D4C9A8 100%);color:var(--text)}
 .hero-slide{display:grid;grid-template-columns:1fr 1fr;align-items:center;min-height:70vh;gap:var(--s-10);padding:var(--s-12)}
 .hero-text{max-width:540px}
 .hero-text .eyebrow{display:inline-block;background:var(--primary-700);color:#fff;padding:6px 14px;border-radius:var(--r-pill);font-size:var(--fs-xs);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:var(--s-5)}
@@ -635,7 +634,7 @@ ul{list-style:none}
 /* ===== MOBILE V3.8 BEGIN ===== */
 /* ============ MOBILE PANEL (v3.8) ============ */
 .mobile-burger{display:none;width:42px;height:42px;border-radius:50%;align-items:center;justify-content:center;color:var(--text);cursor:pointer;background:transparent;border:0;transition:background var(--t-fast)}
-.mobile-burger:hover{background:var(--primary-100,#F2EBDC);color:var(--primary-700)}
+.mobile-burger:hover{background:var(--primary-100,#FAF7F0);color:var(--primary-700)}
 .mobile-burger i{font-size:20px}
 @media(max-width:1024px){.mobile-burger{display:inline-flex} .header-actions>.icon-btn:not(.cart-badge):not([data-search-trigger]){display:none} .header-actions .user-dd-wrap{display:none} .header-actions{margin-left:auto;gap:var(--s-2)} .header-row1{gap:var(--s-2)}}
 
@@ -806,7 +805,7 @@ body.mobile-panel-open{overflow:hidden}
 <!-- HEADER -->
 <header class="header">
   <div class="container header-row1">
-    <a href="index.html" class="brand-logo">Derik</a>
+    <a href="index.html" class="brand-logo"><img src="assets/logo/derik-logo.jpeg" alt="Derik Zeytini — Geleneksel Lezzetin Adresi"></a>
     <nav class="nav">
       <a href="magaza.html">Zeytinyağları</a>
       <a href="magaza.html?kategori=zeytinler">Zeytinler</a>
@@ -913,7 +912,7 @@ body.mobile-panel-open{overflow:hidden}
   <div class="container">
     <div class="footer-cols">
       <div class="footer-brand">
-        <span class="brand-logo">Derik</span>
+        <span class="brand-logo"><img src="assets/logo/derik-logo.jpeg" alt="Derik Zeytini — Geleneksel Lezzetin Adresi"></span>
         <p>Mardin Derik'ten sofranıza.</p>
         <div class="contact-line"><i class="fa-solid fa-location-dot"></i> Mardin Derik, Türkiye</div>
         <div class="contact-line"><i class="fa-solid fa-envelope"></i> info@derikzeytin.com</div>
@@ -1097,7 +1096,7 @@ document.querySelectorAll('.add-cart, [data-add-cart]').forEach(b => {
 <div class="mobile-overlay" data-close-mpanel></div>
 <aside class="mobile-panel" id="mobilePanel" aria-hidden="true">
   <div class="mobile-panel-head">
-    <a href="index.html" class="brand-logo">Derik</a>
+    <a href="index.html" class="brand-logo"><img src="assets/logo/derik-logo.jpeg" alt="Derik Zeytini — Geleneksel Lezzetin Adresi"></a>
     <button class="mobile-panel-close" data-close-mpanel aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
   </div>
   <div id="mpanelUserSection"></div>
