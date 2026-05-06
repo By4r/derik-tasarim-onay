@@ -88,8 +88,8 @@ ul{list-style:none}
 
 /* HEADER */
 .header{position:sticky;top:0;z-index:50;background:var(--bg);box-shadow:var(--shadow-header);border-bottom:1px solid var(--border)}
-.header-row1{display:flex;align-items:center;gap:var(--s-6);height:88px}
-.brand-logo{display:inline-flex;align-items:center;line-height:0}.brand-logo img{height:64px;width:auto;border-radius:8px;display:block;transition:transform var(--t-fast)}.brand-logo:hover img{transform:scale(1.02)}@media(max-width:768px){.brand-logo img{height:52px}}
+.header-row1{display:flex;align-items:center;gap:var(--s-6);min-height:120px;padding:12px 0}@media(max-width:1024px){.header-row1{min-height:104px}}@media(max-width:768px){.header-row1{min-height:88px}}
+.brand-logo{display:inline-flex;align-items:center;line-height:0}.brand-logo img{height:96px;width:auto;display:block;transition:transform var(--t-fast)}.brand-logo:hover img{transform:scale(1.02)}@media(max-width:1024px){.brand-logo img{height:80px}}@media(max-width:768px){.brand-logo img{height:64px}}@media(max-width:480px){.brand-logo img{height:52px}}.footer .brand-logo img{height:84px}@media(max-width:768px){.footer .brand-logo img{height:64px}}
 .header-actions{display:flex;align-items:center;gap:var(--s-2)}
 .icon-btn{position:relative;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:var(--text);transition:background var(--t-fast),color var(--t-fast)}
 .icon-btn i{font-size:var(--icon-md)}
@@ -205,20 +205,23 @@ ul{list-style:none}
 .add-cart:hover{background:var(--primary-900);transform:translateY(-1px);color:#fff}
 
 /* FOOTER */
-.footer{background:var(--bg-section);padding:var(--s-12) 0 var(--s-6);margin-top:96px}
-.footer-cols{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:var(--s-8);padding-bottom:var(--s-10);border-bottom:1px solid var(--border)}
-.footer h4{font-size:var(--fs-sm);font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-bottom:var(--s-4)}
+.footer{background:var(--primary-900);color:#E8DFC5;padding:var(--s-12) 0 var(--s-6);margin-top:96px}
+.footer-cols{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:var(--s-8);padding-bottom:var(--s-10);border-bottom:1px solid rgba(232,223,197,.15)}
+.footer h4{font-size:var(--fs-sm);font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-bottom:var(--s-4);color:#FAF7F0}
 .footer ul li{padding:6px 0}
-.footer ul li a{color:var(--text-2);font-size:var(--fs-sm)}
-.footer-brand p{color:var(--muted);font-size:var(--fs-sm);margin-top:var(--s-3);max-width:300px}
-.footer-bottom{padding-top:var(--s-5);display:flex;justify-content:space-between;align-items:center;font-size:var(--fs-xs);color:var(--muted);flex-wrap:wrap;gap:var(--s-4)}
+.footer ul li a{color:rgba(232,223,197,.78);font-size:var(--fs-sm);transition:color var(--t-fast)}
+.footer ul li a:hover{color:var(--accent-gold)}
+.footer-brand p{color:rgba(232,223,197,.65);font-size:var(--fs-sm);margin-top:var(--s-3);max-width:300px}
+.footer-bottom{padding-top:var(--s-5);display:flex;justify-content:space-between;align-items:center;font-size:var(--fs-xs);color:rgba(232,223,197,.6);flex-wrap:wrap;gap:var(--s-4)}
+.footer-bottom a{color:rgba(232,223,197,.78)}
+.footer-bottom a:hover{color:var(--accent-gold)}
 .socials{display:flex;gap:var(--s-3);margin-top:var(--s-4)}
-.socials a{width:38px;height:38px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;color:var(--text-2);transition:all var(--t-fast)}
+.socials a{width:38px;height:38px;border-radius:50%;background:rgba(232,223,197,.08);display:flex;align-items:center;justify-content:center;color:#E8DFC5;transition:all var(--t-fast)}
 .socials a i{font-size:var(--icon-md)}
-.socials a:hover{background:var(--primary-700);color:#fff}
+.socials a:hover{background:var(--accent-gold);color:var(--primary-900)}
 .policies{display:flex;gap:var(--s-4);flex-wrap:wrap}
-.contact-line{display:flex;align-items:center;gap:var(--s-2);color:var(--text-2);font-size:var(--fs-sm);padding:6px 0}
-.contact-line i{color:var(--primary-700);width:16px}
+.contact-line{display:flex;align-items:center;gap:var(--s-2);color:rgba(232,223,197,.78);font-size:var(--fs-sm);padding:6px 0}
+.contact-line i{color:var(--accent-gold);width:16px}
 
 /* SHOP PAGE — magaza */
 .crumb{font-size:var(--fs-sm);color:var(--muted);padding:var(--s-6) 0;display:flex;align-items:center;gap:var(--s-2);flex-wrap:wrap}
@@ -742,7 +745,7 @@ body.mobile-panel-open{overflow:hidden}
 <!-- HEADER -->
 <header class="header">
   <div class="container header-row1">
-    <a href="index.html" class="brand-logo"><img src="assets/logo/derik-logo.jpeg" alt="Derik Zeytini — Geleneksel Lezzetin Adresi"></a>
+    <a href="index.html" class="brand-logo"><img src="assets/logo/derik-logo-dark.png" alt="Derik Zeytini — Geleneksel Lezzetin Adresi"></a>
     <nav class="nav">
       <a href="magaza.html">Zeytinyağları</a>
       <a href="magaza.html?kategori=zeytinler">Zeytinler</a>
@@ -854,7 +857,7 @@ body.mobile-panel-open{overflow:hidden}
   <div class="container">
     <div class="footer-cols">
       <div class="footer-brand">
-        <span class="brand-logo"><img src="assets/logo/derik-logo.jpeg" alt="Derik Zeytini — Geleneksel Lezzetin Adresi"></span>
+        <span class="brand-logo"><img src="assets/logo/derik-logo.png" alt="Derik Zeytini — Geleneksel Lezzetin Adresi"></span>
         <p>Mardin Derik'ten sofranıza.</p>
         <div class="contact-line"><i class="fa-solid fa-location-dot"></i> Mardin Derik, Türkiye</div>
         <div class="contact-line"><i class="fa-solid fa-envelope"></i> info@derikzeytin.com</div>
@@ -1043,7 +1046,7 @@ document.querySelectorAll('.add-cart, [data-add-cart]').forEach(b => {
 <div class="mobile-overlay" data-close-mpanel></div>
 <aside class="mobile-panel" id="mobilePanel" aria-hidden="true">
   <div class="mobile-panel-head">
-    <a href="index.html" class="brand-logo"><img src="assets/logo/derik-logo.jpeg" alt="Derik Zeytini — Geleneksel Lezzetin Adresi"></a>
+    <a href="index.html" class="brand-logo"><img src="assets/logo/derik-logo-dark.png" alt="Derik Zeytini — Geleneksel Lezzetin Adresi"></a>
     <button class="mobile-panel-close" data-close-mpanel aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
   </div>
   <div id="mpanelUserSection"></div>

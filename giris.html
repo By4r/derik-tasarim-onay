@@ -53,8 +53,8 @@ ul{list-style:none}
 
 /* HEADER */
 .header{position:sticky;top:0;z-index:50;background:var(--bg);box-shadow:var(--shadow-header);border-bottom:1px solid var(--border)}
-.header-row1{display:flex;align-items:center;gap:var(--s-6);height:88px}
-.brand-logo{display:inline-flex;align-items:center;line-height:0}.brand-logo img{height:64px;width:auto;border-radius:8px;display:block;transition:transform var(--t-fast)}.brand-logo:hover img{transform:scale(1.02)}@media(max-width:768px){.brand-logo img{height:52px}}
+.header-row1{display:flex;align-items:center;gap:var(--s-6);min-height:120px;padding:12px 0}@media(max-width:1024px){.header-row1{min-height:104px}}@media(max-width:768px){.header-row1{min-height:88px}}
+.brand-logo{display:inline-flex;align-items:center;line-height:0}.brand-logo img{height:96px;width:auto;display:block;transition:transform var(--t-fast)}.brand-logo:hover img{transform:scale(1.02)}@media(max-width:1024px){.brand-logo img{height:80px}}@media(max-width:768px){.brand-logo img{height:64px}}@media(max-width:480px){.brand-logo img{height:52px}}.footer .brand-logo img{height:84px}@media(max-width:768px){.footer .brand-logo img{height:64px}}
 .header-actions{display:flex;align-items:center;gap:var(--s-2)}
 .icon-btn{position:relative;width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;color:var(--text);transition:background var(--t-fast),color var(--t-fast)}
 .icon-btn i{font-size:var(--icon-md)}
@@ -323,7 +323,7 @@ body.mobile-panel-open{overflow:hidden}
 <!-- HEADER -->
 <header class="header">
   <div class="container header-row1">
-    <a href="index.html" class="brand-logo"><img src="assets/logo/derik-logo.jpeg" alt="Derik Zeytini — Geleneksel Lezzetin Adresi"></a>
+    <a href="index.html" class="brand-logo"><img src="assets/logo/derik-logo-dark.png" alt="Derik Zeytini — Geleneksel Lezzetin Adresi"></a>
     <nav class="nav">
       <a href="magaza.html">Zeytinyağları</a>
       <a href="magaza.html?kategori=zeytinler">Zeytinler</a>
@@ -430,7 +430,7 @@ document.getElementById('loginBtn').addEventListener('click', () => {
   <div class="container">
     <div class="footer-cols">
       <div class="footer-brand">
-        <span class="brand-logo"><img src="assets/logo/derik-logo.jpeg" alt="Derik Zeytini — Geleneksel Lezzetin Adresi"></span>
+        <span class="brand-logo"><img src="assets/logo/derik-logo.png" alt="Derik Zeytini — Geleneksel Lezzetin Adresi"></span>
         <p>Mardin Derik'ten sofranıza.</p>
         <div class="contact-line"><i class="fa-solid fa-location-dot"></i> Mardin Derik, Türkiye</div>
         <div class="contact-line"><i class="fa-solid fa-envelope"></i> info@derikzeytin.com</div>
@@ -627,7 +627,7 @@ function btnReset(btn){
 <div class="mobile-overlay" data-close-mpanel></div>
 <aside class="mobile-panel" id="mobilePanel" aria-hidden="true">
   <div class="mobile-panel-head">
-    <a href="index.html" class="brand-logo"><img src="assets/logo/derik-logo.jpeg" alt="Derik Zeytini — Geleneksel Lezzetin Adresi"></a>
+    <a href="index.html" class="brand-logo"><img src="assets/logo/derik-logo-dark.png" alt="Derik Zeytini — Geleneksel Lezzetin Adresi"></a>
     <button class="mobile-panel-close" data-close-mpanel aria-label="Kapat"><i class="fa-solid fa-xmark"></i></button>
   </div>
   <div class="mobile-panel-cta">
